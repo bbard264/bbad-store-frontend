@@ -1,0 +1,100 @@
+.card {
+  width: auto;
+  margin: 1em 1.5em;
+  padding: 1em 1.5em;
+  background-color: #fff;
+  transition: box-shadow 0.3s ease;
+  border-radius: 20px;
+  position: relative;
+}
+
+.card:hover {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  transition: box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.card .heartIcon {
+  position: absolute;
+  top: 2em;
+  right: 2.5em;
+  height: 1.5em;
+  width: auto;
+  z-index: 2;
+  filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.3));
+  transition: filter 0.2s ease, width 0.2s ease, height 0.2s ease,
+    transform 0.2s ease;
+}
+
+.cardImg {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  width: 100%;
+  padding-top: 150%;
+  overflow: hidden;
+  border-radius: 20px;
+  background-color: #ffffff;
+}
+
+.cardImg .photo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  object-fit: cover;
+  width: auto;
+  height: 100%;
+  z-index: 1;
+}
+
+.heartIcon:hover {
+  cursor: pointer;
+  height: 1.7em;
+  width: auto;
+  filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.7));
+  transform: translate(7.5%, -7.5%);
+  transition: filter 0.2s ease, width 0.2s ease, height 0.2s ease,
+    transform 0.2s ease;
+}
+
+.cardInfo {
+  margin-top: 1em;
+}
+
+.cardName {
+  font-size: 1.25em;
+  font-weight: bold;
+}
+
+.cardTag {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cardPrice {
+  font-size: 1.25em;
+}
+
+.addCartButton {
+  height: 1.5em;
+}
+
+.addCartButton img {
+  width: auto;
+  height: 1.5em;
+  filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.3));
+  transition: filter 0.2s ease, width 0.2s ease, height 0.2s ease,
+    transform 0.2s ease;
+}
+
+.addCartButton:hover img {
+  width: auto;
+  height: 1.7em;
+  filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.7));
+  transform: translate(7.5%, -7.5%);
+  transition: filter 0.2s ease, width 0.2s ease, height 0.2s ease,
+    transform 0.2s ease;
+}

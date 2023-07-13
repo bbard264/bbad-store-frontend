@@ -1,0 +1,588 @@
+.contentContainer {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  position: relative;
+}
+
+/*#region detailSection*/
+.detailSection {
+  width: 70%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+}
+.photoLine {
+  display: inline-flex;
+  overflow: hidden;
+  border-radius: 20px;
+  position: relative;
+  user-select: none;
+}
+.photoFilter {
+  height: 100%;
+  backdrop-filter: blur(10px);
+  opacity: 100%;
+  position: absolute;
+  z-index: 2;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+.photoFilter:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.photoContainers {
+  display: inline-flex;
+  flex-direction: row;
+  transition: all 0.5s ease-in-out;
+}
+.photoBox {
+  position: relative;
+}
+.photoBox img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+.photoBox:last-child img {
+  border-radius: 0 20px 20px 0;
+}
+.photoLine .leftCorner {
+  z-index: 3;
+}
+
+.photoLine .rightCorner {
+  z-index: 3;
+  right: auto;
+  left: 800px;
+  transform: translate(-100%, -50%);
+}
+
+.thumPhotoLine {
+  height: 6em;
+  width: 100%;
+  margin: 1em 0;
+  overflow: hidden;
+  position: relative;
+  border-radius: 20px;
+  padding: 1em 0;
+  user-select: none;
+}
+
+.thumPhotoContainers {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  width: auto;
+  height: 100%;
+  position: absolute;
+  top: 50%;
+  left: calc(50% - 4em);
+  transform: translate(0, -50%);
+  transition: all 0.5s ease-in-out;
+  height: 6em;
+}
+
+.thumPhotoBox {
+  flex-shrink: 0;
+  height: 100%;
+  width: 6em;
+  position: relative;
+  overflow: hidden;
+  margin: 0 1em;
+  border-radius: 20px;
+  opacity: 0.5;
+  transform: all 0.3s ease;
+  cursor: pointer;
+}
+
+.isShow {
+  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.7);
+  opacity: 1;
+  transform: all 0.3s ease;
+  cursor: default;
+}
+
+.thumPhotoBox:hover {
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7);
+}
+
+.thumPhotoBox img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
+}
+
+.headSection {
+  font-size: 1.5em;
+  color: rgb(60, 60, 60);
+}
+
+.fullDetailLine {
+  font-weight: 300;
+}
+
+/*#region reviewSection*/
+.reviewLine {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+.reviewContainers {
+  display: grid;
+  grid-template-rows: repeat(2, 1fr);
+  height: auto;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.reviewContainers > div:nth-child(odd) {
+  grid-row: 1;
+}
+
+.reviewContainers > div:nth-child(even) {
+  grid-row: 2;
+}
+.reviewsBox {
+  width: 18em;
+  margin: 1em;
+  padding: 1em;
+  border-radius: 20px;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+  z-index: 1;
+}
+.reviewsCard {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+.reviewsCard .reviewsCardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+  padding-bottom: 0.5em;
+  margin-bottom: 0.5em;
+  border-bottom: 1px #f1f1f1 solid;
+}
+.reviewsCard .reviewsCardHeader .userImg {
+  /* Styles for the userImg div inside .reviewsCard */
+  /* Add your desired styles here */
+  height: 40px;
+  width: 40px;
+  overflow: hidden;
+  border-radius: 20px;
+  margin-right: 1em;
+}
+.reviewsCard .reviewsCardHeader .userImg img {
+  height: 40px;
+  width: 40px;
+  object-fit: cover;
+}
+.reviewsCard .reviewsCardHeader .userNameRank {
+  margin-right: auto;
+}
+.reviewsCard .reviewsCardHeader .userNameRank .userName {
+  font-size: 1.25em;
+  font-style: italic;
+}
+
+.reviewsCard .reviewsCardHeader .userNameRank .userRank {
+  font-size: 0.8em;
+  font-weight: 300;
+  color: #555;
+}
+
+.reviewsCard .reviewsCardHeader .reviewsRate {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-self: flex-end;
+  /* Styles for the reviewsRate div inside .reviewsCard */
+  /* Add your desired styles here */
+}
+.reviewsRate img {
+  width: auto;
+  height: 1.5em;
+  margin-right: 0.5em;
+  /* Styles for the reviewsRate div inside .reviewsCard */
+  /* Add your desired styles here */
+}
+
+.reviewsCard .reviewsDetails {
+  height: auto;
+  font-weight: 300;
+  padding: 1em;
+  margin-bottom: auto;
+}
+
+.reviewsCard .postDate {
+  display: flex;
+  justify-content: flex-end;
+  color: #999;
+}
+
+.reviewLine .leftCorner,
+.reviewLine .rightCorner {
+  height: 50%;
+  z-index: 2;
+  background: none;
+}
+
+.reviewLine .leftCorner .arrow-left {
+  border-right: 3em solid rgb(0 0 0 / 30%);
+}
+
+.reviewLine .rightCorner .arrow-right {
+  border-left: 3em solid rgb(0 0 0 / 30%);
+}
+
+/*#endregion reviewSection*/
+
+/*#endregion detailSection*/
+
+/*#region commonSection*/
+
+.commonSection {
+  width: 30%;
+  padding: 2em 1em;
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px;
+  position: relative;
+}
+
+.FixedCommonSection {
+  padding: 0.5em 1em;
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px;
+  border: 1px solid #aeaeae;
+  background-color: rgba(255, 255, 255, 0.9);
+  width: 20em;
+  height: auto;
+  position: absolute;
+  transition: all 0.3s ease;
+  z-index: 3;
+}
+
+.FixedCommonSection:hover {
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  border: 5px solid white;
+  transition: box-shadow 0.3s ease, border 0.3s ease;
+}
+
+.nameLine {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1em;
+}
+.nameLine h1 {
+  margin: 0;
+}
+.nameLine h2 {
+  margin: 0;
+  font-size: 1em;
+  color: #777777;
+}
+.rateLine {
+  display: flex;
+  margin-bottom: 1em;
+}
+.star {
+  position: relative;
+  width: 7.5em;
+  height: 1.5em;
+}
+.star div img {
+  width: 1.5em;
+  position: absolute;
+  height: auto;
+}
+
+.star .nowRating img {
+  z-index: 5;
+}
+.star .emptyRating img {
+  z-index: 4;
+}
+
+.star div img:nth-child(1) {
+  left: 0;
+}
+.star div img:nth-child(2) {
+  left: 1.5em;
+}
+.star div img:nth-child(3) {
+  left: 3em;
+}
+.star div img:nth-child(4) {
+  left: 4.5em;
+}
+.star div img:nth-child(5) {
+  left: 6em;
+}
+
+.nowRating {
+  position: absolute;
+  height: 1.5em;
+  overflow: hidden;
+}
+.emptyRating {
+  position: absolute;
+}
+
+.numReviews {
+  margin-left: 1em;
+  align-self: center;
+}
+.priceLine {
+  margin-bottom: 1em;
+  margin-left: 1em;
+}
+.priceLine div {
+  font-size: 1.5em;
+  font-weight: 300;
+  font-style: italic;
+}
+.shortDetailLine {
+  color: #777777;
+  margin-bottom: 1em;
+}
+.optionsLine {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 10.5em;
+  margin-bottom: 0.5em;
+  overflow: auto;
+}
+.optionsLine::-webkit-scrollbar {
+  width: 10px;
+}
+
+.optionsLine::-webkit-scrollbar-track {
+  border-radius: 20px;
+}
+
+.optionsLine::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 20px;
+}
+.optionsLine:hover::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+}
+
+.optionsLine:hover::-webkit-scrollbar-thumb {
+  background-color: #555;
+}
+
+.optionContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.optionContainer .choiceName {
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-bottom: 1em;
+}
+
+.optionContainer .choice {
+  display: inline-flex;
+  flex-direction: row;
+  margin-bottom: 0.5em;
+}
+.optionContainer .choice div {
+  margin-left: 0.5em;
+  padding: 0.1em 0.5em;
+  border-radius: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+}
+.optionContainer .choice div:hover {
+  background-color: black;
+  color: #fff;
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+
+/*#region functionLine*/
+.functionLine {
+  margin: 0.5em;
+  height: 2em;
+  padding: 1em;
+  display: inline-flex;
+  align-items: center;
+  border-top: #777777 1px solid;
+}
+.plusMinusButton {
+  height: 1.5em;
+  border-radius: 20px;
+  display: inline-flex;
+  overflow: hidden;
+  border: 1px solid #999;
+  transition: box-shadow 0.3s ease;
+  margin-right: 1em;
+}
+.plusMinusButton:hover {
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
+  transition: box-shadow 0.3s ease;
+}
+
+.plusMinusButton .minus {
+  width: 1.5em;
+
+  position: relative;
+  cursor: pointer;
+  background-color: white;
+  transition: background-color 0.3s ease;
+}
+.plusMinusButton .numAmount {
+  width: 1.5em;
+
+  border-left: 1px solid #999;
+  border-right: 1px solid #999;
+  position: relative;
+}
+.plusMinusButton .plus {
+  width: 1.5em;
+  position: relative;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.plusMinusButton .minus:hover {
+  background-color: black;
+  transition: background-color 0.3s ease;
+}
+
+.plusMinusButton .plus:hover {
+  background-color: black;
+  transition: background-color 0.3s ease;
+}
+
+.plusMinusButton .minus div {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  user-select: none;
+}
+.plusMinusButton .numAmount div {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  user-select: none;
+}
+.plusMinusButton .plus div {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  user-select: none;
+}
+
+.plusMinusButton .minus:hover div {
+  color: white;
+}
+
+.plusMinusButton .plus:hover div {
+  color: white;
+}
+
+.addToCartButton {
+  height: 2em;
+  padding: 0 1em;
+  margin-right: 1em;
+  width: 4em;
+  position: relative;
+}
+.addToCartButton:hover {
+  cursor: pointer;
+}
+.atcContainer {
+  position: absolute;
+  height: 2em;
+  width: 6em;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #999;
+  border-radius: 20px;
+  transition: box-shadow 0.3s ease, background-color 0.3s ease, filter 0.3s ease,
+    border 0.3s ease, height 0.2s ease, width 0.7s ease;
+}
+
+.atcContainer:hover {
+  height: 3em;
+  width: 7em;
+  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.7);
+  border: 1px #777777 solid;
+  background-color: white;
+  border: 1px solid #ffffff;
+  transition: box-shadow 0.3s ease, background-color 0.3s ease, filter 0.3s ease,
+    border 0.3s ease, height 0.2s ease, width 0.7s ease;
+}
+.atcContainer img {
+  width: 1.5em;
+  user-select: none;
+  transition: height 0.2s ease, width 0.7s ease;
+}
+.addToCartButton:hover .atcContainer img {
+  height: 2em;
+  width: 2em;
+  transition: height 0.2s ease, width 0.7s ease;
+}
+
+.favoriteButton {
+  position: relative;
+  cursor: pointer;
+  width: 1.5em;
+  height: 1.5em;
+}
+.favoriteButton img {
+  user-select: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 1.5em;
+  height: auto;
+  transition: filter 0.3s ease, width 0.3s ease, height 0.3s ease;
+}
+.favoriteButton:hover img {
+  width: 2em;
+  height: auto;
+  filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.5));
+  transition: filter 0.3s ease, width 0.3s ease, height 0.3s ease;
+}
+
+/*#endregion functionLine*/
+
+/*#endregion commonSection*/
+
+.recommendationsLine {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}

@@ -1,0 +1,129 @@
+.header {
+  width: auto;
+  background-color: white;
+  padding: 1em 3em 3em 3em;
+  height: 3em;
+}
+
+.fixedHeader {
+  background-color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1em auto;
+  height: 3em;
+  z-index: 999;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 70%;
+}
+
+.white {
+  background-color: rgb(255, 255, 255);
+  width: 75%;
+  margin-top: 0;
+  border-radius: 0 0 20px 20px;
+  height: 5em;
+  z-index: 997;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.noShadow {
+  position: absolute;
+  width: 100%;
+  height: 7em;
+  z-index: 998;
+  border-radius: 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0);
+}
+
+.leftHeader {
+  display: flex;
+  justify-content: center;
+}
+
+.search {
+  margin-right: 1.5em;
+  width: auto;
+  flex: 1;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  position: relative;
+}
+
+.search input {
+  padding: 10px;
+  border: 1px solid #aeaeae;
+  background-color: white;
+  color: #333;
+  border-radius: 20px;
+  box-shadow: none;
+  outline: none;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.search input:hover,
+input:focus {
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
+}
+
+.search img {
+  height: 1.5em;
+  position: absolute;
+  right: 1em;
+  opacity: 0.3;
+}
+
+.navigation {
+  display: flex;
+  height: 1.5em;
+}
+
+.naviLink {
+  direction: rtl;
+  margin-left: 1.5em;
+  cursor: pointer;
+}
+
+.naviLink a {
+  z-index: 1;
+  border-radius: 20px;
+  border: 5px solid #ffffff;
+  padding: 0 0.25em;
+  transition: box-shadow 0.3s ease;
+}
+
+.naviLink a:hover {
+  border: 5px solid #ffffff;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
+}
+
+.iconLink {
+  margin-left: 1em;
+  width: 1.2em;
+  position: relative;
+  cursor: pointer;
+}
+
+.iconLink img {
+  height: 100%;
+  position: absolute;
+  filter: drop-shadow(2px 0px 0px rgb(255, 255, 255))
+    drop-shadow(-2px 0px 0px rgb(255, 255, 255))
+    drop-shadow(0px 2px 0px rgb(255, 255, 255))
+    drop-shadow(0px -2px 0px rgb(255, 255, 255))
+    drop-shadow(1px 1px 1px rgba(0, 0, 0, 0));
+  transition: filter 0.3s ease;
+}
+
+.iconLink img:hover {
+  filter: drop-shadow(2px 0px 0px rgb(255, 255, 255))
+    drop-shadow(-2px 0px 0px rgb(255, 255, 255))
+    drop-shadow(0px 2px 0px rgb(255, 255, 255))
+    drop-shadow(0px -2px 0px rgb(255, 255, 255))
+    drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.5));
+}

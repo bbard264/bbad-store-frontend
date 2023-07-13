@@ -1,0 +1,99 @@
+.loginLink {
+  text-decoration: underline;
+}
+
+.loginContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.width60 {
+  width: 60%;
+  margin: auto;
+}
+
+.emailpassLine {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+}
+
+.inputEmail,
+.inputPassword {
+  height: 2em;
+  margin-bottom: 1em;
+  border-radius: 20px;
+  padding: 0.5em 1.5em;
+  border: none;
+  background-color: #f0f0f0;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.inputEmail:hover,
+.inputPassword:hover,
+.inputEmail:focus,
+.inputPassword:focus {
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.7);
+  transform: scale(1.05);
+}
+
+.inputEmail:focus-visible,
+.inputPassword:focus-visible {
+  outline: solid 1px #777;
+}
+
+.forgetPassLine {
+  width: 70%;
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1em;
+}
+.submitLogin {
+  margin-bottom: 1em;
+  width: 30%;
+  display: flex;
+  justify-content: center;
+}
+
+.submitBotton {
+  width: 100%;
+  height: 3em;
+  border-radius: 20px;
+  padding: 0.5em 1.5em;
+  border: none;
+  background-color: #111111;
+  outline: none;
+  transition: all 0.3s ease;
+  color: white;
+  font-weight: 500;
+}
+
+.submitBotton:hover {
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.7);
+  transform: scale(1.05);
+  background-color: #ffffff;
+  color: #111111;
+  cursor: pointer;
+  font-weight: 900;
+}
+
+.registerLinkLine {
+  margin-bottom: 1em;
+}
+
+.uinput.account {
+  width: 50%;
+}
+
+.uAConfirmNewPasswordBox .uButton {
+  margin-right: 1em;
+}
+
+.uinput[disabled] {
+  /* Styles for the disabled input */
+  background-color: rgb(240, 240, 240);
+  color: gray;
+  border: #777 1px solid;
+}

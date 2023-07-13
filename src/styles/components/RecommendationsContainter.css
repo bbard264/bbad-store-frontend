@@ -1,0 +1,39 @@
+.recomendationsContainter {
+  height: 23.75em;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+.recomendationsContainter .recommendationsBox {
+  position: absolute;
+  transition: all 0.3s ease;
+}
+
+.recomendationsContainter .leftCorner,
+.recomendationsContainter .rightCorner {
+  height: 25%;
+  z-index: 2;
+  background: none;
+}
+
+.recomendationsContainter .leftCorner .arrow-left {
+  border-right: 2em solid rgb(0 0 0 / 30%);
+  border-top: 2em solid transparent;
+  border-bottom: 2em solid transparent;
+}
+
+.recomendationsContainter .rightCorner .arrow-right {
+  border-left: 2em solid rgb(0 0 0 / 30%);
+  border-top: 2em solid transparent;
+  border-bottom: 2em solid transparent;
+}
+
+.recommendationsBox {
+  display: flex;
+  flex-direction: row;
+  width: auto;
+}
+
+.recommendationsBox .cardBox {
+  width: 16em;
+}

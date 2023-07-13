@@ -1,0 +1,86 @@
+.cartPage {
+  width: 100%;
+  display: inline-flex;
+}
+
+.cartSumContainer {
+  width: 40%;
+  height: 100%;
+}
+
+.cartSumBox {
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 1em;
+  margin: auto;
+}
+
+.cartSumLine {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: #eee;
+  border-radius: 20px;
+}
+
+.cartSumLine .emptyBox {
+  height: 3em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-weight: 900;
+  font-size: 1.25em;
+  margin: 1em 0;
+}
+.emptyBox div {
+  color: #777;
+}
+
+.cartSumHeadLine {
+  align-self: flex-start;
+  margin: 1em 0 0.125em 0;
+  padding-left: 0.5em;
+}
+
+.cartSumBodyLine {
+  padding-top: 0.5em;
+  border-top: #111 solid 1px;
+  display: flex;
+  flex-direction: column;
+}
+
+.cartSumBodyLine .cartDetailLine {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 0 1em 0.5em 1em;
+  color: #777;
+}
+
+.cartSumNetTotalLine {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  border-radius: 20px;
+  background-color: #ccc;
+  font-size: 1.125em;
+  font-weight: 500;
+  width: 100%;
+  padding: 0.5em 0;
+  align-self: center;
+}
+.cartSumCheckOutLine {
+  align-self: center;
+  background-color: rgb(16, 175, 96);
+  font-size: 1.125em;
+  font-weight: 500;
+  width: 100%;
+  color: white;
+  border-radius: 20px;
+  display: flex;
+  padding: 0.5em 0;
+  margin-top: 0.5em;
+  justify-content: center;
+}

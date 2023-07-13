@@ -1,0 +1,26 @@
+/* ------------------------------------------- CatagoryNavi()-------------------------------------- */
+.catagory {
+  background-color: white;
+  width: auto;
+  display: flex;
+  justify-content: space-around;
+  margin: 2em 10em;
+}
+
+.catagoryLink {
+  padding: 0em 1em;
+}
+
+.catagoryLink a {
+  z-index: 1;
+  border-radius: 20px;
+  border: 5px solid #ffffff;
+  padding: 0 0.25em;
+  transition: box-shadow 0.3s ease;
+}
+
+.catagoryLink a:hover {
+  border: 5px solid #ffffff;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
+}
+/* ------------------------------------------- CatagoryNavi()-------------------------------------- */
