@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
 import '../styles/pages/ProductDetail.css';
 import Header from '../components/Header';
 import ArrowCorner from '../components/subcomponents/ArrowCorner';
@@ -106,165 +108,13 @@ const userReview6 = new UserReview(
 );
 userReviews.push(userReview6);
 
-const userReviewsB = [];
-
-const userReviewB1 = new UserReview(
-  burni,
-  'Alex Johnson',
-  'Foodie',
-  4.6,
-  'I love this product! It has made cooking so much easier and enjoyable. The various features and settings allow me to experiment with different recipes and techniques. Highly recommended for any food lover.',
-  '7/2/2023'
-);
-userReviewsB.push(userReviewB1);
-
-const userReviewB2 = new UserReview(
-  wizhogFullImage,
-  'Sophia Davis',
-  'Bookworm',
-  4.4,
-  'This product has become my favorite companion for reading. The display is crisp, and the adjustable brightness makes it comfortable for long reading sessions. The battery life is impressive too!',
-  '7/1/2023'
-);
-userReviewsB.push(userReviewB2);
-
 //#endregion mock userReview
 
-//#region mock product [ProductObjects] class and artBookProduct8 product
-class ProductObjects {
-  constructor(
-    id,
-    name = '',
-    category = '',
-    mainPhoto = '',
-    listAddPhoto = [],
-    price = 0,
-    rating = 0,
-    shortDetail = '',
-    fullDetail = '',
-    options = {},
-    favorite = false,
-    userReviews = [],
-    salesValue = 0,
-    promotion = false,
-    promName = '',
-    promPrice = 0,
-    promDayleft = 0
-  ) {
-    this.id = id;
-    this.name = name;
-    this.category = category;
-    this.mainPhoto = mainPhoto;
-    this.listAddPhoto = listAddPhoto;
-    this.price = price;
-    this.rating = rating;
-    this.shortDetail = shortDetail;
-    this.fullDetail = fullDetail;
-    this.options = options;
-    this.favorite = favorite;
-    this.userReviews = userReviews;
-    this.salesValue = salesValue;
-    this.promotion = promotion;
-    this.promName = promName;
-    this.promPrice = promPrice;
-    this.promDayleft = promDayleft;
-  }
-}
-
-const obja = new ProductObjects(
-  'AB08',
-  'Modern Sculpture',
-  'Art books',
-  kuri,
-  [fizri, burni],
-  29.99,
-  4.7,
-  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras auctor lectus id elit tristique tristique.',
-  `Discover the world of modern sculpture with this comprehensive art book. Featuring stunning photographs and in-depth analysis, "Art Book: Modern Sculpture" takes you on a journey through the works of renowned sculptors from around the globe.
-  
-  Product Details:
-  - Brand: Lorem Ipsum
-  - Model: Ipsum 5000
-  - Color: Midnight Black
-  - Material: Premium stainless steel
-  - Dimensions: 10" (H) x 6" (W) x 4" (D)
-  - Weight: 1.5 lbs
-  - Features: High-quality stainless steel, sleek design, ergonomic handle, non-stick surface, heat-resistant up to 500°F, dishwasher safe.
-  - Package Includes: 1 x Lorem Ipsum Ipsum 5000 Cookware Set, 3 x Stainless steel lids, 1 x User manual.
-  
-  Whether you're an art enthusiast or a professional sculptor, this art book is a must-have addition to your collection. Immerse yourself in the world of modern sculpture and gain a deeper understanding of the artistic techniques, inspirations, and cultural contexts behind each masterpiece.
-  
-  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed aliquam justo ante, non placerat felis consequat nec. Nunc et odio efficitur, aliquam nisl a, vehicula lorem. Nullam ac vulputate turpis.`,
-  {
-    Size: ['Small', 'Medium', 'Large'],
-    Color: ['Red', 'Blue', 'Green'],
-    Material: ['Cotton', 'Polyester', 'Silk'],
-    Style: ['Casual', 'Formal', 'Sporty'],
-  },
-  true,
-  userReviews,
-  0,
-  true,
-  'Limited-time promotion',
-  24.99,
-  5
-);
-
-const objb = new ProductObjects(
-  'TS001', // id
-  'BBad T-Shirt', // name
-  'Wearables', // category
-  wizhogFullImage, // mainPhoto
-  [
-    faChalee3Image,
-    chaleeImage,
-    hugMomentImage,
-    hugMomentImage,
-    hugMomentImage,
-    hugMomentImage,
-    hugMomentImage,
-    hugMomentImage,
-    hugMomentImage,
-    hugMomentImage,
-    hugMomentImage,
-    hugMomentImage,
-    hugMomentImage,
-    hugMomentImage,
-    hugMomentImage,
-    hugMomentImage,
-  ], // listAddPhoto
-  19.99, // price
-  4.5, // rating
-  'A stylish T-shirt featuring the iconic character BBad.', // shortDetail
-  'The BBad T-shirt is made from high-quality cotton and designed for comfort and durability. It showcases the popular character BBad in vibrant colors, making it a must-have for fans and collectors. Express your love for BBad with this unique and trendy T-shirt.', // fullDetail
-  { Size: ['S', 'M', 'L'], Color: ['Black', 'White', 'Red'] }, // options
-  true, // favorite
-  [
-    ...userReviewsB,
-    ...userReviews,
-    ...userReviews,
-    ...userReviews,
-    ...userReviews,
-    ...userReviews,
-    ...userReviews,
-    ...userReviews,
-    ...userReviews,
-    ...userReviews,
-    ...userReviews,
-    ...userReviews,
-  ], // listReviews
-  15, // salesValue
-  false, // promotion
-  '', // promName
-  0, // promPrice
-  0 // promDayleft
-);
-//#endregion
-
-function DetailSection({ product, widthPhoto }) {
+function DetailSection({ product }) {
   //#region HANDLE ALL IMG PRODUCT
-  const listPhoto = [product.mainPhoto, ...product.listAddPhoto];
+  const listPhoto = product.product_photo;
   const [showIndex, setShowIndex] = useState(0);
+  const [widthPhoto, setWidthPhoto] = useState(0);
 
   const getIndexList = (index) => {
     setShowIndex(index);
@@ -283,6 +133,50 @@ function DetailSection({ product, widthPhoto }) {
       setShowIndex(showIndex - 1);
     }
   };
+
+  useEffect(() => {
+    const ratio = 4 / 3;
+    const heightPhoto = 600;
+    const widthPhoto = heightPhoto * ratio;
+    setWidthPhoto(widthPhoto);
+    const updateWidth = () => {
+      const photoLine = document.getElementById('photoLine');
+      const contentContainer = document.getElementById('contentContainer');
+      photoLine.style.width = `${contentContainer.offsetWidth}px`;
+      photoLine.style.height = `${heightPhoto}px`;
+    };
+
+    const updatePhotoStyles = () => {
+      const photoContainers = document.getElementById('photoContainers');
+      const photoFilter = document.getElementById('photoFilter');
+      const photoBoxes = document.getElementsByClassName('photoBox');
+
+      for (let i = 0; i < photoBoxes.length; i++) {
+        const photoBox = photoBoxes[i];
+        photoBox.style.height = `${heightPhoto}px`;
+        photoBox.style.width = `${widthPhoto}px`;
+      }
+
+      photoFilter.style.width = `${widthPhoto}px`;
+      photoFilter.style.left = `${widthPhoto}px`;
+      photoContainers.style.height = `${heightPhoto}px`;
+      photoContainers.style.width = `${
+        widthPhoto * product.product_photo.length
+      }px`;
+    };
+
+    // Initial width update
+    updateWidth();
+    updatePhotoStyles();
+
+    // Event listener for window resize
+    window.addEventListener('resize', updateWidth);
+
+    // Clean up event listener for window resize
+    return () => {
+      window.removeEventListener('resize', updateWidth);
+    };
+  }, [product]);
 
   useEffect(() => {
     const photoContainers = document.getElementById('photoContainers');
@@ -494,13 +388,13 @@ function DetailSection({ product, widthPhoto }) {
       </div>
       <div className="fullDetailLine">
         <h1 className="headSection">DETAIL</h1>
-        <div className="fullDetailSection">{product.fullDetail}</div>
+        <div className="fullDetailSection">{product.full_detail}</div>
       </div>
-      <ReviewSection userReviews={product.userReviews} />
-      <div className="recommendationsLine">
+      <ReviewSection userReviews={userReviews} />
+      {/* <div className="recommendationsLine">
         <h1 className="headSection">Recommendations</h1>
         <RecommendationsContainter />
-      </div>
+      </div> */}
     </div>
   );
 }
@@ -528,6 +422,9 @@ function CommonSection({ product }) {
   }
 
   function renderOption(options) {
+    if (!options) {
+      return;
+    }
     if (Object.entries(options).length === 0) {
       return null;
     } else {
@@ -586,39 +483,39 @@ function CommonSection({ product }) {
     );
   }
 
-  function favoriteButton(favorite) {
-    function checkFavorite(favorite) {
-      if (favorite) {
-        return <img src={fullHeartIcon} alt="truefavorite"></img>;
-      } else {
-        return <img src={emptyHeartIcon} alt="falsefavorite"></img>;
-      }
-    }
-    return <div className="favoriteButton">{checkFavorite(favorite)}</div>;
-  }
+  // function favoriteButton(favorite) {
+  //   function checkFavorite(favorite) {
+  //     if (favorite) {
+  //       return <img src={fullHeartIcon} alt="truefavorite"></img>;
+  //     } else {
+  //       return <img src={emptyHeartIcon} alt="falsefavorite"></img>;
+  //     }
+  //   }
+  //   return <div className="favoriteButton">{checkFavorite(favorite)}</div>;
+  // }
 
   return (
     <div className="commonSection">
       <div className="FixedCommonSection" id="FixedCommonSection">
         <div className="nameLine">
-          <h2>{product.category}</h2>
-          <h1>{product.name}</h1>
+          <h2>{product.category_id.toUpperCase()}</h2>
+          <h1>{product.product_name}</h1>
         </div>
         <div className="rateLine">
-          {renderStarRating(product.rating)}
-          <div className="numReviews">{product.userReviews.length} reviews</div>
+          {renderStarRating(4.7)}
+          <div className="numReviews">{userReviews.length} reviews</div>
         </div>
         <div className="priceLine">
-          <div>฿ {product.price}</div>
+          <div>฿ {product.product_price}</div>
         </div>
         <div className="shortDetailLine">
-          <div>{product.shortDetail}</div>
+          <div>{product.short_details}</div>
         </div>
-        {renderOption(product.options)}
+        {renderOption(product.option)}
         <div className="functionLine">
           {PlusMinusButton()}
           {addToCartButton()}
-          {favoriteButton(product.favorite)}
+          {/* {favoriteButton(product.favorite)} */}
         </div>
       </div>
     </div>
@@ -627,56 +524,34 @@ function CommonSection({ product }) {
 
 //#endregion CommonSection
 
+async function fetchProduct(productId) {
+  let requestAPI = `/api/product/${productId}`;
+  console.log('requestAPI', requestAPI);
+  try {
+    const response = await axios.get(requestAPI);
+    const product = response.data;
+    return product;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export default function ProductDetail() {
-  let testProduct = objb;
-
-  const [widthPhoto, setWidthPhoto] = useState(0);
+  const { productId, producturl } = useParams();
+  const [product, setProduct] = useState(null);
 
   useEffect(() => {
-    const ratio = 4 / 3;
-    const heightPhoto = 600;
-    const widthPhoto = heightPhoto * ratio;
-    setWidthPhoto(widthPhoto);
-    const updateWidth = () => {
-      const photoLine = document.getElementById('photoLine');
-      const contentContainer = document.getElementById('contentContainer');
-      photoLine.style.width = `${contentContainer.offsetWidth}px`;
-      photoLine.style.height = `${heightPhoto}px`;
-    };
-
-    const updatePhotoStyles = () => {
-      const photoContainers = document.getElementById('photoContainers');
-      const photoFilter = document.getElementById('photoFilter');
-      const photoBoxes = document.getElementsByClassName('photoBox');
-
-      for (let i = 0; i < photoBoxes.length; i++) {
-        const photoBox = photoBoxes[i];
-        photoBox.style.height = `${heightPhoto}px`;
-        photoBox.style.width = `${widthPhoto}px`;
+    async function getProduct() {
+      try {
+        const fetchedProduct = await fetchProduct(productId.slice(3));
+        setProduct(fetchedProduct);
+      } catch (error) {
+        console.error(error);
       }
+    }
 
-      photoFilter.style.width = `${widthPhoto}px`;
-      photoFilter.style.left = `${widthPhoto}px`;
-      photoContainers.style.height = `${heightPhoto}px`;
-      photoContainers.style.width = `${
-        widthPhoto * (testProduct.listAddPhoto.length + 1)
-      }px`;
-    };
+    getProduct();
 
-    // Initial width update
-    updateWidth();
-    updatePhotoStyles();
-
-    // Event listener for window resize
-    window.addEventListener('resize', updateWidth);
-
-    // Clean up event listener for window resize
-    return () => {
-      window.removeEventListener('resize', updateWidth);
-    };
-  }, [testProduct]);
-
-  useEffect(() => {
     const applyStageStyles = (stage) => {
       const FixedCommonSection = document.getElementById('FixedCommonSection');
       if (stage === 1) {
@@ -736,10 +611,14 @@ export default function ProductDetail() {
   return (
     <div>
       <Header />
-      <div className="contentContainer" id="contentContainer">
-        <DetailSection product={testProduct} widthPhoto={widthPhoto} />
-        <CommonSection product={testProduct} />
-      </div>
+      {product ? (
+        <div className="contentContainer" id="contentContainer">
+          <DetailSection product={product} />
+          <CommonSection product={product} />
+        </div>
+      ) : (
+        <p>Loading...</p>
+      )}
       <Footer />
     </div>
   );

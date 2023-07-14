@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import addIcon from '../assets/icon/add.png';
 import cartIcon from '../assets/icon/cart.png';
 import heartEmptyIcon from '../assets/icon/heart.png';
@@ -6,18 +7,16 @@ import heartFillIcon from '../assets/icon/heart2.png';
 
 import '../styles/components/Card.css';
 
-export default function Card({ product, index, onFavoriteChange }) {
-  const [favorite, setFavorite] = useState(product.favorite);
-
-  const handleToggleFavorite = () => {
-    const updatedFavorite = !favorite;
-    setFavorite(updatedFavorite);
-    onFavoriteChange(index, updatedFavorite);
-  };
-
-  useEffect(() => {
-    setFavorite(product.favorite);
-  }, [product.favorite]);
+export default function Card({ product }) {
+  const navigate = useNavigate();
+  let favorite = false; // come back to fix later
+  function handleOnClick(productIdUrl) {
+    navigate(
+      `/product-detail/${
+        'id=' + productIdUrl.product_id + '/' + productIdUrl.product_url_name
+      }`
+    );
+  }
 
   return (
     <div className="card">
@@ -25,16 +24,45 @@ export default function Card({ product, index, onFavoriteChange }) {
         className="heartIcon"
         src={favorite ? heartFillIcon : heartEmptyIcon}
         alt={favorite ? 'favoriteTure' : 'favoriteFalse'}
-        onClick={handleToggleFavorite}
       />
-      <div className="cardImg">
-        <img className="photo" src={product.photo} alt={product.name} />
+      <div
+        className="cardImg"
+        onClick={() =>
+          handleOnClick({
+            product_id: product._id,
+            product_url_name: product.product_url_name,
+          })
+        }
+      >
+        <img
+          className="photo"
+          src={product.product_photo[0]}
+          alt={product.product_name}
+        />
       </div>
-      <div className="cardInfo">
-        <div className="cardName">{product.name}</div>
+      <div
+        className="cardInfo"
+        onClick={() =>
+          handleOnClick({
+            product_id: product._id,
+            product_url_name: product.product_url_name,
+          })
+        }
+      >
+        <div className="cardName">{product.product_name}</div>
       </div>
       <div className="cardTag">
-        <div className="cardPrice">฿ {product.price}</div>
+        <div
+          className="cardPrice"
+          onClick={() =>
+            handleOnClick({
+              product_id: product._id,
+              product_url_name: product.product_url_name,
+            })
+          }
+        >
+          ฿ {product.product_price}
+        </div>
         <div className="addCartButton">
           <img src={addIcon} alt="addIcon" />
           <img src={cartIcon} alt="cartIcon" />

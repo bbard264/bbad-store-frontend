@@ -218,14 +218,18 @@ function MainContent() {
 
 // --------------------- MainContent()------------------------------------------
 
-export default function Home() {
-  return (
-    <div>
-      <Header />
-      <CoverContent />
-      <CategoryNavi />
-      <MainContent />
-      <Footer />
-    </div>
-  );
+class Home extends React.Component {
+  render() {
+    return (
+      <div>
+        <Header />
+        <CoverContent />
+        <CategoryNavi />
+        {/* <MainContent /> */}
+        <Footer />
+      </div>
+    );
+  }
 }
+
+export default Home;

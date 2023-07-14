@@ -9,6 +9,7 @@ import Order from './pages/Order';
 import User from './pages/User';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Page404 from './pages/404';
 
 class App extends Component {
   render() {
@@ -19,10 +20,18 @@ class App extends Component {
           <Route path="/cart" element={<Cart />} />
           <Route path="/login" element={<Login />} />
           <Route path="/order" element={<Order />} />
-          <Route path="/product-detail" element={<ProductDetail />} />
-          <Route path="/products" element={<Products />} />
+          <Route
+            path="/product-detail/:productId/:producturl"
+            element={<ProductDetail />}
+          />
+          <Route path="/products/:routeParameter?" element={<Products />} />
+          <Route
+            path="/products/:routeParameter/:routeParameter2?"
+            element={<Products />}
+          />
           <Route path="/register" element={<Register />} />
           <Route path="/user" element={<User />} />
+          <Route path="/*" element={<Page404 />} />
         </Routes>
       </BrowserRouter>
     );

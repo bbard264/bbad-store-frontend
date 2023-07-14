@@ -50,6 +50,7 @@
 
 .pageNavi button:disabled {
   color: #999;
+  visibility: hidden;
   cursor: default;
 }
 
