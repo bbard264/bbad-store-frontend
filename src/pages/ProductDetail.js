@@ -23,9 +23,6 @@ import faChalee3Image from '../assets/ex_products/FA_chalee3.jpg';
 import chaleeImage from '../assets/ex_products/chalee.jpg';
 import hugMomentImage from '../assets/ex_products/HugMoment.jpg';
 
-// have product.id then request the product class
-// have productdetail
-
 //#region mock userReview
 
 class UserReview {
@@ -401,6 +398,61 @@ function DetailSection({ product }) {
 
 //#region CommonSection
 function CommonSection({ product }) {
+  useEffect(() => {
+    const applyStageStyles = (stage) => {
+      const FixedCommonSection = document.getElementById('FixedCommonSection');
+      if (stage === 1) {
+        FixedCommonSection.style.top = '';
+        FixedCommonSection.style.position = '';
+        FixedCommonSection.style.alignItems = '';
+        FixedCommonSection.style.justifyContent = '';
+      } else if (stage === 2) {
+        FixedCommonSection.style.top = '12%';
+        FixedCommonSection.style.position = 'fixed';
+        FixedCommonSection.style.bottom = '';
+      } else if (stage === 3) {
+        FixedCommonSection.style.top = 'auto';
+        FixedCommonSection.style.bottom = '0%';
+        FixedCommonSection.style.position = 'absolute';
+        FixedCommonSection.style.alignItems = 'flex-start';
+        FixedCommonSection.style.justifyContent = 'flex-end';
+      }
+    };
+
+    let stage = 1;
+
+    const handleScroll = () => {
+      const nowPosition = document.documentElement.scrollTop;
+      const nowPositionBot =
+        document.documentElement.scrollHeight -
+        document.documentElement.clientHeight -
+        document.documentElement.scrollTop;
+      let oldStage = stage;
+      if (nowPosition <= 40 && nowPositionBot >= 120) {
+        stage = 1;
+      }
+      if (nowPosition > 40 && nowPositionBot >= 120) {
+        stage = 2;
+      }
+      if (nowPosition >= 40 && nowPositionBot < 120) {
+        stage = 3;
+      }
+      if (oldStage === stage) {
+        return;
+      } else {
+        applyStageStyles(stage);
+      }
+    };
+
+    // Event listener for window scroll
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    // Clean up event listener for window scroll
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   function renderStarRating(rating) {
     let maxRating = 5;
     let percentRating = (rating / 5) * 100 + '%';
@@ -551,59 +603,6 @@ export default function ProductDetail() {
     }
 
     getProduct();
-
-    const applyStageStyles = (stage) => {
-      const FixedCommonSection = document.getElementById('FixedCommonSection');
-      if (stage === 1) {
-        FixedCommonSection.style.top = '';
-        FixedCommonSection.style.position = '';
-        FixedCommonSection.style.alignItems = '';
-        FixedCommonSection.style.justifyContent = '';
-      } else if (stage === 2) {
-        FixedCommonSection.style.top = '12%';
-        FixedCommonSection.style.position = 'fixed';
-        FixedCommonSection.style.bottom = '';
-      } else if (stage === 3) {
-        FixedCommonSection.style.top = 'auto';
-        FixedCommonSection.style.bottom = '0%';
-        FixedCommonSection.style.position = 'absolute';
-        FixedCommonSection.style.alignItems = 'flex-start';
-        FixedCommonSection.style.justifyContent = 'flex-end';
-      }
-    };
-
-    let stage = 1;
-
-    const handleScroll = () => {
-      const nowPosition = document.documentElement.scrollTop;
-      const nowPositionBot =
-        document.documentElement.scrollHeight -
-        document.documentElement.clientHeight -
-        document.documentElement.scrollTop;
-      let oldStage = stage;
-      if (nowPosition <= 40 && nowPositionBot >= 120) {
-        stage = 1;
-      }
-      if (nowPosition > 40 && nowPositionBot >= 120) {
-        stage = 2;
-      }
-      if (nowPosition >= 40 && nowPositionBot < 120) {
-        stage = 3;
-      }
-      if (oldStage === stage) {
-        return;
-      } else {
-        applyStageStyles(stage);
-      }
-    };
-
-    // Event listener for window scroll
-    window.addEventListener('scroll', handleScroll, { passive: true });
-
-    // Clean up event listener for window scroll
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
   }, []);
 
   //#endregion
