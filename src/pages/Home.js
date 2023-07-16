@@ -39,76 +39,88 @@ function centerPoint(imgChoosingIndex, numCircle, onClick) {
   );
 }
 
-function CoverContent() {
-  function getImgCover() {
-    return [coverpic, testimg1691, testimg1692, testimg1693, not169];
-  }
+function getImgCover() {
+  return [coverpic, testimg1691, testimg1692, testimg1693, not169];
+}
 
-  const imgCoverList = getImgCover();
-  const [imgCover, setImgCover] = useState(imgCoverList[0]);
-  const [oldImage, setOldImage] = useState(imgCover);
-  const [isLoading, setIsLoading] = useState(false);
+const imgCoverList = getImgCover();
+
+function renderImgCover(imgList, topImg, lastImg) {
+  return imgList.map((img, index) => {
+    if (topImg === index) {
+      return (
+        <img
+          className="img-cover onTop"
+          key={index}
+          src={img}
+          alt={`Image ${index}`}
+        />
+      );
+    } else if (lastImg === index) {
+      return (
+        <img
+          className="img-cover previous"
+          key={index}
+          src={img}
+          alt={`Image ${index}`}
+        />
+      );
+    } else {
+      return (
+        <img
+          className="img-cover"
+          key={index}
+          src={img}
+          alt={`Image ${index}`}
+        />
+      );
+    }
+  });
+}
+function CoverContent() {
+  const [topImg, setTopImg] = useState(0);
+  const [lastImg, setLastImg] = useState(imgCoverList.length);
 
   function handleCornerClick(direction) {
-    setIsLoading(true); // Set isLoading to true
-
-    setImgCover((imgCover) => {
-      setOldImage(imgCover); // Run setOldImage before setting the new image
-      let indexImg;
-      if (direction === 'left') {
-        indexImg = imgCoverList.indexOf(imgCover) - 1;
-        if (indexImg === -1) {
-          indexImg = imgCoverList.length - 1;
-        }
-      } else if (direction === 'right') {
-        indexImg = imgCoverList.indexOf(imgCover) + 1;
-        if (indexImg === imgCoverList.length) {
-          indexImg = 0;
-        }
+    let indexImg;
+    if (direction === 'left') {
+      indexImg = topImg - 1;
+      if (indexImg === -1) {
+        indexImg = imgCoverList.length - 1;
       }
-      return imgCoverList[indexImg]; // Return the new image to setImgCover
-    });
+    } else if (direction === 'right') {
+      indexImg = topImg + 1;
+      if (indexImg === imgCoverList.length) {
+        indexImg = 0;
+      }
+    }
 
-    setTimeout(() => {
-      setIsLoading(false); // Set isLoading to false after 100ms
-    }, 100);
+    setTopImg(() => {
+      setLastImg(topImg);
+      return indexImg;
+    });
   }
 
   function onCircleClick(index) {
-    setIsLoading(true); // Set isLoading to true
-
-    setImgCover((imgCover) => {
-      setOldImage(imgCover); // Run setOldImage before setting the new image
-      return imgCoverList[index]; // Return the new image to setImgCover
+    setTopImg(() => {
+      setLastImg(topImg);
+      return index;
     });
-
-    setTimeout(() => {
-      setIsLoading(false); // Set isLoading to false after 100ms
-    }, 100);
   }
 
   return (
     <div className="cover-container">
-      <div className="img-container">
+      <div className="cover-img-container">
         <ArrowCorner
           direction="left"
           onClick={() => handleCornerClick('left')}
         />
-        {centerPoint(
-          imgCoverList.indexOf(imgCover),
-          imgCoverList.length,
-          onCircleClick
-        )}
+        {centerPoint(topImg, imgCoverList.length, onCircleClick)}
         <ArrowCorner
           direction="right"
           onClick={() => handleCornerClick('right')}
         />
-        <img
-          src={oldImage}
-          className={`img-cover ${isLoading ? 'loading' : 'loaded'}`}
-          alt="imgCover"
-        ></img>
-        <img src={imgCover} className="img-cover" alt="imgCover"></img>
+        {renderImgCover(imgCoverList, topImg, lastImg)}
       </div>
     </div>
   );

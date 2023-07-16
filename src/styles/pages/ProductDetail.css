@@ -447,10 +447,8 @@
 
 .plusMinusButton .minus {
   width: 1.5em;
-
   position: relative;
   cursor: pointer;
-  background-color: white;
   transition: background-color 0.3s ease;
 }
 .plusMinusButton .numAmount {

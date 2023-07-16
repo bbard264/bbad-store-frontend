@@ -96,7 +96,7 @@ function pageNavi(numPage, lastNumPage, handlePageChange) {
 }
 
 const fetchProductList = async (category, page, setProductList) => {
-  let apilink = `/api/products-list/${category ? category : 'all'}${
+  let apilink = `/api/product/getProductsList/${category ? category : 'all'}${
     page ? '/' + page : ''
   }`;
 
@@ -111,7 +111,7 @@ const fetchProductList = async (category, page, setProductList) => {
 };
 
 const fetchLastPage = async (category, setLastPage) => {
-  let apilink = `/api/products-lastpageNum${category ? '/' + category : ''}`;
+  let apilink = `/api/product/getLastPage${category ? '/' + category : ''}`;
 
   try {
     const resLastPage = await axios.get(apilink);

@@ -577,7 +577,7 @@ function CommonSection({ product }) {
 //#endregion CommonSection
 
 async function fetchProduct(productId) {
-  let requestAPI = `/api/product/${productId}`;
+  let requestAPI = `/api/product/getProductById/${productId}`;
   console.log('requestAPI', requestAPI);
   try {
     const response = await axios.get(requestAPI);
@@ -589,7 +589,7 @@ async function fetchProduct(productId) {
 }
 
 export default function ProductDetail() {
-  const { productId, producturl } = useParams();
+  const { productId } = useParams();
   const [product, setProduct] = useState(null);
 
   useEffect(() => {

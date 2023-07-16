@@ -17,7 +17,7 @@ function renderNavi(naviList, currentCategory) {
 
 const fetchCategoryList = async () => {
   try {
-    const resCategoryList = await axios.get('/api/categorylist');
+    const resCategoryList = await axios.get('/api/category/getcategorylist');
     return resCategoryList.data;
   } catch (error) {
     console.error('Failed to fetch products:', error);
@@ -27,15 +27,26 @@ const fetchCategoryList = async () => {
 let categoryList = await fetchCategoryList();
 
 export default function CategoryNavi({ currentCategory }) {
+  useEffect(() => {
+    console.log('categoryList is called? ', !!categoryList);
+  }, [categoryList]);
   return (
     <div className="categoryNavi">
-      <div
-        className={`categoryLink ${currentCategory ? '' : 'activeCategory'}`}
-        key={`all`}
-      >
-        <a href={`/products/`}>All</a>
-      </div>
-      {renderNavi(categoryList, currentCategory)}
+      {categoryList !== undefined ? (
+        <>
+          <div
+            className={`categoryLink ${
+              currentCategory ? '' : 'activeCategory'
+            }`}
+            key={`all`}
+          >
+            <a href={`/products/`}>All</a>
+          </div>
+          {renderNavi(categoryList, currentCategory)}
+        </>
+      ) : (
+        <p>Loading...</p>
+      )}
     </div>
   );
 }
