@@ -76,7 +76,7 @@ label {
   outline: solid 1px red;
 }
 
-.warningMessage {
+.warningMessage-register {
   color: red;
   position: absolute;
   padding-left: 1em;
@@ -145,9 +145,16 @@ label {
   transition: none;
 }
 
-.disbled {
-  background-color: #777 !important;
+.disbled-register {
+  background-color: #d6d6d6 !important;
   color: #aaa !important;
   box-shadow: none !important;
   cursor: default !important;
+}
+
+.warningMessage-register.lastline {
+  margin-top: 1em;
+  top: 0;
+  height: 1.25em;
+  position: relative;
 }

@@ -1,5 +1,6 @@
 .loginLink {
   text-decoration: underline;
+  cursor: pointer;
 }
 
 .loginContainer {
@@ -52,13 +53,15 @@
 }
 .submitLogin {
   margin-bottom: 1em;
-  width: 30%;
+  width: 100%;
   display: flex;
   justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
 
 .submitBotton {
-  width: 100%;
+  width: 10em;
   height: 3em;
   border-radius: 20px;
   padding: 0.5em 1.5em;
@@ -68,6 +71,7 @@
   transition: all 0.3s ease;
   color: white;
   font-weight: 500;
+  margin-bottom: 1em;
 }
 
 .submitBotton:hover {
@@ -83,17 +87,19 @@
   margin-bottom: 1em;
 }
 
-.uinput.account {
-  width: 50%;
+.disbled-login {
+  background-color: #d6d6d6 !important;
+  color: #aaa !important;
+  box-shadow: none !important;
+  cursor: default !important;
+  transform: none !important;
+  font-weight: 500 !important;
 }
 
-.uAConfirmNewPasswordBox .uButton {
-  margin-right: 1em;
-}
-
-.uinput[disabled] {
-  /* Styles for the disabled input */
-  background-color: rgb(240, 240, 240);
-  color: gray;
-  border: #777 1px solid;
+.warningMessage-login {
+  color: red;
+  font-size: 1em;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }

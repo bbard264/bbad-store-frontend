@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react';
+import React, { useReducer, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import '../styles/pages/Register.css';
@@ -6,27 +6,31 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 
 const initialState = {
-  email: {
-    value: '',
-    validator: { required: true },
-    error: { status: true, message: '', isTouched: false },
-  },
-
-  displayName: {
-    value: '',
-    validator: {
-      required: true,
-
-      minLength: 4,
+  registerInfo: {
+    email: {
+      value: '',
+      validator: { required: true },
+      error: { status: true, message: '', isTouched: false },
     },
-    error: { status: true, message: '', isTouched: false },
-  },
 
-  password: {
-    value: '',
-    validator: { required: true, minLength: 8, confirmPassword: '' },
-    error: { status: true, message: '', isTouched: false },
+    displayName: {
+      value: '',
+      validator: {
+        required: true,
+
+        minLength: 4,
+      },
+      error: { status: true, message: '', isTouched: false },
+    },
+
+    password: {
+      value: '',
+      validator: { required: true, minLength: 8, confirmPassword: '' },
+      error: { status: true, message: '', isTouched: false },
+    },
   },
+  errorMessage: '',
+  isPassValidate: false,
 };
 
 function checkValue(fieldCheck, validator) {
@@ -106,31 +110,37 @@ function reducer(state, action) {
       if (field === 'confirmPassword') {
         updatedState = {
           ...state,
-          password: {
-            ...state.password,
-            validator: {
-              ...state.password.validator,
-              confirmPassword: value,
+          registerInfo: {
+            ...state.registerInfo,
+            password: {
+              ...state.registerInfo.password,
+              validator: {
+                ...state.registerInfo.password.validator,
+                confirmPassword: value,
+              },
             },
           },
         };
 
-        updatedState.password.error = checkValue(
-          updatedState.password,
-          updatedState.password.validator
+        updatedState.registerInfo.password.error = checkValue(
+          updatedState.registerInfo.password,
+          updatedState.registerInfo.password.validator
         );
       } else {
         updatedState = {
           ...state,
-          [field]: {
-            ...state[field],
-            value: value,
+          registerInfo: {
+            ...state.registerInfo,
+            [field]: {
+              ...state.registerInfo[field],
+              value: value,
+            },
           },
         };
 
-        updatedState[field].error = checkValue(
-          updatedState[field],
-          updatedState[field].validator
+        updatedState.registerInfo[field].error = checkValue(
+          updatedState.registerInfo[field],
+          updatedState.registerInfo[field].validator
         );
       }
 
@@ -140,18 +150,30 @@ function reducer(state, action) {
       const { field: errorField, payload: errorPayload } = action;
       return {
         ...state,
-        [errorField]: {
-          ...state[errorField],
-          error: {
-            ...state[errorField].error,
-            ...errorPayload,
+        registerInfo: {
+          ...state.registerInfo,
+          [errorField]: {
+            ...state.registerInfo[errorField],
+            error: {
+              ...state.registerInfo[errorField].error,
+              ...errorPayload,
+            },
           },
         },
       };
 
     case 'RESET':
       return initialState;
-
+    case 'UPDATE_ERROR_MESSAGE':
+      return {
+        ...state,
+        errorMessage: action.payload.value,
+      };
+    case 'UPDATE_IsPassValidate':
+      return {
+        ...state,
+        isPassValidate: action.payload.value,
+      };
     default:
       return state;
   }
@@ -170,34 +192,34 @@ const postRegisterUser = async (registerData) => {
 export default function Register() {
   const navigate = useNavigate();
   const [state, dispatch] = useReducer(reducer, initialState);
-  const isPassEndValidate = Object.values(state).every(
-    (field) => !field.error.status
-  );
-  const handleValueChange = async (e) => {
+
+  const handleValueChange = (e) => {
     const { name, value } = e.target;
-    await dispatch({ type: 'UPDATE_FIELD', payload: { field: name, value } });
+    dispatch({ type: 'UPDATE_FIELD', payload: { field: name, value } });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!isPassEndValidate) {
+    if (!state.isPassValidate) {
       console.log('failed to validated by frontend');
       return;
     } else {
       console.log('validate pass by frontend');
       let registData = {
-        email: state.email.value,
-        displayName: state.displayName.value,
-        password: state.password.value,
+        email: state.registerInfo.email.value,
+        displayName: state.registerInfo.displayName.value,
+        password: state.registerInfo.password.value,
       };
       const confirmed = window.confirm('Confirm your infomation?');
       if (confirmed) {
         const response = await postRegisterUser(registData);
-        console.log(response);
         if (response.registerSuccess) {
-          window.alert(`Register Success!! Welcome ${state.displayName.value}`);
-          // navigate('/login');
+          window.alert(
+            `Register Success!! Welcome ${state.registerInfo.displayName.value}`
+          );
+          navigate('/login');
+          return;
         }
         if (response.registerError) {
           if (response.registerError.emailIsDup) {
@@ -222,6 +244,13 @@ export default function Register() {
               },
             });
           }
+          return;
+        } else {
+          dispatch({
+            type: 'UPDATE_ERROR_MESSAGE',
+            payload: { value: `Can't Register, Please try again later` },
+          });
+          console.log(state.errorMessage);
         }
       }
     }
@@ -232,6 +261,21 @@ export default function Register() {
     dispatch({ type: 'RESET' });
   };
 
+  useEffect(() => {
+    const isAllError =
+      state.registerInfo.email.error.status ||
+      state.registerInfo.displayName.error.status ||
+      state.registerInfo.password.error.status;
+    dispatch({
+      type: 'UPDATE_IsPassValidate',
+      payload: { field: 'isPassvalidate', value: !isAllError },
+    });
+  }, [
+    state.registerInfo.email.error.status ||
+      state.registerInfo.displayName.error.status ||
+      state.registerInfo.password.error.status,
+  ]);
+
   // let [showInfo, setShowInfo] = useState(false);
 
   // function handleShowInfo() {
@@ -240,7 +284,7 @@ export default function Register() {
   return (
     <div className="registerPage">
       <Header />
-      <form onSubmit={handleSubmit} onReset={handleReset}>
+      <form onSubmit={handleSubmit} onReset={handleReset} autoComplete="off">
         <div className="registerContainer">
           <div className="loginHeader">
             <h1>Register</h1>
@@ -253,18 +297,21 @@ export default function Register() {
               <label>
                 <input
                   className={`registerInput${
-                    state.email.error.status && state.email.error.isTouched
+                    state.registerInfo.email.error.status &&
+                    state.registerInfo.email.error.isTouched
                       ? ' isError'
                       : ''
                   }`}
                   type="email"
                   name="email"
-                  value={state.email.value}
+                  value={state.registerInfo.email.value}
                   onChange={handleValueChange}
                   placeholder="Your email ..."
                 />
               </label>
-              <div className="warningMessage">{state.email.error.message}</div>
+              <div className="warningMessage-register">
+                {state.registerInfo.email.error.message}
+              </div>
             </div>
           </div>
           <div className="registerLine">
@@ -275,20 +322,20 @@ export default function Register() {
               <label>
                 <input
                   className={`registerInput${
-                    state.displayName.error.status &&
-                    state.displayName.error.isTouched
+                    state.registerInfo.displayName.error.status &&
+                    state.registerInfo.displayName.error.isTouched
                       ? ' isError'
                       : ''
                   }`}
                   type="text"
                   name="displayName"
-                  value={state.displayName.value}
+                  value={state.registerInfo.displayName.value}
                   onChange={handleValueChange}
                   placeholder="Your name ..."
                 />
               </label>
-              <div className="warningMessage">
-                {state.displayName.error.message}
+              <div className="warningMessage-register">
+                {state.registerInfo.displayName.error.message}
               </div>
             </div>
           </div>
@@ -300,21 +347,21 @@ export default function Register() {
               <label>
                 <input
                   className={`registerInput${
-                    state.password.error.status &&
-                    state.password.error.isTouched
+                    state.registerInfo.password.error.status &&
+                    state.registerInfo.password.error.isTouched
                       ? ' isError'
                       : ''
                   }`}
                   type="password"
                   name="password"
-                  value={state.password.value}
+                  value={state.registerInfo.password.value}
                   onChange={handleValueChange}
                   placeholder="Password ..."
-                  autoComplete="new-password"
+                  autoComplete="off"
                 />
               </label>
-              <div className="warningMessage">
-                {state.password.error.message}
+              <div className="warningMessage-register">
+                {state.registerInfo.password.error.message}
               </div>
             </div>
           </div>
@@ -326,17 +373,17 @@ export default function Register() {
               <label>
                 <input
                   className={`registerInput${
-                    state.password.error.status &&
-                    state.password.error.isTouched
+                    state.registerInfo.password.error.status &&
+                    state.registerInfo.password.error.isTouched
                       ? ' isError'
                       : ''
                   }`}
                   type="password"
                   name="confirmPassword"
-                  value={state.password.validator.confirmPassword}
+                  value={state.registerInfo.password.validator.confirmPassword}
                   onChange={handleValueChange}
                   placeholder="Confirm password ..."
-                  autoComplete="new-password"
+                  autoComplete="off"
                 />
               </label>
             </div>
@@ -437,12 +484,15 @@ export default function Register() {
             </button>
             <button
               className={`submitBotton register ${
-                isPassEndValidate ? '' : 'disbled'
+                state.isPassValidate ? '' : 'disbled-register'
               }`}
               type="submit"
             >
               Register
             </button>
+          </div>
+          <div className="warningMessage-register lastline">
+            {state.errorMessage}
           </div>
         </div>
       </form>
