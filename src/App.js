@@ -18,7 +18,6 @@ class App extends Component {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/cart" element={<Cart />} />
-          <Route path="/login" element={<Login />} />
           <Route path="/order" element={<Order />} />
           <Route
             path="/product-detail/:productId/:producturl"
@@ -29,8 +28,9 @@ class App extends Component {
             path="/products/:routeParameter/:routeParameter2?"
             element={<Products />}
           />
-          <Route path="/register" element={<Register />} />
           <Route path="/user" element={<User />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/*" element={<Page404 />} />
         </Routes>
       </BrowserRouter>

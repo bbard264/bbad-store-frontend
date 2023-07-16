@@ -15,6 +15,7 @@ import Card from '../components/Card.js';
 import product1 from '../assets/ex_products/OC_vince.jpg';
 import product2 from '../assets/ex_products/very hot.jpg';
 
+console.log('OnTop');
 // ---------------------------- CoverContent()--------------------------------------------
 
 function centerPoint(imgChoosingIndex, numCircle, onClick) {

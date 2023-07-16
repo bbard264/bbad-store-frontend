@@ -16,7 +16,7 @@
   align-items: center;
 }
 
-.categoryLink a {
+.categoryLink div {
   z-index: 1;
   display: flex;
   justify-content: center;
@@ -35,12 +35,12 @@
   cursor: pointer;
 }
 
-.categoryLink:hover a {
+.categoryLink:hover div {
   color: white;
 }
 
 .activeCategory,
-.activeCategory a {
+.activeCategory div {
   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
   background-color: black;
   color: white;

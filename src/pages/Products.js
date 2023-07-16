@@ -157,7 +157,7 @@ export default function Products() {
     };
 
     fetchData();
-  }, []);
+  }, [category]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -174,7 +174,7 @@ export default function Products() {
 
     fetchData();
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [numPage]);
+  }, [numPage, category]);
 
   function handlePageChange(newPage) {
     if (category === '') {

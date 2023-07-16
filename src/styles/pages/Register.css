@@ -9,8 +9,7 @@
   width: 100%;
   display: flex;
   flex-direction: row;
-
-  margin-bottom: 1em;
+  margin-bottom: 1.5em;
 }
 
 .headRegisterColumn,
@@ -33,6 +32,9 @@
 .inputRegisterColumn {
   padding-left: 1em;
   justify-content: flex-start;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
 }
 
 .genderRadioRegister {
@@ -50,8 +52,8 @@ label {
 
 .registerInput {
   height: 2em;
+  width: 100%;
   border-radius: 20px;
-  width: 50%;
   padding: 0.5em 1.5em;
   border: none;
   background-color: #f0f0f0;
@@ -67,6 +69,19 @@ label {
 
 .registerInput:focus-visible {
   outline: solid 1px #777;
+  background-color: #fff;
+}
+
+.registerInput.isError {
+  outline: solid 1px red;
+}
+
+.warningMessage {
+  color: red;
+  position: absolute;
+  padding-left: 1em;
+  top: 100%;
+  font-size: 0.75em;
 }
 
 .pmiLine {
@@ -117,7 +132,8 @@ label {
 .reset:hover {
   background-color: rgb(209, 89, 89);
   color: #fff;
-  border: #fff 1px solid;
+  border: rgb(209, 89, 89) 1px solid;
+  box-shadow: 0 0 4px rgba(209, 89, 89, 0.7);
 }
 
 .height2 {
@@ -127,4 +143,11 @@ label {
 .address {
   height: 6em;
   transition: none;
+}
+
+.disbled {
+  background-color: #777 !important;
+  color: #aaa !important;
+  box-shadow: none !important;
+  cursor: default !important;
 }

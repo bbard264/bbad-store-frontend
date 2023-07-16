@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../styles/components/CategoryNavi.css';
 
-function renderNavi(naviList, currentCategory) {
+function renderNavi(naviList, currentCategory, navigate) {
   return naviList.map((category) => (
     <div
       className={`categoryLink ${
         category._id === currentCategory ? 'activeCategory' : ''
       }`}
       key={category._id}
+      onClick={() => navigate(`/products/${category._id}`)}
     >
-      <a href={`/products/${category._id}`}>{category.category_name}</a>
+      <div>{category.category_name}</div>
     </div>
   ));
 }
@@ -27,9 +29,7 @@ const fetchCategoryList = async () => {
 let categoryList = await fetchCategoryList();
 
 export default function CategoryNavi({ currentCategory }) {
-  useEffect(() => {
-    console.log('categoryList is called? ', !!categoryList);
-  }, [categoryList]);
+  const navigate = useNavigate();
   return (
     <div className="categoryNavi">
       {categoryList !== undefined ? (
@@ -39,10 +39,11 @@ export default function CategoryNavi({ currentCategory }) {
               currentCategory ? '' : 'activeCategory'
             }`}
             key={`all`}
+            onClick={() => navigate('/products')}
           >
-            <a href={`/products/`}>All</a>
+            <div>All</div>
           </div>
-          {renderNavi(categoryList, currentCategory)}
+          {renderNavi(categoryList, currentCategory, navigate)}
         </>
       ) : (
         <p>Loading...</p>
