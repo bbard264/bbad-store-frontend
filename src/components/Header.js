@@ -17,7 +17,7 @@ export default function Header() {
       <div className="fixedHeader white"></div>
       <div className="fixedHeader">
         <div className="leftHeader">
-          <div className="logo" onClick={() => navigate('/')}>
+          <div className="logo" onClick={() => navigate('/home')}>
             <img src={bbadlogo} alt="bbadlogo"></img>
             <div className="brandname">.bbad-shop</div>
           </div>

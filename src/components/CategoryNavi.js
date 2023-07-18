@@ -2,37 +2,46 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../styles/components/CategoryNavi.css';
+import CatgoryLastpage from '../config/services/CatagoryLastpage';
 
-function renderNavi(naviList, currentCategory, navigate) {
+function renderNavi(naviObj, currentCategory, navigate) {
+  const naviList = Object.values(naviObj);
+  naviList.pop();
   return naviList.map((category) => (
     <div
       className={`categoryLink ${
-        category._id === currentCategory ? 'activeCategory' : ''
+        category.value._id === currentCategory ? 'activeCategory' : ''
       }`}
-      key={category._id}
-      onClick={() => navigate(`/products/${category._id}`)}
+      key={category.value._id}
+      onClick={() => navigate(`/products/${category.value._id}`)}
     >
-      <div>{category.category_name}</div>
+      <div>{category.value.category_name}</div>
     </div>
   ));
 }
 
 const fetchCategoryList = async () => {
   try {
-    const resCategoryList = await axios.get('/api/category/getcategorylist');
-    return resCategoryList.data;
+    const apilink = '/api/category/getCategoryList&Lastpage';
+    console.log('requestAPI', apilink);
+    const response = await axios.get(apilink);
+    await CatgoryLastpage.setCatgoryLastpage(response.data);
   } catch (error) {
     console.error('Failed to fetch products:', error);
   }
 };
 
-let categoryList = await fetchCategoryList();
+if (!CatgoryLastpage.getCatgoryLastpage()) {
+  await fetchCategoryList();
+}
 
 export default function CategoryNavi({ currentCategory }) {
   const navigate = useNavigate();
+  const categoryMap = CatgoryLastpage.getCatgoryLastpage();
+
   return (
     <div className="categoryNavi">
-      {categoryList !== undefined ? (
+      {categoryMap !== undefined ? (
         <>
           <div
             className={`categoryLink ${
@@ -43,7 +52,7 @@ export default function CategoryNavi({ currentCategory }) {
           >
             <div>All</div>
           </div>
-          {renderNavi(categoryList, currentCategory, navigate)}
+          {renderNavi(categoryMap, currentCategory, navigate)}
         </>
       ) : (
         <p>Loading...</p>

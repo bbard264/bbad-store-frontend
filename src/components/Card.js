@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import addIcon from '../assets/icon/add.png';
 import cartIcon from '../assets/icon/cart.png';
@@ -14,7 +14,8 @@ export default function Card({ product }) {
     navigate(
       `/product-detail/${
         'id=' + productIdUrl.product_id + '/' + productIdUrl.product_url_name
-      }`
+      }`,
+      { state: { product: product } }
     );
   }
 

@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import '../styles/pages/Login.css';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import Token from '../config/services/Token';
 
 const initialState = {
   email: {
@@ -59,11 +60,12 @@ const reducer = (state, action) => {
 
 const login = async (loginData) => {
   try {
-    const response = await axios.post('/api/user/login', loginData);
-    console.log(response.data);
+    const apilink = '/api/user/login';
+    const response = await axios.post(apilink, loginData);
+    console.log('requestAPI', apilink);
     return response.data;
   } catch (error) {
-    if (error.name === 'AxiosError') {
+    if (error.response.status === 500) {
       return {
         canLogin: false,
         message: "Can't Login, Please try again later",
@@ -73,7 +75,7 @@ const login = async (loginData) => {
   }
 };
 
-export default function Login() {
+export default function Login(porps) {
   const navigate = useNavigate();
   const [state, dispatch] = useReducer(reducer, initialState);
 
@@ -106,30 +108,24 @@ export default function Login() {
       email: state.email.value,
       password: state.password.value,
     };
-    console.log(loginData);
+
     const responseLogin = await login(loginData);
+    dispatch({
+      type: 'UPDATE_COUNT_LOGIN',
+      payload: { value: state.countLogin + 1 },
+    });
 
     if (responseLogin.token) {
       window.alert(responseLogin.message);
+      Token.setToken(responseLogin.token);
+      porps.setRole('user');
       navigate('/');
       return;
     }
 
-    if (!responseLogin.canLogin) {
-      await dispatch({
-        type: 'UPDATE_ERROR_MESSAGE',
-        payload: { value: responseLogin.message },
-      });
-    }
-    if (responseLogin.noEmailPass) {
-      await dispatch({
-        type: 'UPDATE_ERROR_MESSAGE',
-        payload: { value: responseLogin.message },
-      });
-    }
-    await dispatch({
-      type: 'UPDATE_COUNT_LOGIN',
-      payload: { value: state.countLogin + 1 },
+    dispatch({
+      type: 'UPDATE_ERROR_MESSAGE',
+      payload: { value: responseLogin.message },
     });
   };
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import { useParams, useLocation } from 'react-router-dom';
+import axios from '../config/axios';
 import '../styles/pages/ProductDetail.css';
 import Header from '../components/Header';
 import ArrowCorner from '../components/subcomponents/ArrowCorner';
@@ -590,22 +590,25 @@ async function fetchProduct(productId) {
 
 export default function ProductDetail() {
   const { productId } = useParams();
+  const location = useLocation();
   const [product, setProduct] = useState(null);
 
   useEffect(() => {
     async function getProduct() {
       try {
-        const fetchedProduct = await fetchProduct(productId.slice(3));
-        setProduct(fetchedProduct);
+        if (location.state) {
+          setProduct(location.state.product);
+        } else {
+          const fetchedProduct = await fetchProduct(productId.slice(3));
+          setProduct(fetchedProduct);
+        }
       } catch (error) {
         console.error(error);
       }
     }
 
     getProduct();
-  }, []);
-
-  //#endregion
+  }, [location.state]);
 
   return (
     <div>

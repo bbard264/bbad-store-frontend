@@ -1,41 +1,36 @@
 import './App.css';
-import { Component } from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Home from './pages/Home';
-import Products from './pages/Products';
-import ProductDetail from './pages/ProductDetail';
-import Cart from './pages/Cart';
-import Order from './pages/Order';
-import User from './pages/User';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import Page404 from './pages/404';
+import { useState } from 'react';
+import { BrowserRouter } from 'react-router-dom';
+import CreateRoutes from './config/CreateRoutes';
+import Token from './config/services/Token';
 
-class App extends Component {
-  render() {
-    return (
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/order" element={<Order />} />
-          <Route
-            path="/product-detail/:productId/:producturl"
-            element={<ProductDetail />}
-          />
-          <Route path="/products/:routeParameter?" element={<Products />} />
-          <Route
-            path="/products/:routeParameter/:routeParameter2?"
-            element={<Products />}
-          />
-          <Route path="/user" element={<User />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/*" element={<Page404 />} />
-        </Routes>
-      </BrowserRouter>
-    );
-  }
+function App() {
+  const [role, setRole] = useState(Token.getRole());
+  console.log(role);
+
+  return (
+    <BrowserRouter>
+      <CreateRoutes role={role} setRole={setRole} />
+    </BrowserRouter>
+  );
 }
 
 export default App;
+
+// {/* <Routes>
+// <Route path="/" element={<Home />} />
+// <Route path="/cart" element={<Cart />} />
+// <Route path="/order" element={<Order />} />
+// <Route
+//   path="/product-detail/:productId/:producturl"
+//   element={<ProductDetail />}
+// />
+// <Route
+//   path="/products/:routeParameter?/:routeParameter2?"
+//   element={<Products />}
+// />
+// <Route path="/user" element={<User />} />
+// <Route path="/login" element={<Login />} />
+// <Route path="/register" element={<Register />} />
+// <Route path="/*" element={<Page404 />} />
+// </Routes> */}

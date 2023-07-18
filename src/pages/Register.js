@@ -1,6 +1,7 @@
 import React, { useReducer, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../config/axios';
 import { useNavigate } from 'react-router-dom';
+import checkValue from '../config/services/CheckValueValidated';
 import '../styles/pages/Register.css';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -9,15 +10,15 @@ const initialState = {
   registerInfo: {
     email: {
       value: '',
-      validator: { required: true },
+      validator: { required: true, maxLength: 100 },
       error: { status: true, message: '', isTouched: false },
     },
 
-    displayName: {
+    displayname: {
       value: '',
       validator: {
         required: true,
-
+        maxLength: 50,
         minLength: 4,
       },
       error: { status: true, message: '', isTouched: false },
@@ -25,82 +26,18 @@ const initialState = {
 
     password: {
       value: '',
-      validator: { required: true, minLength: 8, confirmPassword: '' },
+      validator: {
+        required: true,
+        minLength: 8,
+        maxLength: 50,
+        confirmPassword: '',
+      },
       error: { status: true, message: '', isTouched: false },
     },
   },
   errorMessage: '',
   isPassValidate: false,
 };
-
-function checkValue(fieldCheck, validator) {
-  const error = { status: true, message: '', isTouched: true };
-  if (!validator) {
-    error.status = false;
-    error.isTouched = true;
-    return;
-  }
-  let value = fieldCheck.value;
-  let errorMessage = '';
-  let validatorRequiredCheck = true;
-  let validatorMinLengthCheck = true;
-  let validatorConfirmPasswordCheck = true;
-
-  if (validator.required) {
-    if (value !== '') {
-      validatorRequiredCheck = true;
-    } else {
-      validatorRequiredCheck = false;
-      if (validator.required) {
-        if (errorMessage === '') {
-          errorMessage = 'Required';
-        } else {
-          errorMessage += ' | Required';
-        }
-      }
-    }
-  }
-
-  if (validator.minLength) {
-    if (value.length >= validator.minLength) {
-      validatorMinLengthCheck = true;
-    } else {
-      validatorMinLengthCheck = false;
-      if (validator.minLength) {
-        if (errorMessage === '') {
-          errorMessage = `Need more than ${validator.minLength - 1}`;
-        } else {
-          errorMessage += ` | Need more than ${validator.minLength - 1}`;
-        }
-      }
-    }
-  }
-
-  if (validator.confirmPassword) {
-    if (value === validator.confirmPassword) {
-      validatorConfirmPasswordCheck = true;
-    } else {
-      validatorConfirmPasswordCheck = false;
-      if (validator.confirmPassword) {
-        if (errorMessage === '') {
-          errorMessage = `Passwords didn't matched`;
-        } else {
-          errorMessage += ` | Passwords didn't matched`;
-        }
-      }
-    }
-  }
-
-  error.status = !(
-    validatorRequiredCheck &&
-    validatorMinLengthCheck &&
-    validatorConfirmPasswordCheck
-  );
-  error.message = errorMessage;
-  error.isTouched = true;
-
-  return error;
-}
 
 function reducer(state, action) {
   switch (action.type) {
@@ -123,8 +60,7 @@ function reducer(state, action) {
         };
 
         updatedState.registerInfo.password.error = checkValue(
-          updatedState.registerInfo.password,
-          updatedState.registerInfo.password.validator
+          updatedState.registerInfo.password
         );
       } else {
         updatedState = {
@@ -139,8 +75,7 @@ function reducer(state, action) {
         };
 
         updatedState.registerInfo[field].error = checkValue(
-          updatedState.registerInfo[field],
-          updatedState.registerInfo[field].validator
+          updatedState.registerInfo[field]
         );
       }
 
@@ -182,7 +117,9 @@ function reducer(state, action) {
 const postRegisterUser = async (registerData) => {
   console.log('sending registerData to backend');
   try {
-    const response = await axios.post('/api/user/register', registerData);
+    const apilink = '/api/user/register';
+    console.log('requestAPI', apilink);
+    const response = await axios.post(apilink, registerData);
     return response.data;
   } catch (error) {
     return error.response.data;
@@ -208,7 +145,7 @@ export default function Register() {
       console.log('validate pass by frontend');
       let registData = {
         email: state.registerInfo.email.value,
-        displayName: state.registerInfo.displayName.value,
+        displayname: state.registerInfo.displayname.value,
         password: state.registerInfo.password.value,
       };
       const confirmed = window.confirm('Confirm your infomation?');
@@ -216,7 +153,7 @@ export default function Register() {
         const response = await postRegisterUser(registData);
         if (response.registerSuccess) {
           window.alert(
-            `Register Success!! Welcome ${state.registerInfo.displayName.value}`
+            `Register Success!! Welcome ${state.registerInfo.displayname.value}`
           );
           navigate('/login');
           return;
@@ -233,10 +170,10 @@ export default function Register() {
               },
             });
           }
-          if (response.registerError.displayNameDup) {
+          if (response.registerError.displaynameDup) {
             dispatch({
               type: 'UPDATE_ERROR',
-              field: 'displayName',
+              field: 'displayname',
               payload: {
                 status: true,
                 message: 'This Name is already taked',
@@ -264,7 +201,7 @@ export default function Register() {
   useEffect(() => {
     const isAllError =
       state.registerInfo.email.error.status ||
-      state.registerInfo.displayName.error.status ||
+      state.registerInfo.displayname.error.status ||
       state.registerInfo.password.error.status;
     dispatch({
       type: 'UPDATE_IsPassValidate',
@@ -272,7 +209,7 @@ export default function Register() {
     });
   }, [
     state.registerInfo.email.error.status ||
-      state.registerInfo.displayName.error.status ||
+      state.registerInfo.displayname.error.status ||
       state.registerInfo.password.error.status,
   ]);
 
@@ -322,20 +259,20 @@ export default function Register() {
               <label>
                 <input
                   className={`registerInput${
-                    state.registerInfo.displayName.error.status &&
-                    state.registerInfo.displayName.error.isTouched
+                    state.registerInfo.displayname.error.status &&
+                    state.registerInfo.displayname.error.isTouched
                       ? ' isError'
                       : ''
                   }`}
                   type="text"
-                  name="displayName"
-                  value={state.registerInfo.displayName.value}
+                  name="displayname"
+                  value={state.registerInfo.displayname.value}
                   onChange={handleValueChange}
                   placeholder="Your name ..."
                 />
               </label>
               <div className="warningMessage-register">
-                {state.registerInfo.displayName.error.message}
+                {state.registerInfo.displayname.error.message}
               </div>
             </div>
           </div>

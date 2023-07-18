@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../config/axios';
 import '../styles/pages/Products.css';
+import CatgoryLastpage from '../config/services/CatagoryLastpage';
 
 import Header from '../components/Header';
 import CategoryNavi from '../components/CategoryNavi';
@@ -95,104 +95,92 @@ function pageNavi(numPage, lastNumPage, handlePageChange) {
   );
 }
 
-const fetchProductList = async (category, page, setProductList) => {
+const fetchProductList = async (category, page) => {
   let apilink = `/api/product/getProductsList/${category ? category : 'all'}${
     page ? '/' + page : ''
   }`;
 
   try {
+    console.log('requestAPI', apilink);
     const resProductList = await axios.get(apilink);
-    setProductList(resProductList.data);
-    return true;
+    return resProductList.data;
   } catch (error) {
     console.error('Failed to fetch products:', error);
-    return false;
-  }
-};
-
-const fetchLastPage = async (category, setLastPage) => {
-  let apilink = `/api/product/getLastPage${category ? '/' + category : ''}`;
-
-  try {
-    const resLastPage = await axios.get(apilink);
-    setLastPage(resLastPage.data);
-    return true;
-  } catch (error) {
-    console.error('Failed to fetch last page num:', error);
-    return false;
   }
 };
 
 export default function Products() {
   const { routeParameter, routeParameter2 } = useParams();
-  let numPage = 1;
-  let category = '';
-
-  if (!routeParameter) {
-  } else if (!routeParameter2) {
-    if (parseInt(routeParameter)) {
-      numPage = parseInt(routeParameter);
-    } else {
-      category = routeParameter;
-    }
-  } else {
-    category = routeParameter;
-    numPage = parseInt(routeParameter2);
-  }
-
+  const [state, setState] = useState({
+    numPage: 1,
+    category: { category_id: '', lastPage: 1 },
+    productList: [],
+  });
   const navigate = useNavigate();
-  const [productList, setProductList] = useState(null);
-  const [lastPage, setLastPage] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const lastPageFetchSuccessful = await fetchLastPage(
-        category,
-        setLastPage
-      );
-
-      if (!lastPageFetchSuccessful) {
-        navigate('/404'); // Redirect to the 404 page if any fetch fails
+    const newlocation = { numPage: 1, category: { category_id: '' } };
+    if (routeParameter) {
+      if (!routeParameter2) {
+        if (parseInt(routeParameter)) {
+          newlocation.numPage = parseInt(routeParameter);
+          newlocation.category.category_id = '';
+        } else {
+          newlocation.category.category_id = routeParameter;
+        }
+      } else {
+        newlocation.category.category_id = routeParameter;
+        newlocation.numPage = parseInt(routeParameter2);
       }
-    };
+    }
 
-    fetchData();
-  }, [category]);
+    async function fetchData(props) {
+      try {
+        if (props.category.category_id === '') {
+          props.category.lastPage = await CatgoryLastpage.getCatgoryLastpage()[
+            'all'
+          ].lastPage;
+        } else {
+          props.category.lastPage = await CatgoryLastpage.getCatgoryLastpage()[
+            props.category.category_id
+          ].lastPage;
+        }
+        props.productList = await fetchProductList(
+          props.category.category_id,
+          props.numPage
+        );
+        setState(props);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const productListFetchSuccessful = await fetchProductList(
-        category,
-        numPage,
-        setProductList
-      );
+        // Handle the fetched data or perform other actions
+      } catch (error) {
+        // Handle any errors that occurred during fetching
 
-      if (!productListFetchSuccessful) {
-        navigate('/404'); // Redirect to the 404 page if any fetch fails
+        console.error(error);
       }
-    };
+    }
 
-    fetchData();
+    fetchData(newlocation);
+
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [numPage, category]);
+  }, [routeParameter, routeParameter2]);
 
-  function handlePageChange(newPage) {
-    if (category === '') {
+  const handlePageChange = (newPage) => {
+    if (state.category.category_id === '') {
       navigate(`/products/${newPage}`);
     } else {
-      navigate(`/products/${category}/${newPage}`);
+      navigate(`/products/${state.category.category_id}/${newPage}`);
     }
-  }
+  };
 
   return (
     <div className="ProductsPage">
       <Header />
-      <CategoryNavi currentCategory={category} />
-      {productList && lastPage ? (
+      <CategoryNavi currentCategory={state.category.category_id} />
+      {state.productList && state.category.lastPage ? (
         <React.Fragment>
-          {pageNavi(numPage, lastPage, handlePageChange)}
-          {mainContent(productList, numPage)}
-          {pageNavi(numPage, lastPage, handlePageChange)}
+          {pageNavi(state.numPage, state.category.lastPage, handlePageChange)}
+          {mainContent(state.productList, state.numPage)}
+          {pageNavi(state.numPage, state.category.lastPage, handlePageChange)}
           {/* <RecommendationsContainter /> */}
         </React.Fragment>
       ) : (
