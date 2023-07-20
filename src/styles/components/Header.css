@@ -85,12 +85,11 @@ input:focus {
 
 .naviLink {
   direction: rtl;
-  margin-left: 1.5em;
+  margin-left: 1.25em;
   cursor: pointer;
   border-radius: 20px;
-  border: 5px solid #ffffff;
-  padding: 0 0.25em;
-  transition: box-shadow 0.3s ease;
+  padding: 0 0.5em;
+  transition: all 0.3s ease;
   display: flex;
   align-items: center;
 }
@@ -100,8 +99,9 @@ input:focus {
 }
 
 .naviLink:hover {
-  border: 5px solid #ffffff;
   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
+  color: white;
+  background-color: black;
 }
 
 .iconLink {
