@@ -6,7 +6,6 @@ import Token from './config/services/Token';
 
 function App() {
   const [role, setRole] = useState(Token.getRole());
-  console.log(role);
 
   return (
     <BrowserRouter>

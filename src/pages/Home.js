@@ -11,11 +11,8 @@ import testimg1691 from '../assets/ex_products/16-9test2.jpg';
 import testimg1692 from '../assets/ex_products/16-9test3.jpg';
 import testimg1693 from '../assets/ex_products/16-9test5.jpg';
 // --------------------- MainContent import ------------------------------------------
-import Card from '../components/Card.js';
-import product1 from '../assets/ex_products/OC_vince.jpg';
-import product2 from '../assets/ex_products/very hot.jpg';
+// import Card from '../components/Card.js';
 
-console.log('OnTop');
 // ---------------------------- CoverContent()--------------------------------------------
 
 function centerPoint(imgChoosingIndex, numCircle, onClick) {
@@ -54,7 +51,7 @@ function renderImgCover(imgList, topImg, lastImg) {
           className="img-cover onTop"
           key={index}
           src={img}
-          alt={`Image ${index}`}
+          alt={`${index}`}
         />
       );
     } else if (lastImg === index) {
@@ -63,17 +60,12 @@ function renderImgCover(imgList, topImg, lastImg) {
           className="img-cover previous"
           key={index}
           src={img}
-          alt={`Image ${index}`}
+          alt={`${index}`}
         />
       );
     } else {
       return (
-        <img
-          className="img-cover"
-          key={index}
-          src={img}
-          alt={`Image ${index}`}
-        />
+        <img className="img-cover" key={index} src={img} alt={`${index}`} />
       );
     }
   });
@@ -131,118 +123,114 @@ function CoverContent() {
 
 // ----------------------------- MainContent()----------------------------------------------------
 
-class Product {
-  constructor(
-    name,
-    photo,
-    price,
-    favorite = false,
-    salesValue = 0,
-    promotion = false,
-    promName = '',
-    promPrice = 0,
-    promDayleft = 0
-  ) {
-    this.name = name;
-    this.photo = photo;
-    this.price = price;
-    this.favorite = favorite; // true or false // get from user
-    this.salesValue = salesValue;
-    this.promotion = promotion; // true or false only // get from admin
-    this.promName = promName; // if promotion = false, this should be empty
-    this.promPrice = promPrice; // if promotion = false, this should be empty
-    this.promDayleft = promDayleft; // if promotion = false, this should be empty
-  }
-}
+// class Product {
+//   constructor(
+//     name,
+//     photo,
+//     price,
+//     favorite = false,
+//     salesValue = 0,
+//     promotion = false,
+//     promName = '',
+//     promPrice = 0,
+//     promDayleft = 0
+//   ) {
+//     this.name = name;
+//     this.photo = photo;
+//     this.price = price;
+//     this.favorite = favorite; // true or false // get from user
+//     this.salesValue = salesValue;
+//     this.promotion = promotion; // true or false only // get from admin
+//     this.promName = promName; // if promotion = false, this should be empty
+//     this.promPrice = promPrice; // if promotion = false, this should be empty
+//     this.promDayleft = promDayleft; // if promotion = false, this should be empty
+//   }
+// }
 
-let promTestProd = new Product(
-  'promTestProd',
-  product1,
-  '4999',
-  true,
-  300,
-  true,
-  'TestProm',
-  '300',
-  '24'
-);
-let testProd = new Product(
-  'testProd',
-  product2,
-  '3000',
-  false,
-  300,
-  false,
-  '',
-  '',
-  ''
-);
+// let promTestProd = new Product(
+//   'promTestProd',
+//   product1,
+//   '4999',
+//   true,
+//   300,
+//   true,
+//   'TestProm',
+//   '300',
+//   '24'
+// );
+// let testProd = new Product(
+//   'testProd',
+//   product2,
+//   '3000',
+//   false,
+//   300,
+//   false,
+//   '',
+//   '',
+//   ''
+// );
 
-function SeeMoreCard() {
-  return (
-    <div className="seeMoreCard">
-      <div>
-        <div>SEE MORE</div>
-        <div>PRODUCTS</div>
-      </div>
-    </div>
-  );
-}
+// function SeeMoreCard() {
+//   return (
+//     <div className="seeMoreCard">
+//       <div>
+//         <div>SEE MORE</div>
+//         <div>PRODUCTS</div>
+//       </div>
+//     </div>
+//   );
+// }
 
-function renderProductCards(products, handleFavoriteChange) {
-  return products.map((product, index) => (
-    <div className="cardBox" key={index}>
-      <Card
-        product={product}
-        index={index}
-        onFavoriteChange={handleFavoriteChange}
-      />
-    </div>
-  ));
-}
+// function renderProductCards(products, handleFavoriteChange) {
+//   return products.map((product, index) => (
+//     <div className="cardBox" key={index}>
+//       <Card
+//         product={product}
+//         index={index}
+//         onFavoriteChange={handleFavoriteChange}
+//       />
+//     </div>
+//   ));
+// }
 
-function MainContent() {
-  function handleFavoriteChange(index, updatedFavorite) {
-    const updatedProducts = [...products];
-    updatedProducts[index].favorite = updatedFavorite;
-    setProducts(updatedProducts);
-  }
+// function MainContent() {
+//   function handleFavoriteChange(index, updatedFavorite) {
+//     const updatedProducts = [...products];
+//     updatedProducts[index].favorite = updatedFavorite;
+//     setProducts(updatedProducts);
+//   }
 
-  const [products, setProducts] = useState([
-    testProd,
-    promTestProd,
-    testProd,
-    promTestProd,
-    testProd,
-    testProd,
-    testProd,
-    testProd,
-  ]);
+//   const [products, setProducts] = useState([
+//     testProd,
+//     promTestProd,
+//     testProd,
+//     promTestProd,
+//     testProd,
+//     testProd,
+//     testProd,
+//     testProd,
+//   ]);
 
-  return (
-    <div className="mainContent">
-      {renderProductCards(products, handleFavoriteChange)}
-      <div className="cardBox">
-        <SeeMoreCard />
-      </div>
-    </div>
-  );
-}
+//   return (
+//     <div className="mainContent">
+//       {renderProductCards(products, handleFavoriteChange)}
+//       <div className="cardBox">
+//         <SeeMoreCard />
+//       </div>
+//     </div>
+//   );
+// }
 
 // --------------------- MainContent()------------------------------------------
 
-class Home extends React.Component {
-  render() {
-    return (
-      <div>
-        <Header />
-        <CoverContent />
-        <CategoryNavi />
-        {/* <MainContent /> */}
-        <Footer />
-      </div>
-    );
-  }
+export default function Home() {
+  return (
+    <div>
+      <Header />
+      <CoverContent />
+      <CategoryNavi />
+      {/* <MainContent /> */}
+      <Footer />
+    </div>
+  );
 }
-
-export default Home;

@@ -6,7 +6,10 @@ import Token from '../config/services/Token';
 import '../styles/pages/User.css';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import kuri from '../assets/ex_products/kuri.jpg';
+import Cropping from '../components/Cropping';
+import profileTemp from '../assets/temp_img/profile_temp.png';
+import UserDataStorage from '../config/services/UserDataStorage';
+import RESTapi from '../config/services/RESTapi';
 
 const userPageList = ['profile', 'account'];
 
@@ -72,8 +75,6 @@ function reducer(state, action) {
       }
 
       return { ...updatedState, isPassValidate: isPassValidateProfile };
-
-      return updatedState;
     case 'UPDATE_ADDRESS':
       const updatedAddress = {
         ...state,
@@ -185,12 +186,77 @@ function reducer(state, action) {
       }
 
       return { ...updatedUserAcc, isPassValidate: isPassValidateACC };
+    case 'UPDATE_ERROR_MESSAGE':
+      return {
+        ...state,
+        errorMessage: action.payload.value,
+      };
     case 'RESET':
       return action.payload;
     default:
       throw new Error(`Unhandled action type: ${action.type}`);
   }
 }
+
+const fetchUpdateUser = async (props) => {
+  const { userId, newImg, newInfo } = props;
+  const apilink = '/api/user/updateUser';
+  console.log('Request API', apilink);
+
+  try {
+    if (newImg && !newInfo) {
+      // If newImg exists but newInfo is null, send only the image data
+      const imageResponse = await axios.get(newImg, { responseType: 'blob' });
+      const imageBlob = imageResponse.data;
+
+      // Create a new FormData object and append the image blob as a file
+      const formData = new FormData();
+      formData.append('img', imageBlob, `${userId}-profile100x100.jpg`);
+      formData.append('photo', `${userId}-profile100x100.jpg`);
+
+      await axios.put(apilink, formData);
+      UserDataStorage.setUserImage(newImg);
+    } else if (newImg && newInfo) {
+      // If both newImg and newInfo exist, send both image and other data
+
+      // Fetch the image using Axios to get the image blob data
+      const imageResponse = await axios.get(newImg, { responseType: 'blob' });
+      const imageBlob = imageResponse.data;
+
+      // Create a new FormData object and append the image blob as a file
+      const formData = new FormData();
+      formData.append('img', imageBlob, `${userId}-profile100x100.jpg`); // Set the image name to the value of newInfo.photo
+
+      // Append other data from newInfo as fields
+      formData.append('photo', `${userId}-profile100x100.jpg`);
+      formData.append('displayname', newInfo.displayname);
+      formData.append('email', newInfo.email);
+      formData.append('phone', newInfo.phone);
+      formData.append('gender', newInfo.gender);
+      formData.append('birthdate', newInfo.birthdate);
+      formData.append('address[address1]', newInfo.address.address1);
+      formData.append('address[address2]', newInfo.address.address2);
+      formData.append('address[district]', newInfo.address.district);
+      formData.append('address[province]', newInfo.address.province);
+      formData.append('address[postcode]', newInfo.address.postcode);
+
+      const response = await axios.put(apilink, formData);
+      UserDataStorage.setUserImage(newImg);
+      if (response.data.updateResult) {
+        RESTapi.fetchUserInfo();
+      }
+    } else if (!newImg && newInfo) {
+      // If newImg is null, send only newInfo
+      const response = await axios.put(apilink, newInfo);
+      if (response.data.updateResult) {
+        RESTapi.fetchUserInfo();
+      }
+    }
+    window.location.reload();
+  } catch (error) {
+    console.error('Error updating data:', error);
+  }
+};
 
 function UserProfile({ userData }) {
   const originUserProfileInfo = {
@@ -256,10 +322,34 @@ function UserProfile({ userData }) {
     isPassValidate: true,
   };
   const [userProInfo, dispatch] = useReducer(reducer, originUserProfileInfo);
+  const [uploadedPhoto, setUploadedPhoto] = useState(null);
+  const [croppedImg, setCroppedImgage] = useState(null);
+  const [showCrop, setShowCrop] = useState(false);
+  const file = document.querySelector('.inputUploadPhoto');
+
+  const handlePhotoChange = (e) => {
+    const selectedFile = e.target.files[0];
+
+    if (selectedFile) {
+      const objectURL = URL.createObjectURL(selectedFile);
+      setUploadedPhoto(objectURL);
+      setShowCrop(true);
+    } else {
+      console.error('No file selected.');
+      setUploadedPhoto();
+      setCroppedImgage();
+    }
+  };
+
+  const onCanclePhotoCrop = () => {
+    setUploadedPhoto();
+    setShowCrop(false);
+
+    file.value = '';
+  };
 
   const handleValueChange = async (e) => {
     const { name, value } = e.target;
-    console.log(name, value);
 
     if (
       Object.keys(originUserProfileInfo.userProfileInfo.address).includes(name)
@@ -276,41 +366,54 @@ function UserProfile({ userData }) {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
+
     if (!userProInfo.isPassValidate) {
       console.log("..don't pass validate..");
       return;
     }
-    if (JSON.stringify(userProInfo) === JSON.stringify(originUserProfileInfo)) {
+
+    const isInfoChanged =
+      JSON.stringify(userProInfo) !== JSON.stringify(originUserProfileInfo);
+
+    if (!isInfoChanged && !croppedImg) {
       console.log("..don't pass validate..");
       return;
     }
-    const confirmed = window.confirm('Confirm your infomation?');
-    if (confirmed) {
-      let newInfo = {
-        displayname: userProInfo.userProfileInfo.displayname.value,
-        email: userProInfo.userProfileInfo.email.value,
-        phone: userProInfo.userProfileInfo.phone.value,
-        gender: userProInfo.userProfileInfo.gender.value,
-        birthdate: userProInfo.userProfileInfo.birthdate.value,
-        address: {
-          address1: userProInfo.userProfileInfo.address.address1.value,
-          address2: userProInfo.userProfileInfo.address.address2.value,
-          district: userProInfo.userProfileInfo.address.district.value,
-          province: userProInfo.userProfileInfo.address.province.value,
-          postcode: userProInfo.userProfileInfo.address.postcode.value,
-        },
-      };
-      console.log(newInfo);
-      console.log('sending new info to backend..');
-      return;
-    } else {
+
+    const confirmed = window.confirm('Confirm your information?');
+    if (!confirmed) {
       return;
     }
+
+    const newInfo = isInfoChanged
+      ? {
+          displayname: userProInfo.userProfileInfo.displayname.value,
+          email: userProInfo.userProfileInfo.email.value,
+          phone: userProInfo.userProfileInfo.phone.value,
+          gender: userProInfo.userProfileInfo.gender.value,
+          birthdate: userProInfo.userProfileInfo.birthdate.value,
+          address: {
+            address1: userProInfo.userProfileInfo.address.address1.value,
+            address2: userProInfo.userProfileInfo.address.address2.value,
+            district: userProInfo.userProfileInfo.address.district.value,
+            province: userProInfo.userProfileInfo.address.province.value,
+            postcode: userProInfo.userProfileInfo.address.postcode.value,
+          },
+        }
+      : undefined;
+
+    fetchUpdateUser({
+      userId: userData._id,
+      newImg: croppedImg,
+      newInfo: newInfo,
+    });
   };
 
   const handleReset = () => {
+    setCroppedImgage();
+    setUploadedPhoto();
     dispatch({ type: 'RESET', payload: originUserProfileInfo });
   };
 
@@ -319,10 +422,48 @@ function UserProfile({ userData }) {
       <div className="uPPhotoLine">
         <div className="uHeadLine">photo</div>
         <div className="uPphotoContainer">
+          {showCrop ? (
+            <Cropping
+              uploadedPhoto={uploadedPhoto}
+              setCroppedImage={setCroppedImgage}
+              onCanclePhotoCrop={onCanclePhotoCrop}
+              setShowCrop={setShowCrop}
+            />
+          ) : (
+            <></>
+          )}
           <div className="uPphotoBox">
-            <img src={kuri} alt="userData.photo" />
+            <img
+              className="userPhoto"
+              src={
+                croppedImg
+                  ? croppedImg
+                  : userData.photo
+                  ? UserDataStorage.getUserImage()
+                  : profileTemp
+              }
+              alt="user"
+            />
           </div>
-          <button className="uButton">Change</button>
+
+          <label htmlFor="uploadPhoto" className="uButton upload">
+            <div>+</div>
+          </label>
+          <input
+            className="inputUploadPhoto"
+            type="file"
+            name="uploadPhoto"
+            id="uploadPhoto"
+            onChange={handlePhotoChange}
+            title="Upload a photo"
+            placeholder="Choose a photo to upload"
+            onClick={(event) => {
+              event.currentTarget.value = null;
+            }}
+          />
+          <div id="fileName" className="file-name">
+            {croppedImg ? file.value.slice(12) : 'upload new photo'}
+          </div>
         </div>
       </div>
       <form
@@ -332,7 +473,9 @@ function UserProfile({ userData }) {
         onReset={handleReset}
       >
         <div className="uPNameBox">
-          <div className="uHeadLine">Name</div>
+          <label htmlFor="displayname" className="uHeadLine">
+            Name
+          </label>
           <div className="uWarningMessage">
             {userProInfo.userProfileInfo.displayname.error.message}
           </div>
@@ -340,8 +483,10 @@ function UserProfile({ userData }) {
             className="uinput"
             type="text"
             name="displayname"
+            id="displayname"
             value={userProInfo.userProfileInfo.displayname.value || ''}
             onChange={handleValueChange}
+            placeholder="your name...."
           />
         </div>
         <div className="uPGenderBox">
@@ -383,7 +528,9 @@ function UserProfile({ userData }) {
           </div>
         </div>
         <div className="uPEmailBox">
-          <div className="uHeadLine">Email</div>
+          <label htmlFor="email" className="uHeadLine">
+            Email
+          </label>
           <div className="uWarningMessage">
             {userProInfo.userProfileInfo.email.error.message}
           </div>
@@ -391,25 +538,37 @@ function UserProfile({ userData }) {
             className="uinput"
             type="email"
             name="email"
+            id="email"
             value={userProInfo.userProfileInfo.email.value || ''}
             onChange={handleValueChange}
+            placeholder="your email...."
           />
         </div>
         <div className="uPDoBBox">
-          <div className="uHeadLine">Date of Birth</div>
+          <label htmlFor="birthdate" className="uHeadLine">
+            Date of Birth
+          </label>
           <div className="uWarningMessage">
             {userProInfo.userProfileInfo.birthdate.error.message}
           </div>
           <input
             className="uinput"
             type="date"
-            name="date"
-            value={userProInfo.userProfileInfo.birthdate.value || ''}
+            id="birthdate"
+            name="birthdate"
+            value={
+              new Date(userProInfo.userProfileInfo.birthdate.value)
+                .toISOString()
+                .split('T')[0] || ''
+            }
             onChange={handleValueChange}
+            placeholder="YYYY-MM-DD"
           />
         </div>
         <div className="uPPhoneBox">
-          <div className="uHeadLine">Phone</div>
+          <label htmlFor="phone" className="uHeadLine">
+            Phone
+          </label>
           <div className="uWarningMessage">
             {userProInfo.userProfileInfo.phone.error.message}
           </div>
@@ -417,6 +576,7 @@ function UserProfile({ userData }) {
             className="uinput"
             type="tel"
             name="phone"
+            id="phone"
             value={userProInfo.userProfileInfo.phone.value || ''}
             onChange={handleValueChange}
             placeholder="your phone...."
@@ -428,42 +588,52 @@ function UserProfile({ userData }) {
             {userProInfo.userProfileInfo.address.postcode.error.message}
           </div>
           <div className="uPAddressContainer">
+            <label htmlFor="address1" />
             <input
               className="uinput uaddress"
               type="text"
               name="address1"
+              id="address1"
               value={userProInfo.userProfileInfo.address.address1.value || ''}
               onChange={handleValueChange}
               placeholder="your address...."
             />
+            <label htmlFor="address2" />
             <input
               className="uinput uaddress"
               type="text"
               name="address2"
+              id="address2"
               value={userProInfo.userProfileInfo.address.address2.value || ''}
               onChange={handleValueChange}
               placeholder="your address...."
             />
+            <label htmlFor="district" />
             <input
               className="uinput uaddress"
               type="text"
               name="district"
+              id="district"
               value={userProInfo.userProfileInfo.address.district.value || ''}
               onChange={handleValueChange}
               placeholder="district...."
             />
+            <label htmlFor="province" />
             <input
               className="uinput uaddress"
               type="text"
               name="province"
+              id="provinc"
               value={userProInfo.userProfileInfo.address.province.value || ''}
               onChange={handleValueChange}
               placeholder="province...."
             />
+            <label htmlFor="postcode" />
             <input
               className="uinput uaddress"
               type="num"
               name="postcode"
+              id="postcode"
               value={userProInfo.userProfileInfo.address.postcode.value || ''}
               onChange={handleValueChange}
               placeholder="postcode...."
@@ -482,6 +652,19 @@ function UserProfile({ userData }) {
     </div>
   );
 }
+
+const fetchChangeUserPassword = async (props) => {
+  const apilink = '/api/user/changePassword';
+  console.log('REQUEST API,', apilink);
+  try {
+    const response = await axios.put(apilink, props);
+    return response.data;
+  } catch (error) {
+    window.alert(`Can't change password, Please try again later`);
+    window.location.reload();
+    console.error('Failed to fetch user information:', error);
+  }
+};
 
 function UserAccount({ userData }) {
   const originalUserAccountInfo = {
@@ -512,36 +695,62 @@ function UserAccount({ userData }) {
 
   const handleValueChange = async (e) => {
     const { name, value } = e.target;
+    if (userAccInfo.errorMessage !== '') {
+      userAccInfo.errorMessage = '';
+    }
     dispatch({ type: 'UPDATE_USERACC', payload: { field: name, value } });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (
       !userAccInfo.isPassValidate ||
       userAccInfo.userAccountInfo.oldPassword.value === '' ||
       userAccInfo.userAccountInfo.newPassword.value === ''
     ) {
-      console.log("..don't pass validate..");
+      dispatch({
+        type: 'UPDATE_ERROR_MESSAGE',
+        payload: { value: 'Password have no change' },
+      });
       return;
     }
     if (
       userAccInfo.userAccountInfo.oldPassword.value ===
       userAccInfo.userAccountInfo.newPassword.value
     ) {
-      console.log("..don't pass validate..");
+      dispatch({
+        type: 'UPDATE_ERROR_MESSAGE',
+        payload: {
+          value: `Old password can't be New password`,
+        },
+      });
       return;
     }
     const confirmed = window.confirm('Confirm your infomation?');
     if (confirmed) {
-      console.log('sending new info to backend..');
       let newInfo = {
         oldPassword: userAccInfo.userAccountInfo.oldPassword.value,
         newPassword: userAccInfo.userAccountInfo.newPassword.value,
       };
-      console.log(newInfo);
+      const isChangePassword = await fetchChangeUserPassword(newInfo);
+      if (isChangePassword.changePassword) {
+        window.alert(isChangePassword.message);
+        window.location.reload();
+      } else {
+        window.alert(isChangePassword.message);
+        dispatch({
+          type: 'UPDATE_ERROR_MESSAGE',
+          payload: {
+            value: isChangePassword.message,
+          },
+        });
+      }
+
       return;
     } else {
+      setShowChangingPassword(false);
+      console.log('not confirm');
       return;
     }
   };
@@ -582,11 +791,7 @@ function UserAccount({ userData }) {
           />
         </div>
       </div>
-      <form
-        className="passwordLine"
-        onSubmit={handleSubmit}
-        onReset={handleReset}
-      >
+      <form className="passwordLine" onSubmit={handleSubmit}>
         <div className="uAPasswordBox">
           <div className="uHeadLine">Password</div>
           {showChangingPassword ? (
@@ -611,7 +816,10 @@ function UserAccount({ userData }) {
           <button
             className="uButton"
             type="button"
-            onClick={() => setShowChangingPassword(!showChangingPassword)}
+            onClick={() => {
+              setShowChangingPassword(!showChangingPassword);
+              handleReset();
+            }}
           >
             Change
           </button>
@@ -637,7 +845,10 @@ function UserAccount({ userData }) {
                 />
                 <div className="uAWarningMessage">
                   {userAccInfo.userAccountInfo.oldPassword.error.message === ''
-                    ? userAccInfo.userAccountInfo.newPassword.error.message
+                    ? userAccInfo.userAccountInfo.newPassword.error.message ===
+                      ''
+                      ? userAccInfo.errorMessage
+                      : userAccInfo.userAccountInfo.newPassword.error.message
                     : `old password is not valid`}
                 </div>
               </div>
@@ -660,7 +871,10 @@ function UserAccount({ userData }) {
                 <button
                   className="uButton reset"
                   type="reset"
-                  onClick={() => setShowChangingPassword(!showChangingPassword)}
+                  onClick={() => {
+                    setShowChangingPassword(!showChangingPassword);
+                    handleReset();
+                  }}
                 >
                   Cancel
                 </button>
@@ -730,22 +944,6 @@ function showContent(contentNow, userPageList, userData) {
   }
 }
 
-const fetchUserInfo = async (dispatch, setIsLoaded) => {
-  const apilink = '/api/user/getUserById';
-
-  try {
-    console.log('Request API:', apilink);
-    const response = await axios.get(apilink);
-    dispatch({
-      type: 'SET_USER',
-      payload: response.data.userInfo,
-    });
-    setIsLoaded(true);
-  } catch (error) {
-    console.error('Failed to fetch user information:', error);
-  }
-};
-
 export default function User() {
   const emptyUser = {
     _id: '',
@@ -775,7 +973,16 @@ export default function User() {
   }
 
   useEffect(() => {
-    fetchUserInfo(dispatch, setIsLoaded);
+    if (!Token.getToken()) {
+      UserDataStorage.removeUserData();
+      window.location.reload();
+    } else {
+      dispatch({
+        type: 'SET_USER',
+        payload: UserDataStorage.getUserData(),
+      });
+      setIsLoaded(true);
+    }
   }, []);
 
   function handleMenuClick(page) {

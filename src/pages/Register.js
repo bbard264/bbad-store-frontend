@@ -208,9 +208,9 @@ export default function Register() {
       payload: { field: 'isPassvalidate', value: !isAllError },
     });
   }, [
-    state.registerInfo.email.error.status ||
-      state.registerInfo.displayname.error.status ||
-      state.registerInfo.password.error.status,
+    state.registerInfo.email.error.status,
+    state.registerInfo.displayname.error.status,
+    state.registerInfo.password.error.status,
   ]);
 
   // let [showInfo, setShowInfo] = useState(false);

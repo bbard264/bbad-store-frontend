@@ -4,10 +4,6 @@
   width: 100%;
 }
 
-.userContainer div {
-  transition: all 0.3s ease;
-}
-
 .userNaviContainer {
   width: 40%;
   height: 45em;
@@ -100,7 +96,6 @@
   width: 100%;
 }
 
-.uPPhotoLine,
 .uPNameBox,
 .uPGenderBox,
 .uPEmailBox,
@@ -164,8 +159,17 @@
   font-weight: 900;
 }
 
+.uPPhotoLine {
+  width: 100%;
+  margin-bottom: 1em;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
 .uPphotoContainer {
   display: flex;
+  width: 100%;
   flex-direction: row;
   align-items: center;
   padding: 0 1em;
@@ -177,9 +181,10 @@
   width: 6em;
   overflow: hidden;
   margin-right: 1em;
+  border: #999 1px solid;
 }
 
-.uPphotoContainer img {
+.userPhoto {
   height: 100%;
   width: 100%;
   object-fit: cover;
@@ -245,4 +250,43 @@
 
 .uHeadLine.onClick:hover {
   color: red;
+}
+
+.inputUploadPhoto {
+  display: none;
+}
+
+.uButton.upload {
+  font-weight: 400;
+  border-radius: 50%;
+  height: 3em;
+  width: 3em;
+  padding: 0;
+  transform: none;
+  font-family: 'Prompt', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.uButton.upload div {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  margin: auto;
+  justify-content: center;
+  align-items: center;
+  font-size: 4em;
+}
+
+.file-name {
+  margin-left: 10px;
+  font-size: 14px;
+  color: #666;
 }

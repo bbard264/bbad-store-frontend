@@ -5,6 +5,7 @@ import '../styles/pages/Login.css';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Token from '../config/services/Token';
+import RESTapi from '../config/services/RESTapi';
 
 const initialState = {
   email: {
@@ -119,6 +120,7 @@ export default function Login(porps) {
       window.alert(responseLogin.message);
       Token.setToken(responseLogin.token);
       porps.setRole('user');
+      await RESTapi.fetchUserInfo();
       navigate('/');
       return;
     }
