@@ -1,11 +1,31 @@
 import './App.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import CreateRoutes from './config/CreateRoutes';
 import Token from './config/services/Token';
+import RESTapi from './config/services/RESTapi';
 
 function App() {
   const [role, setRole] = useState(Token.getRole());
+  console.log(role);
+  useEffect(() => {
+    async function checkAuthentication() {
+      try {
+        const isAuthenticated = await RESTapi.fetchCheckAuthen();
+        setRole(isAuthenticated ? 'user' : 'guest');
+      } catch (error) {
+        console.error('Error occurred:', error);
+      }
+    }
+
+    // Call the authentication function when the component mounts
+    if (role === 'guest') {
+      return;
+    } else {
+      checkAuthentication();
+      return;
+    }
+  }, []);
 
   return (
     <BrowserRouter>

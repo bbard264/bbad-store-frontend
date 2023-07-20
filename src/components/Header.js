@@ -39,20 +39,29 @@ export default function Header() {
             <div>Order</div>
           </div>
           <div className="iconLink" onClick={() => navigate('/favorite')}>
-            <img src={heart2} alt="favorite"></img>
+            <div className="iconBox">
+              <img src={heart2} alt="favorite" />
+            </div>
           </div>
           <div className="iconLink" onClick={() => navigate('/cart')}>
-            <img src={cart} alt="cart"></img>
+            <div className="iconBox">
+              <img src={cart} alt="cart" />
+            </div>
           </div>
           <div className="iconLink" onClick={() => navigate('/user')}>
-            <img
-              src={
-                UserDataStorage.getUserImage() ?? forceUpdate
-                  ? forceUpdate
-                  : user
-              }
-              alt="user"
-            ></img>
+            <div className="iconBox">
+              {UserDataStorage.getUserImage() ? (
+                <img
+                  src={UserDataStorage.getUserImage()}
+                  alt="user"
+                  className="haveProfile"
+                />
+              ) : forceUpdate ? (
+                <img src={forceUpdate} alt="user" className="haveProfile" />
+              ) : (
+                <img src={user} alt="user" />
+              )}
+            </div>
           </div>
         </div>
       </div>

@@ -110,18 +110,25 @@ export default function Login(porps) {
       password: state.password.value,
     };
 
-    const responseLogin = await login(loginData);
     dispatch({
       type: 'UPDATE_COUNT_LOGIN',
       payload: { value: state.countLogin + 1 },
     });
 
+    const responseLogin = await login(loginData);
+
     if (responseLogin.token) {
       window.alert(responseLogin.message);
       Token.setToken(responseLogin.token);
-      porps.setRole('user');
-      await RESTapi.fetchUserInfo();
-      navigate('/');
+
+      try {
+        // Wait for the fetchUserInfo() to complete before navigating.
+        await RESTapi.fetchUserInfo();
+        navigate('/');
+        porps.setRole('user');
+      } catch (error) {
+        console.error('Error fetching user info:', error);
+      }
       return;
     }
 

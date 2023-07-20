@@ -977,11 +977,19 @@ export default function User() {
       UserDataStorage.removeUserData();
       window.location.reload();
     } else {
-      dispatch({
-        type: 'SET_USER',
-        payload: UserDataStorage.getUserData(),
-      });
-      setIsLoaded(true);
+      if (UserDataStorage.getUserData()) {
+        dispatch({
+          type: 'SET_USER',
+          payload: UserDataStorage.getUserData(),
+        });
+        setIsLoaded(true);
+      } else {
+        RESTapi.fetchUserInfo();
+        dispatch({
+          type: 'SET_USER',
+          payload: UserDataStorage.getUserData(),
+        });
+      }
     }
   }, []);
 

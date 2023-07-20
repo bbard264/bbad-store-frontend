@@ -14,6 +14,21 @@ class RESTapi {
       console.error('Failed to fetch user information:', error);
     }
   }
+  static async fetchCheckAuthen() {
+    const apilink = '/api/user/checkAuthentication';
+
+    try {
+      console.log('Request API:', apilink);
+      const response = await axios.get(apilink);
+      return true;
+    } catch (error) {
+      if (error.response?.status === 401) {
+        return false;
+      } else {
+        console.error('Failed to fetch user information:', error);
+      }
+    }
+  }
 }
 
 export default RESTapi;
