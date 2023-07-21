@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Header from '../components/Header.js';
-import Footer from '../components/Footer.js';
 import CartOrderHeader from '../components/CartOrderHead.js';
-import CartListBox from '../components/CartListBox.js';
 import copyIcon from '../assets/icon/copy.png';
 import '../styles/pages/Order.css';
 
@@ -200,7 +197,7 @@ function renderOrderDetail(productCartList) {
       <div className="thisOrderCartLine">
         <h2 className="thisOrderHead">ORDER CART</h2>
         <div className="thisOrderBox">
-          <CartListBox productCartList={productCartList} />
+          {/* <CartListBox productCartList={productCartList} /> */}
         </div>
       </div>
     </div>
@@ -225,7 +222,6 @@ function renderOrderList() {
 export default function Order() {
   return (
     <div className="order">
-      <Header />
       <CartOrderHeader nowPage="OrderPage" />
       <div className="contentContainer">
         <div className="orderPage">
@@ -242,7 +238,6 @@ export default function Order() {
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 }

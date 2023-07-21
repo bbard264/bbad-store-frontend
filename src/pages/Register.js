@@ -3,8 +3,6 @@ import axios from '../config/axios';
 import { useNavigate } from 'react-router-dom';
 import checkValue from '../config/services/CheckValueValidated';
 import '../styles/pages/Register.css';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
 
 const initialState = {
   registerInfo: {
@@ -213,14 +211,8 @@ export default function Register() {
     state.registerInfo.password.error.status,
   ]);
 
-  // let [showInfo, setShowInfo] = useState(false);
-
-  // function handleShowInfo() {
-  //   setShowInfo(!showInfo);
-  // }
   return (
     <div className="registerPage">
-      <Header />
       <form onSubmit={handleSubmit} onReset={handleReset} autoComplete="off">
         <div className="registerContainer">
           <div className="loginHeader">
@@ -325,96 +317,6 @@ export default function Register() {
               </label>
             </div>
           </div>
-          {/* <div className="pmiLine">
-          <div
-            className="pmitoggle"
-            onClick={() => {
-              handleShowInfo();
-            }}
-          >
-            Provide more information
-          </div>
-        </div>
-        <div className={`pmiHiddineLine ${showInfo ? 'show ' : ''}`}>
-          <div className="registerLine">
-            <div className="headRegisterColumn">
-              <div>Gender</div>
-            </div>
-            <div className="inputRegisterColumn">
-              <div className="genderRadioRegister">
-                <label>
-                  <input
-                    className="radioChoice"
-                    type="radio"
-                    value="Male"
-                    name="gender"
-                  />{' '}
-                  Male
-                </label>
-                <label>
-                  <input
-                    className="radioChoice"
-                    type="radio"
-                    value="Female"
-                    name="gender"
-                  />{' '}
-                  Female
-                </label>
-                <label>
-                  <input
-                    className="radioChoice"
-                    type="radio"
-                    value="Others"
-                    name="gender"
-                  />{' '}
-                  Others
-                </label>
-              </div>
-            </div>
-          </div>
-          <div className="registerLine">
-            <div className="headRegisterColumn">
-              <div>Date of Birth</div>
-            </div>
-            <div className="inputRegisterColumn">
-            <label>  
-            <input
-                className="registerInput"
-                type="date"
-                placeholder="dd/mm/yyyy"
-              />
-              </label>
-            </div>
-          </div>
-          <div className="registerLine">
-            <div className="headRegisterColumn">
-              <div>Phone</div>
-            </div>
-            <div className="inputRegisterColumn">
-            <label>  
-            <input
-                className="registerInput"
-                type="tel"
-                placeholder="your phone number..."
-              />
-             </label> 
-            </div>
-          </div>
-          <div className="registerLine">
-            <div className="headRegisterColumn">
-              <div className="height2">Address</div>
-            </div>
-            <div className="inputRegisterColumn">
-            <label>  
-            <textarea
-                className="registerInput address"
-                type="text"
-                placeholder="your address"
-              />
-              </label>
-            </div>
-          </div>
-        </div> */}
           <div className="buttonLine">
             <button className="submitBotton reset" type="reset">
               Reset
@@ -433,7 +335,6 @@ export default function Register() {
           </div>
         </div>
       </form>
-      <Footer />
     </div>
   );
 }

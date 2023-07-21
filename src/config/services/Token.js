@@ -1,16 +1,17 @@
 import UserDataStorage from './UserDataStorage';
 
 class Token {
+  static storage_key = 'ACCESS_TOKEN';
   static setToken(token) {
-    localStorage.setItem('ACCESS_TOKEN', token);
+    localStorage.setItem(this.storage_key, token);
   }
 
   static getToken() {
-    return localStorage.getItem('ACCESS_TOKEN');
+    return localStorage.getItem(this.storage_key);
   }
 
   static removeToken() {
-    localStorage.removeItem('ACCESS_TOKEN');
+    localStorage.removeItem(this.storage_key);
     // Also remove user data when removing the token
     UserDataStorage.removeUserData();
   }

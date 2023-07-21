@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import Header from '../components/Header';
+
 import CategoryNavi from '../components/CategoryNavi';
-import Footer from '../components/Footer';
+
 import '../styles/pages/Home.css';
 // --------------------- CoverContent import --------------------------------------------
 import ArrowCorner from '../components/subcomponents/ArrowCorner.js';
@@ -226,11 +226,9 @@ function CoverContent() {
 export default function Home() {
   return (
     <div>
-      <Header />
       <CoverContent />
       <CategoryNavi />
       {/* <MainContent /> */}
-      <Footer />
     </div>
   );
 }

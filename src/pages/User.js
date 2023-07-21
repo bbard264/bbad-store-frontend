@@ -4,8 +4,7 @@ import axios from '../config/axios';
 import checkValue from '../config/services/CheckValueValidated';
 import Token from '../config/services/Token';
 import '../styles/pages/User.css';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+
 import Cropping from '../components/Cropping';
 import profileTemp from '../assets/temp_img/profile_temp.png';
 import UserDataStorage from '../config/services/UserDataStorage';
@@ -999,7 +998,6 @@ export default function User() {
 
   return (
     <div className="userPage">
-      <Header />
       <div className="userContainer">
         {isLoaded ? (
           <>
@@ -1014,7 +1012,6 @@ export default function User() {
           <p>Loading...</p>
         )}
       </div>
-      <Footer />
     </div>
   );
 }

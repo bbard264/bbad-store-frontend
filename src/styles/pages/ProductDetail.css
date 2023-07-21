@@ -414,14 +414,17 @@
   border: 1px solid rgba(0, 0, 0, 0.3);
   transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
 }
-.optionContainer .choice div:hover {
+.optionContainer .choice div:hover,
+input[type='radio'].radioProduct:checked + .radioName {
   background-color: black;
   color: #fff;
   transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
   cursor: pointer;
 }
-
+.radioProduct {
+  display: none;
+}
 /*#region functionLine*/
 .functionLine {
   margin: 0.5em;
@@ -583,4 +586,10 @@
   width: 100%;
   display: flex;
   flex-direction: column;
+}
+
+.warningMessage {
+  display: flex;
+  justify-content: center;
+  color: red;
 }

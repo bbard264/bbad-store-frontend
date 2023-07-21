@@ -1,19 +1,31 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import bbadlogo from '../assets/ex_products/bbadlogo.png';
 import magnifyingGlass from '../assets/icon/magnifying-glass.png';
-import heart2 from '../assets/icon/heart2.png';
-import cart from '../assets/icon/cart.png';
-import user from '../assets/icon/user.png';
+import heart2Icon from '../assets/icon/heart2.png';
+import cartIcon from '../assets/icon/cart.png';
+import userIcon from '../assets/icon/user.png';
 import '../styles/components/Header.css';
 import UserDataStorage from '../config/services/UserDataStorage';
+import Token from '../config/services/Token';
+import CartStorage from '../config/services/CartStorage';
 
 export default function Header() {
   const navigate = useNavigate();
-  const [forceUpdate, setForceUpdate] = useState();
+  const location = useLocation();
+  const [userImg, setUserImg] = useState();
+  const [countItemsInCart, setCountItemsInCart] = useState(0);
   useEffect(() => {
-    setForceUpdate(UserDataStorage.getUserImage());
-  }, []);
+    if (Token.getRole() === 'user') {
+      setUserImg(UserDataStorage.getUserImage());
+      setCountItemsInCart(CartStorage.getCountItemsInCart());
+    } else {
+      UserDataStorage.removeUserData();
+      setUserImg();
+      setCountItemsInCart(0);
+    }
+    console.log(location);
+  }, [location]);
 
   return (
     <div className="header">
@@ -40,12 +52,17 @@ export default function Header() {
           </div>
           <div className="iconLink" onClick={() => navigate('/favorite')}>
             <div className="iconBox">
-              <img src={heart2} alt="favorite" />
+              <img src={heart2Icon} alt="favorite" />
             </div>
           </div>
           <div className="iconLink" onClick={() => navigate('/cart')}>
             <div className="iconBox">
-              <img src={cart} alt="cart" />
+              {countItemsInCart === 0 || !CartStorage.getCountItemsInCart() ? (
+                <div></div>
+              ) : (
+                <div className="countItemsInCart">{countItemsInCart}</div>
+              )}
+              <img src={cartIcon} alt="cart" />
             </div>
           </div>
           <div className="iconLink" onClick={() => navigate('/user')}>
@@ -53,13 +70,13 @@ export default function Header() {
               {UserDataStorage.getUserImage() ? (
                 <img
                   src={UserDataStorage.getUserImage()}
-                  alt="user"
+                  alt="userProfile"
                   className="haveProfile"
                 />
-              ) : forceUpdate ? (
-                <img src={forceUpdate} alt="user" className="haveProfile" />
+              ) : userImg ? (
+                <img src={userImg} alt="userProfile" className="haveProfile" />
               ) : (
-                <img src={user} alt="user" />
+                <img src={userIcon} alt="guestuser" />
               )}
             </div>
           </div>

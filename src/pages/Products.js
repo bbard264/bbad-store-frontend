@@ -4,15 +4,14 @@ import axios from '../config/axios';
 import '../styles/pages/Products.css';
 import CatgoryLastpage from '../config/services/CatagoryLastpage';
 
-import Header from '../components/Header';
 import CategoryNavi from '../components/CategoryNavi';
-import Footer from '../components/Footer';
+
 import RecommendationsContainter from '../components/RecommendationsContainter';
 import Card from '../components/Card.js';
 
 import coverpic from '../assets/ex_products/cover_ex.jpg';
 
-function mainContent(listofProducts, numPage) {
+export function mainContent(listofProducts, numPage) {
   // console.log('listofProducts', listofProducts);
   if (!listofProducts) {
     return;
@@ -174,7 +173,6 @@ export default function Products() {
 
   return (
     <div className="ProductsPage">
-      <Header />
       <CategoryNavi currentCategory={state.category.category_id} />
       {state.productList && state.category.lastPage ? (
         <React.Fragment>
@@ -186,8 +184,6 @@ export default function Products() {
       ) : (
         <p>Loading...</p>
       )}
-
-      <Footer />
     </div>
   );
 }

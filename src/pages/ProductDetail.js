@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import React, { useState, useEffect, useReducer } from 'react';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import axios from '../config/axios';
+import Token from '../config/services/Token';
 import '../styles/pages/ProductDetail.css';
-import Header from '../components/Header';
+
 import ArrowCorner from '../components/subcomponents/ArrowCorner';
-import Footer from '../components/Footer';
+
 import RecommendationsContainter from '../components/RecommendationsContainter';
 import emptyHeartIcon from '../assets/icon/heart.png';
 import fullHeartIcon from '../assets/icon/heart2.png';
@@ -22,6 +23,7 @@ import wizhogFullImage from '../assets/ex_products/wizhog-full.jpg';
 import faChalee3Image from '../assets/ex_products/FA_chalee3.jpg';
 import chaleeImage from '../assets/ex_products/chalee.jpg';
 import hugMomentImage from '../assets/ex_products/HugMoment.jpg';
+import CartStorage from '../config/services/CartStorage';
 
 //#region mock userReview
 
@@ -396,8 +398,70 @@ function DetailSection({ product }) {
   );
 }
 
+const emptyProductToCart = {
+  productId: '',
+  productName: '',
+  productPhoto: '',
+  option: {},
+  unitPrice: 0, // Numeric data type instead of 0
+  quantity: 0, // Numeric data type instead of 0
+  priceChange: { discount: 0 },
+};
+
+function reducer(state, action) {
+  switch (action.type) {
+    case 'UPDATE_OPTION':
+      return {
+        ...state,
+        property: { ...state.property, option: action.payload },
+      };
+
+    case 'UPDATE_QUANTITY_INCREMENT':
+      return {
+        ...state,
+        property: { ...state.property, quantity: state.property.quantity + 1 },
+      };
+    case 'UPDATE_QUANTITY_DECREMENT':
+      if (state.quantity <= 1) {
+        return { ...state, property: { ...state.property, quantity: 1 } };
+      } else {
+        return {
+          ...state,
+          property: {
+            ...state.property,
+            quantity: state.property.quantity - 1,
+          },
+        };
+      }
+    default:
+      return state;
+  }
+}
+
 //#region CommonSection
 function CommonSection({ product }) {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [errorMessage, setErrorMessage] = useState('');
+  const [cartState, dispatch] = useReducer(reducer, {
+    product_id: product._id,
+    property: {
+      product_name: product.product_name,
+      product_photo: [product.product_photo[0]],
+      option: product.option
+        ? {
+            ...Object.fromEntries(
+              Object.entries(product.option).map(([key, value]) =>
+                value.length === 1 ? [key, value[0]] : [key, undefined]
+              )
+            ),
+          }
+        : null,
+      product_price: product.product_price,
+      quantity: 1,
+    },
+  });
+
   useEffect(() => {
     const applyStageStyles = (stage) => {
       const FixedCommonSection = document.getElementById('FixedCommonSection');
@@ -473,60 +537,118 @@ function CommonSection({ product }) {
     );
   }
 
-  function renderOption(options) {
-    if (!options) {
-      return;
-    }
-    if (Object.entries(options).length === 0) {
+  function renderOption(options, handleOnRadioChange) {
+    if (!options || Object.entries(options).length === 0) {
       return null;
     } else {
-      function renderChoices(options) {
-        return Object.entries(options).map(([key, values]) => (
-          <div className="optionContainer" key={key}>
-            <div className="choiceName">{key}</div>
+      function renderRadioChoices(options, name) {
+        return (
+          <div className="optionContainer" key={name}>
+            <div className="choiceName">{name}</div>
             <div className="choice">
-              {values.map((value, index) => (
-                <div key={`${key}-${index}`}>{value}</div>
+              {options.map((value, index) => (
+                <label key={`${name}-${index}`}>
+                  <input
+                    type="radio"
+                    name={name}
+                    value={value}
+                    onChange={handleOnRadioChange}
+                    className="radioProduct"
+                    defaultChecked={options.length === 1}
+                  />
+                  <div className="radioName">{value}</div>
+                </label>
               ))}
             </div>
           </div>
-        ));
+        );
       }
 
-      return <div className="optionsLine">{renderChoices(options)}</div>;
+      return (
+        <div className="optionsLine">
+          {Object.entries(options).map(([key, values]) =>
+            renderRadioChoices(values, key)
+          )}
+        </div>
+      );
     }
   }
 
-  function PlusMinusButton() {
-    let [numAmount, setNumAmount] = useState(1);
-    function minusNumAmount() {
-      if (numAmount === 1) {
-        return;
-      } else {
-        setNumAmount(numAmount - 1);
-      }
-    }
-    function plusNumAmount() {
-      setNumAmount(numAmount + 1);
-    }
-    return (
-      <div className="plusMinusButton">
-        <div className="minus" onClick={minusNumAmount}>
-          <div>-</div>
-        </div>
-        <div className="numAmount">
-          <div>{numAmount}</div>
-        </div>
-        <div className="plus" onClick={plusNumAmount}>
-          <div>+</div>
-        </div>
-      </div>
-    );
+  function handleOnRadioChange(e) {
+    const { name, value } = e.target;
+    cartState.property.option[name] = value;
   }
-
   function addToCartButton() {
+    async function handleOnClickAddToCart() {
+      if (Token.getRole() === 'guest') {
+        if (window.confirm(`You haven't login yet, go to Login?`)) {
+          navigate('/login', { state: { from: location.pathname } });
+          return;
+        } else {
+          setErrorMessage('Please Login first');
+          return;
+        }
+      }
+      const IsOptionAllSelected = (option) => {
+        if (!option || Object.keys(option).length === 0) {
+          return true;
+        }
+
+        for (const key in option) {
+          if (
+            option.hasOwnProperty(key) &&
+            (option[key] === undefined || option[key] === null)
+          ) {
+            return false;
+          }
+        }
+
+        return true;
+      };
+
+      if (IsOptionAllSelected(cartState.property.option)) {
+        if (window.confirm('Add to Cart?')) {
+          try {
+            const newProductInCartToSave = {
+              product_id: cartState.product_id,
+              property: {
+                product_name: cartState.property.product_name,
+                product_photo: cartState.property.product_photo,
+                option: cartState.property.option,
+                product_price: cartState.property.product_price,
+                quantity: cartState.property.quantity,
+                totalPrice: 0,
+                priceChange: { discount: 0 },
+              },
+              validator: { isStock: false },
+              note: '',
+            };
+            const response = await CartStorage.addToCart(
+              newProductInCartToSave
+            );
+
+            // Handle the response
+            if (response.addToCart) {
+              window.alert(response.message);
+              console.log(newProductInCartToSave);
+              console.log(CartStorage.getCart());
+              // window.location.reload();
+            } else {
+              console.error(response.message);
+              setErrorMessage(response.message);
+            }
+          } catch (error) {
+            console.error('Error:', error.message);
+            setErrorMessage(error.message);
+          }
+        }
+      } else {
+        setErrorMessage('Please select at least one each option');
+      }
+    }
+
     return (
-      <div className="addToCartButton">
+      <div className="addToCartButton" onClick={handleOnClickAddToCart}>
         <div className="atcContainer">
           <img src={addIcon} alt="addIcon" />
           <img src={cartIcon} alt="cartIcon" />
@@ -563,12 +685,29 @@ function CommonSection({ product }) {
         <div className="shortDetailLine">
           <div>{product.short_details}</div>
         </div>
-        {renderOption(product.option)}
+        {renderOption(product.option, handleOnRadioChange)}
         <div className="functionLine">
-          {PlusMinusButton()}
+          <div className="plusMinusButton">
+            <div
+              className="minus"
+              onClick={() => dispatch({ type: 'UPDATE_QUANTITY_DECREMENT' })}
+            >
+              <div>-</div>
+            </div>
+            <div className="numAmount">
+              <div>{cartState.property.quantity}</div>
+            </div>
+            <div
+              className="plus"
+              onClick={() => dispatch({ type: 'UPDATE_QUANTITY_INCREMENT' })}
+            >
+              <div>+</div>
+            </div>
+          </div>
           {addToCartButton()}
           {/* {favoriteButton(product.favorite)} */}
         </div>
+        <div className="warningMessage">{errorMessage}</div>
       </div>
     </div>
   );
@@ -612,7 +751,6 @@ export default function ProductDetail() {
 
   return (
     <div>
-      <Header />
       {product ? (
         <div className="contentContainer" id="contentContainer">
           <DetailSection product={product} />
@@ -621,7 +759,6 @@ export default function ProductDetail() {
       ) : (
         <p>Loading...</p>
       )}
-      <Footer />
     </div>
   );
 }

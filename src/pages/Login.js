@@ -1,11 +1,12 @@
-import React, { useReducer, useEffect } from 'react';
+import React, { useReducer, useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import '../styles/pages/Login.css';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+
 import Token from '../config/services/Token';
 import RESTapi from '../config/services/RESTapi';
+import CartStorage from '../config/services/CartStorage';
 
 const initialState = {
   email: {
@@ -78,6 +79,8 @@ const login = async (loginData) => {
 
 export default function Login(porps) {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [previousRoute, setPreviousRoute] = useState('');
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const handleValueChange = (e) => {
@@ -124,7 +127,8 @@ export default function Login(porps) {
       try {
         // Wait for the fetchUserInfo() to complete before navigating.
         await RESTapi.fetchUserInfo();
-        navigate('/');
+        await CartStorage.setCartStorage();
+        navigate(previousRoute);
         porps.setRole('user');
       } catch (error) {
         console.error('Error fetching user info:', error);
@@ -159,9 +163,13 @@ export default function Login(porps) {
     }
   }, [state.status.canLogin]);
 
+  useEffect(() => {
+    console.log(location.state?.from);
+    setPreviousRoute(location.state?.from || '/');
+  }, [location.state]);
+
   return (
     <div className="loginPage">
-      <Header />
       <div className="loginContainer width60">
         <div className="loginHeader">
           <h1>Sign In</h1>
@@ -215,7 +223,6 @@ export default function Login(porps) {
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 }

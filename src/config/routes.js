@@ -7,6 +7,7 @@ import User from '../pages/User';
 import Login from '../pages/Login';
 import Register from '../pages/Register';
 import Page404 from '../pages/404';
+import Favorite from '../pages/Favorite';
 
 const components = {
   home: {
@@ -27,7 +28,7 @@ const components = {
   },
   order: {
     url: '/order',
-    component: Order,
+    component: Page404,
   },
   user: {
     url: '/user/:page?',
@@ -43,7 +44,7 @@ const components = {
   },
   favorite: {
     url: '/favorite',
-    component: Page404,
+    component: Favorite,
   },
   page404: {
     url: '/404',

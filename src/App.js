@@ -4,6 +4,8 @@ import { BrowserRouter } from 'react-router-dom';
 import CreateRoutes from './config/CreateRoutes';
 import Token from './config/services/Token';
 import RESTapi from './config/services/RESTapi';
+import Header from './components/Header';
+import Footer from './components/Footer';
 
 function App() {
   const [role, setRole] = useState(Token.getRole());
@@ -12,8 +14,9 @@ function App() {
     async function checkAuthentication() {
       try {
         const isAuthenticated = await RESTapi.fetchCheckAuthen();
-        setRole(isAuthenticated ? 'user' : 'guest');
+        setRole(isAuthenticated.isAuthen ? 'user' : 'guest');
       } catch (error) {
+        setRole('guest');
         console.error('Error occurred:', error);
       }
     }
@@ -29,7 +32,9 @@ function App() {
 
   return (
     <BrowserRouter>
+      <Header />
       <CreateRoutes role={role} setRole={setRole} />
+      <Footer />
     </BrowserRouter>
   );
 }

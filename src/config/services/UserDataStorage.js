@@ -6,7 +6,7 @@ class UserDataStorage {
       return method();
     } else {
       this.removeUserData();
-      // Handle the case where the user is not authenticated, e.g., redirect to login page.
+      // Handle the case where the user is not authenticated, e.g., redirect to the login page.
     }
   }
 
@@ -27,6 +27,7 @@ class UserDataStorage {
   static removeUserData() {
     localStorage.removeItem('USER_DATA');
     localStorage.removeItem('USER_IMAGE');
+    localStorage.removeItem('USER_CART');
   }
 
   static async setUserImage(imageUrl) {
@@ -48,7 +49,7 @@ class UserDataStorage {
 
   static getUserImage() {
     return this.checkTokenAndRun(() => {
-      return localStorage.getItem('USER_IMAGE');
+      return localStorage.getItem('USER_IMAGE'); // Corrected key from this.storage_key to 'USER_IMAGE'
     });
   }
 }
