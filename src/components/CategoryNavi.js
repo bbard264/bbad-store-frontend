@@ -25,7 +25,7 @@ const fetchCategoryList = async () => {
     const apilink = '/api/category/getCategoryList&Lastpage';
     console.log('requestAPI', apilink);
     const response = await axios.get(apilink);
-    await CatgoryLastpage.setCatgoryLastpage(response.data);
+    CatgoryLastpage.setCatgoryLastpage(response.data);
   } catch (error) {
     console.error('Failed to fetch products:', error);
   }
@@ -41,7 +41,9 @@ export default function CategoryNavi({ currentCategory }) {
 
   return (
     <div className="categoryNavi">
-      {categoryMap !== undefined ? (
+      {categoryMap === null || categoryMap === undefined ? (
+        <></>
+      ) : (
         <>
           <div
             className={`categoryLink ${
@@ -54,8 +56,6 @@ export default function CategoryNavi({ currentCategory }) {
           </div>
           {renderNavi(categoryMap, currentCategory, navigate)}
         </>
-      ) : (
-        <p>Loading...</p>
       )}
     </div>
   );

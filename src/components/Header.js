@@ -7,25 +7,22 @@ import cartIcon from '../assets/icon/cart.png';
 import userIcon from '../assets/icon/user.png';
 import '../styles/components/Header.css';
 import UserDataStorage from '../config/services/UserDataStorage';
-import Token from '../config/services/Token';
 import CartStorage from '../config/services/CartStorage';
 
-export default function Header() {
+export default function Header(props) {
   const navigate = useNavigate();
   const location = useLocation();
   const [userImg, setUserImg] = useState();
   const [countItemsInCart, setCountItemsInCart] = useState(0);
   useEffect(() => {
-    if (Token.getRole() === 'user') {
+    if (props.role === 'user') {
       setUserImg(UserDataStorage.getUserImage());
       setCountItemsInCart(CartStorage.getCountItemsInCart());
     } else {
-      UserDataStorage.removeUserData();
       setUserImg();
       setCountItemsInCart(0);
     }
-    console.log(location);
-  }, [location]);
+  }, [location, props.role]);
 
   return (
     <div className="header">

@@ -156,11 +156,11 @@
   object-fit: cover;
 }
 
-.productCol .NameOptionBox {
+.productCol .nameOptionBox {
   display: flex;
   flex-direction: column;
 }
-.productCol .NameOptionBox .optionBox {
+.productCol .nameOptionBox .optionBox {
   display: flex;
   flex-direction: row;
 }
@@ -190,4 +190,14 @@
 
 .totalCol {
   justify-self: center;
+}
+
+.productPhotoBox:hover,
+.productName:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.productPhotoBox:hover + .nameOptionBox .productName {
+  text-decoration: underline;
 }

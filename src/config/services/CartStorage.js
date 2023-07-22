@@ -14,23 +14,26 @@ export default class CartStorage {
           property: {
             product_name: '',
             product_photo: '',
+            product_url_name: '',
             option: {},
             product_price: 0,
-            quantity: 0,
+            quantity: 1,
             totalPrice: 0,
             priceChange: { discount: 0 },
           },
           validator: { isStock: false },
           note: '',
         };
+        console.log('listOfObjects', listOfObjects);
 
         const updatedList = listOfObjects.map((obj) => {
-          const newItem = { ...newFormat.item }; // Create a copy of the newFormat.item object
+          const newItem = { ...newFormat.property }; // Create a copy of the newFormat.item object
 
           // Copy the properties from the original object to the newItem
           newItem._id = obj._id;
           newItem.product_name = obj.product_name;
           newItem.product_photo = obj.product_photo[0];
+          newItem.product_url_name = obj.product_url_name;
           newItem.option = obj.option || {}; // Use an empty object if option is null
           newItem.product_price = obj.product_price;
 
@@ -41,6 +44,7 @@ export default class CartStorage {
             note: '',
           };
         });
+        console.log(updatedList);
         localStorage.setItem(this.storage_key, JSON.stringify(updatedList));
       }
       return { getCart: response.getCart, message: response.message };

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import UserDataStorage from './UserDataStorage';
+import Token from './Token';
 
 class RESTapi {
   static async fetchUserInfo() {
@@ -20,14 +21,17 @@ class RESTapi {
 
     try {
       console.log('Request API:', apilink);
-      const response = await axios.get(apilink);
+      await axios.get(apilink);
       return { isAuthen: true, message: 'Authenticated' };
     } catch (error) {
+      if (Token.getToken()) {
+        Token.removeToken();
+      }
       if (error.response?.status === 401) {
         return { isAuthen: false, message: 'Unauthenticated' };
       } else {
-        return { isAuthen: false, message: 'false to check Authen' };
         console.error('Failed to check authen:', error);
+        return { isAuthen: false, message: 'false to check Authen' };
       }
     }
   }
@@ -51,7 +55,7 @@ class RESTapi {
 
     try {
       console.log('Request API', apilink);
-      const response = await axios.put(apilink, productId);
+      await axios.put(apilink, productId);
 
       return {
         addToCart: true,
@@ -71,7 +75,7 @@ class RESTapi {
 
     try {
       console.log('Request API', apilink);
-      const response = await axios.put(apilink, productIdOrAll);
+      await axios.put(apilink, productIdOrAll);
       return {
         removeFromCart: true,
         message: `Remove product ${productIdOrAll}  from cart successful`,

@@ -448,6 +448,7 @@ function CommonSection({ product }) {
     property: {
       product_name: product.product_name,
       product_photo: [product.product_photo[0]],
+      product_url_name: product.product_url_name,
       option: product.option
         ? {
             ...Object.fromEntries(
@@ -614,6 +615,7 @@ function CommonSection({ product }) {
               property: {
                 product_name: cartState.property.product_name,
                 product_photo: cartState.property.product_photo,
+                product_url_name: cartState.property.product_url_name,
                 option: cartState.property.option,
                 product_price: cartState.property.product_price,
                 quantity: cartState.property.quantity,

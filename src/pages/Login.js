@@ -164,7 +164,6 @@ export default function Login(porps) {
   }, [state.status.canLogin]);
 
   useEffect(() => {
-    console.log(location.state?.from);
     setPreviousRoute(location.state?.from || '/');
   }, [location.state]);
 

@@ -8,33 +8,18 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 
 function App() {
-  const [role, setRole] = useState(Token.getRole());
+  const [role, setRole] = useState(Token.getRole()); // Initial state set to null
+
   console.log(role);
   useEffect(() => {
-    async function checkAuthentication() {
-      try {
-        const isAuthenticated = await RESTapi.fetchCheckAuthen();
-        setRole(isAuthenticated.isAuthen ? 'user' : 'guest');
-      } catch (error) {
-        setRole('guest');
-        console.error('Error occurred:', error);
-      }
-    }
-
-    // Call the authentication function when the component mounts
-    if (role === 'guest') {
-      return;
-    } else {
-      checkAuthentication();
-      return;
-    }
+    RESTapi.fetchCheckAuthen();
   }, []);
 
   return (
     <BrowserRouter>
-      <Header />
+      <Header role={role} />
       <CreateRoutes role={role} setRole={setRole} />
-      <Footer />
+      <Footer role={role} />
     </BrowserRouter>
   );
 }
