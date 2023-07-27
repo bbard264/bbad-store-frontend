@@ -439,7 +439,7 @@ function reducer(state, action) {
 }
 
 //#region CommonSection
-function CommonSection({ product }) {
+function CommonSection({ product, shareState, setShareState }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [errorMessage, setErrorMessage] = useState('');
@@ -451,13 +451,16 @@ function CommonSection({ product }) {
       product_url_name: product.product_url_name,
       option: product.option
         ? {
-            ...Object.fromEntries(
-              Object.entries(product.option).map(([key, value]) =>
-                value.length === 1 ? [key, value[0]] : [key, undefined]
-              )
-            ),
+            isSelect: false,
+            choice: {
+              ...Object.fromEntries(
+                Object.entries(product.option).map(([key, value]) =>
+                  value.length === 1 ? [key, value] : [key, undefined]
+                )
+              ),
+            },
           }
-        : null,
+        : {},
       product_price: product.product_price,
       quantity: 1,
     },
@@ -577,7 +580,11 @@ function CommonSection({ product }) {
 
   function handleOnRadioChange(e) {
     const { name, value } = e.target;
-    cartState.property.option[name] = value;
+    cartState.property.option.isSelect = true;
+    cartState.property.option.choice[name] = [
+      value,
+      ...product.option[name].filter((item) => item !== value),
+    ];
   }
   function addToCartButton() {
     async function handleOnClickAddToCart() {
@@ -590,7 +597,7 @@ function CommonSection({ product }) {
           return;
         }
       }
-      const IsOptionAllSelected = (option) => {
+      const isOptionAllSelected = (option) => {
         if (!option || Object.keys(option).length === 0) {
           return true;
         }
@@ -607,14 +614,15 @@ function CommonSection({ product }) {
         return true;
       };
 
-      if (IsOptionAllSelected(cartState.property.option)) {
+      if (isOptionAllSelected(cartState.property.option.choice)) {
         if (window.confirm('Add to Cart?')) {
+          console.log(cartState.property.product_photo);
           try {
             const newProductInCartToSave = {
               product_id: cartState.product_id,
               property: {
                 product_name: cartState.property.product_name,
-                product_photo: cartState.property.product_photo,
+                product_photo: cartState.property.product_photo[0],
                 product_url_name: cartState.property.product_url_name,
                 option: cartState.property.option,
                 product_price: cartState.property.product_price,
@@ -622,7 +630,7 @@ function CommonSection({ product }) {
                 totalPrice: 0,
                 priceChange: { discount: 0 },
               },
-              validator: { isStock: false },
+              validator: { isStock: false, isAllOptionSelected: true },
               note: '',
             };
             const response = await CartStorage.addToCart(
@@ -631,10 +639,8 @@ function CommonSection({ product }) {
 
             // Handle the response
             if (response.addToCart) {
-              window.alert(response.message);
-              console.log(newProductInCartToSave);
-              console.log(CartStorage.getCart());
-              // window.location.reload();
+              setShareState(shareState + 1);
+              setErrorMessage('');
             } else {
               console.error(response.message);
               setErrorMessage(response.message);
@@ -729,7 +735,7 @@ async function fetchProduct(productId) {
   }
 }
 
-export default function ProductDetail() {
+export default function ProductDetail(props) {
   const { productId } = useParams();
   const location = useLocation();
   const [product, setProduct] = useState(null);
@@ -756,7 +762,11 @@ export default function ProductDetail() {
       {product ? (
         <div className="contentContainer" id="contentContainer">
           <DetailSection product={product} />
-          <CommonSection product={product} />
+          <CommonSection
+            product={product}
+            shareState={props.shareState}
+            setShareState={props.setShareState}
+          />
         </div>
       ) : (
         <p>Loading...</p>

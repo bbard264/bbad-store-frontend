@@ -7,6 +7,7 @@ import wizhogFullImage from '../assets/ex_products/wizhog-full.jpg';
 import faChalee3Image from '../assets/ex_products/FA_chalee3.jpg';
 import chaleeImage from '../assets/ex_products/chalee.jpg';
 import hugMomentImage from '../assets/ex_products/HugMoment.jpg';
+import RESTapi from './../config/services/RESTapi';
 
 //#region mock product
 
@@ -80,14 +81,46 @@ const productCartList = [product1, product2, product3, product4];
 
 //#endregion
 
-function renderOrderDetail(productCartList) {
-  function renderCircle(stage, maxStage) {
+function OrderList(props) {
+  const order = props.orderData;
+  const orderStatus = props.orderStatus;
+  const isSelected = props.orderData === props.orderDetail;
+  const setOrderDetail = props.setOrderDetail;
+
+  return (
+    <div
+      className={`orderList${isSelected ? ' isSelected' : ''}`}
+      onClick={() => setOrderDetail(order)}
+    >
+      <div className="dateHCol">
+        <div className="create_date">
+          {new Date(order.created_at).toLocaleDateString('en-GB')}
+        </div>
+        <div className="order_id">{order._id}</div>
+      </div>
+      <div className="statusHCol">
+        <div className="statusHHead">STATUS:</div>
+        <div className="statusHValue">
+          {orderStatus.find((stage) => stage._id === order.status_id)
+            ?.stage_name || 'Stage Not Found'}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function OrderDetail(props) {
+  const order = props.orderDetail;
+  console.log(order);
+  const orderStatusList = props.orderStatus;
+  function renderTimeLine(stage) {
+    const stageNum =
+      parseInt(orderStatusList?.findIndex((item) => item._id === stage)) + 1;
+    const maxStage = orderStatusList.length - 3;
     let circleElements = [];
-
     for (let i = 1; i <= maxStage; i++) {
-      let isStage = stage >= i ? 'currentStage' : '';
-      let lineAfterClass = stage >= i + 1 ? 'currentStage' : '';
-
+      let isStage = stageNum >= i ? 'currentStage' : '';
+      let lineAfterClass = stageNum >= i + 1 ? 'currentStage' : '';
       circleElements.push(
         <div className={`circleRow col${i}`}>
           {i === 1 ? null : <div className={`lineBefore ${isStage}`} />}
@@ -96,8 +129,52 @@ function renderOrderDetail(productCartList) {
         </div>
       );
     }
-
     return circleElements;
+  }
+
+  function renderReviewProductList(items) {
+    function renderOption(option) {
+      if (!option) {
+        return;
+      }
+      const options = [];
+      for (const key in option) {
+        options.push(
+          <div className={`option notLetMidify`} key={key}>
+            {option[key][0]}
+          </div>
+        );
+      }
+      return options;
+    }
+
+    return items.map((item, index) => (
+      <div className="reviewProductRow" key={index}>
+        <div className="productCol">
+          <div className="productPhotoBox inReview">
+            <img
+              src={item.property.product_photo}
+              alt={item.property.product_name}
+            />
+          </div>
+          <div className="nameOptionBox">
+            <div className="productName inReview">
+              {item.property.product_name}
+            </div>
+            <div className="optionBox">
+              {renderOption(item.property.option)}
+            </div>
+          </div>
+        </div>
+        <div className="priceCol">฿{item.property.product_price}</div>
+        <div className="quantityCol">
+          <div className="numAmount inReview">
+            <div>{item.property.quantity}</div>
+          </div>
+        </div>
+        <div className="totalCol">฿{item.property.totalPrice}</div>
+      </div>
+    ));
   }
 
   return (
@@ -107,15 +184,20 @@ function renderOrderDetail(productCartList) {
         <div className="orderDetail">
           <div className="orderIDCol">
             <h2 className="orderIDHead">ID</h2>
-            <div className="orderIDValue">#1223131323</div>
+            <div className="orderIDValue">{order._id}</div>
           </div>
           <div className="dateCol">
             <h2 className="dateHead">Date</h2>
-            <div className="dateValue"> 12/3/2023</div>
+            <div className="dateValue">
+              {new Date(order.created_at).toLocaleDateString('en-GB')}
+            </div>
           </div>
           <div className="statusCol">
             <h2 className="statusHead">STATUS</h2>
-            <div className="statusValue">Packed</div>
+            <div className="statusValue">
+              {orderStatusList?.find((stage) => stage._id === order.status_id)
+                ?.stage_name || 'Stage Not Found'}
+            </div>
           </div>
         </div>
       </div>
@@ -159,17 +241,25 @@ function renderOrderDetail(productCartList) {
               <div>Delivered</div>
             </div>
           </div>
-          {renderCircle(4, 6)}
+          {renderTimeLine(order.status_id)}
         </div>
       </div>
       <div className="addressOrderSumLine">
         <div className="addressContainer">
-          <h2 className="addressHead">ADDRESS</h2>
+          <h2 className="addressHead">CONTACT ADDRESS</h2>
+          <div className="realNameBox">{order.contact_info.real_name}</div>
+          <div className="phoneBox">{order.contact_info.phone}</div>
           <div className="addressBox">
-            <p>
-              111 Room 11, BBad condo, BBad Road, BBad Head, BBard Heart,
-              Bangkok 00000
-            </p>
+            {order.contact_info.address.adress1 +
+              ' ' +
+              order.contact_info.address.adress2 +
+              ' ' +
+              order.contact_info.address.district +
+              ' ' +
+              order.contact_info.address.province +
+              ' ' +
+              order.contact_info.address.postcode +
+              ' '}
           </div>
         </div>
         <div className="orderSumContainer">
@@ -177,19 +267,19 @@ function renderOrderDetail(productCartList) {
           <div className="orderSumBox">
             <div className="orderSumLine">
               <div className="orderSumName">subtotal</div>
-              <div className="orderSumValue">฿2300</div>
+              <div className="orderSumValue">฿{order.summary.subtotal}</div>
             </div>
-            <div className="orderSumLine">
-              <div className="orderSumName">shipping</div>
-              <div className="orderSumValue">FREE</div>
-            </div>
-            <div className="orderSumLine">
-              <div className="orderSumName">TAX</div>
-              <div className="orderSumValue">฿230(+10%)</div>
-            </div>
+            {Object.entries(order.summary.priceChange).map(([key, value]) =>
+              value !== 0 ? (
+                <div key={key} className="orderSumLine">
+                  <div className="orderSumName">{key}</div>
+                  <div className="orderSumValue">฿{value}</div>
+                </div>
+              ) : null
+            )}
             <div className="orderSumLine netLine">
               <div className="orderSumName">NET</div>
-              <div className="orderSumValue">฿2323</div>
+              <div className="orderSumValue">฿{order.summary.net}</div>
             </div>
           </div>
         </div>
@@ -197,47 +287,88 @@ function renderOrderDetail(productCartList) {
       <div className="thisOrderCartLine">
         <h2 className="thisOrderHead">ORDER CART</h2>
         <div className="thisOrderBox">
-          {/* <CartListBox productCartList={productCartList} /> */}
+          <div className="reviewProductHeadLine">
+            <div>PRODUCT</div>
+            <div>PRICE</div>
+            <div>QUANTITY</div>
+            <div>TOTAL</div>
+          </div>
+          <div className="reviewProductList">
+            <div className="reviewProductListContent">
+              {renderReviewProductList(order.items)}
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-  );
-}
-
-function renderOrderList() {
-  return (
-    <div className="orderList">
-      <div className="dateHCol">
-        <div className="date">12/3/2023</div>
-        <div className="orderID">#1223131323</div>
-      </div>
-      <div className="statusHCol">
-        <div className="statusHHead">STATUS:</div>
-        <div className="statusHValue">Payment Confirm</div>
       </div>
     </div>
   );
 }
 
 export default function Order() {
-  return (
-    <div className="order">
-      <CartOrderHeader nowPage="OrderPage" />
-      <div className="contentContainer">
-        <div className="orderPage">
-          <div className="orderListContainer">
-            <div className="orderHeadLine">
-              <h1>Order History</h1>
+  const [orderData, setOrderData] = useState({});
+  const [orderDetail, setOrderDetail] = useState({});
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const responseGetOrder = await RESTapi.getOrders();
+        const responseGetOrderStatus = await RESTapi.getOrderStatus();
+
+        if (
+          responseGetOrder.getOrder &&
+          responseGetOrderStatus.getOrderStatus
+        ) {
+          setOrderData({
+            orderList: responseGetOrder.data,
+            orderStatus: responseGetOrderStatus.data,
+          });
+          setOrderDetail(responseGetOrder.data[0]);
+        }
+      } catch (error) {
+        console.error('Error fetching orders:', error);
+      }
+    };
+    fetchOrders();
+  }, []);
+
+  if (orderData === {} || orderDetail === {}) {
+    return <div>loading....</div>;
+  } else {
+    return (
+      <div className="order">
+        <CartOrderHeader nowPage="OrderPage" />
+        <div className="contentContainer">
+          <div className="orderPage">
+            <div className="orderListContainer">
+              <div className="orderHeadLine">
+                <h1>Order History</h1>
+                {orderData === {} || orderData.orderList === undefined ? (
+                  <div>loading....</div>
+                ) : (
+                  orderData.orderList.map((order) => (
+                    <OrderList
+                      orderData={order}
+                      orderStatus={orderData.orderStatus}
+                      orderDetail={orderDetail}
+                      setOrderDetail={setOrderDetail}
+                    />
+                  ))
+                )}
+              </div>
             </div>
-            {renderOrderList()}
-            {renderOrderList()}
-            {renderOrderList()}
-          </div>
-          <div className="orderDetailContainer">
-            {renderOrderDetail(productCartList)}
+            <div className="orderDetailContainer">
+              {orderDetail === {} || orderData.orderStatus === undefined ? (
+                <div>loading....</div>
+              ) : (
+                <OrderDetail
+                  orderDetail={orderDetail}
+                  orderStatus={orderData.orderStatus}
+                />
+              )}
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  }
 }

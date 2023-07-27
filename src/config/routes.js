@@ -28,7 +28,7 @@ const components = {
   },
   order: {
     url: '/order',
-    component: Page404,
+    component: Order,
   },
   user: {
     url: '/user/:page?',

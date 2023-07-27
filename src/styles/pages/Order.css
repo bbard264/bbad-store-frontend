@@ -23,8 +23,16 @@
   margin: 0.5em auto;
   padding: 0.5em 1em;
   border-radius: 20px;
+  background-color: rgb(173, 173, 173);
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.orderList.isSelected {
   background-color: white;
   overflow: hidden;
+  cursor: default;
 }
 
 .orderList .dateHCol {
@@ -220,35 +228,54 @@
 .addressContainer,
 .orderSumContainer {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
 }
 
 .addressContainer {
   width: 40%;
+  height: 100%;
 }
 
 .orderSumContainer {
   width: 60%;
 }
 
-.addressBox,
-.orderSumBox {
-  flex: 1;
+.realNameBox,
+.phoneBox {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: 20px;
+  padding: 0 0.9em;
+  font-size: 0.9em;
+  flex-basis: 1;
+}
+
+.addressBox {
+  flex-basis: 2;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   margin: 0.25em;
   border-radius: 20px;
-  padding: 0.9em;
+  padding: 0 0.9em;
+  font-size: 0.9em;
+  margin: auto;
 }
 
 .orderSumBox {
-  background-color: white;
-}
-
-.addressBox p {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: 0.25em;
+  border-radius: 20px;
+  padding: 0 3em;
   font-size: 0.9em;
   margin: 0;
+  background-color: white;
 }
 
 .orderSumLine {
@@ -275,6 +302,7 @@
   margin: 0;
   font-size: 1em;
   color: #555;
+  width: 100%;
 }
 
 .thisOrderBox {

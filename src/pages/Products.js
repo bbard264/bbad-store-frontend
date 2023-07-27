@@ -11,7 +11,7 @@ import Card from '../components/Card.js';
 
 import coverpic from '../assets/ex_products/cover_ex.jpg';
 
-export function mainContent(listofProducts, numPage) {
+export function mainContent(listofProducts, numPage, props) {
   // console.log('listofProducts', listofProducts);
   if (!listofProducts) {
     return;
@@ -28,7 +28,12 @@ export function mainContent(listofProducts, numPage) {
     }
     const productCards = products.map((product, index) => (
       <div className="cardBox" key={index}>
-        <Card product={product} index={index} />
+        <Card
+          product={product}
+          index={index}
+          shareState={props.shareState}
+          setShareState={props.setShareState}
+        />
       </div>
     ));
     if (numPage === 1) {
@@ -108,7 +113,7 @@ const fetchProductList = async (category, page) => {
   }
 };
 
-export default function Products() {
+export default function Products(props) {
   const { routeParameter, routeParameter2 } = useParams();
   const [state, setState] = useState({
     numPage: 1,
@@ -177,7 +182,7 @@ export default function Products() {
       {state.productList && state.category.lastPage ? (
         <React.Fragment>
           {pageNavi(state.numPage, state.category.lastPage, handlePageChange)}
-          {mainContent(state.productList, state.numPage)}
+          {mainContent(state.productList, state.numPage, props)}
           {pageNavi(state.numPage, state.category.lastPage, handlePageChange)}
           {/* <RecommendationsContainter /> */}
         </React.Fragment>

@@ -49,23 +49,26 @@ class RESTapi {
     }
   }
 
-  static async addToCart(productid) {
+  static async addToCart(props) {
     const apilink = '/api/Order/addToCart';
-    const productId = { product_id: productid };
-
     try {
       console.log('Request API', apilink);
-      await axios.put(apilink, productId);
-
+      await axios.put(apilink, props);
       return {
         addToCart: true,
-        message: `Add ${productid} To Cart Successful`,
+        message: `Add ${props.product_id} To Cart Successful`,
       };
     } catch (error) {
       console.error('Failed to add product to cart:', error);
+      if (error.response.status === 401) {
+        return {
+          addToCart: false,
+          message: `Unauthorized`,
+        };
+      }
       return {
         addToCart: false,
-        message: `Failed to add product ${productid}  to cart`,
+        message: `Failed to add product to cart`,
       };
     }
   }
@@ -88,6 +91,108 @@ class RESTapi {
       return {
         removeFromCart: false,
         message: `Failed to remove product ${productIdOrAll} from cart`,
+      };
+    }
+  }
+
+  static async createOrder(props) {
+    const apilink = '/api/Order/createOrder'; // Assuming this is the correct API endpoint for creating orders
+    try {
+      console.log('Request API', apilink);
+      const response = await axios.post(apilink, props); // Use axios.post for POST requests
+      return response.data;
+    } catch (error) {
+      console.error('Failed to create order:', error);
+      if (error.response && error.response.status === 401) {
+        return {
+          createOrder: false,
+          message: `Unauthorized`,
+        };
+      }
+      return {
+        createOrder: false,
+        message: `Failed to create order`,
+      };
+    }
+  }
+
+  static async getOrders() {
+    const apilink = '/api/Order/getOrders'; // Update the endpoint URL accordingly
+    try {
+      console.log('Request API', apilink);
+      const response = await axios.get(apilink); // Use axios.get for GET requests
+      return response.data;
+    } catch (error) {
+      console.error('Failed to get orders:', error);
+      return {
+        getOrders: false,
+        message: `Failed to get orders`,
+      };
+    }
+  }
+
+  static async getOrderStatus() {
+    const apilink = '/api/Order/getOrderStatus'; // Update the endpoint URL accordingly
+    try {
+      console.log('Request API', apilink);
+      const response = await axios.get(apilink); // Use axios.get for GET requests
+      return response.data;
+    } catch (error) {
+      console.error('Failed to get orders:', error);
+      return {
+        getOrders: false,
+        message: `Failed to get orders`,
+      };
+    }
+  }
+
+  static async getFavorite() {
+    const apilink = '/api/User/getFavorite';
+
+    try {
+      console.log('Request API', apilink);
+      const response = await axios.get(apilink);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch user favorite data:', error);
+      return {
+        getFavorite: false,
+        message: `Failed to fetch user favorite data`,
+      };
+    }
+  }
+  static async addFavorite(props) {
+    const apilink = '/api/Order/addFavorite';
+    try {
+      console.log('Request API', apilink);
+      const response = await axios.put(apilink, props);
+      return response.data;
+    } catch (error) {
+      console.error(`Failed to add favorite`, error);
+      if (error.response.status === 401) {
+        return {
+          addFavorite: false,
+          message: `Unauthorized`,
+        };
+      }
+      return {
+        addFavorite: false,
+        message: `Failed to add favorite`,
+      };
+    }
+  }
+  static async removeFavorite() {
+    const apilink = '/api/Order/removeFromCart';
+
+    try {
+      console.log('Request API', apilink);
+      const response = await axios.put(apilink, props);
+      return response.data;
+    } catch (error) {
+      console.error(`Failed to remove favorite`, error);
+      return {
+        removeFavorite: false,
+        message: `Failed to remove favorite`,
       };
     }
   }

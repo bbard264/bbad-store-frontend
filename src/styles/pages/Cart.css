@@ -9,20 +9,22 @@
 }
 
 .cartSumBox {
-  width: 70%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding: 1em;
   margin: auto;
+  align-items: center;
 }
 
 .cartSumLine {
+  width: 80%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   background-color: #eee;
-  border-radius: 20px;
+  border-radius: 20px 20px 0 0;
 }
 
 .cartSumLine .emptyBox {
@@ -63,11 +65,11 @@
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  border-radius: 20px;
+  border-radius: 0 0 20px 20px;
   background-color: #ccc;
   font-size: 1.125em;
   font-weight: 500;
-  width: 100%;
+  width: 80%;
   padding: 0.5em 0;
   align-self: center;
 }
@@ -76,17 +78,45 @@
   background-color: rgb(16, 175, 96);
   font-size: 1.125em;
   font-weight: 500;
-  width: 100%;
+  width: 60%;
   color: white;
   border-radius: 20px;
   display: flex;
   padding: 0.5em 0;
-  margin-top: 0.5em;
+  margin-top: 1em;
   justify-content: center;
+  border: none;
+  transition: all 0.3s ease;
+}
+.cartSumCheckOutLine.checkOut:hover {
+  width: 50%;
+  cursor: pointer;
+  transform: scale(1.2);
+}
+
+.cartSumCheckOutLine.removeCart {
+  background-color: #f2f2f2 !important;
+  width: auto;
+  font-size: 1em;
+  padding: 0.5em 1em;
+  align-self: flex-end;
+}
+
+.cartSumCheckOutLine.removeCart:hover {
+  width: auto;
+  cursor: pointer;
+  background-color: rgb(228, 61, 61) !important;
+  box-shadow: 0 0 3px rgba(223, 43, 43, 0.76);
 }
 
 .cartListContainer {
-  width: 60%;
+  min-width: 60%;
+}
+
+.cartListBox {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .cartContentContainer {
@@ -127,6 +157,7 @@
   align-items: center;
   margin: 0.4em 0;
   padding: 0.6em 0;
+  position: relative;
   /* background-color: #888; */
   border-radius: 20px;
 }
@@ -174,10 +205,31 @@
   margin-right: 0.25em;
   border-radius: 20px;
   border: 1px #777777 solid;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.option:hover {
+  transform: scale(1.15);
 }
 
 .option.needOption {
-  background-color: white;
+  border: 1px red solid;
+  position: relative;
+  margin-right: 0.5em;
+}
+
+.option:hover.notLetMidify {
+  transform: none;
+  cursor: default;
+}
+
+.NEED {
+  top: 0;
+  left: 110%;
+  position: absolute;
+  color: red;
+  white-space: nowrap;
 }
 
 .priceCol {
@@ -200,4 +252,392 @@
 
 .productPhotoBox:hover + .nameOptionBox .productName {
   text-decoration: underline;
+}
+
+.inReview {
+  cursor: default !important;
+  text-decoration: none !important;
+  border: none !important;
+}
+
+.modifyOptionPostion {
+  position: relative;
+}
+
+.modifyOptionContainer {
+  position: fixed;
+  min-width: 100%;
+  min-height: 100%;
+  left: 0;
+  top: 0;
+  z-index: 1000;
+  display: flex;
+}
+
+.modifyOptionBox {
+  padding: 2em;
+  position: fixed;
+  width: 70%;
+  height: 80%;
+  z-index: 1002;
+  left: 50%;
+  top: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  transform: translate(-50%, -50%);
+}
+
+.backDropModifyOptionBox {
+  background-color: rgb(255, 255, 255);
+  border-radius: 20px;
+  position: fixed;
+  width: 30%;
+  height: 70%;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1001;
+  margin: auto;
+}
+
+.backDropCancelBox {
+  background-color: rgb(0, 0, 0, 0.7);
+  min-width: 100%;
+  min-height: 100%;
+  left: 0;
+  top: 0;
+  display: flex;
+  z-index: 1000;
+  cursor: pointer;
+}
+
+.productCol.modifyOption {
+  margin: 0 0 1em 0;
+  padding: 0;
+  height: 5em;
+}
+.productPhotoBox.modifyOption {
+  height: 5em;
+  width: 5em;
+  margin: 0 1em 0 0;
+}
+
+.deleteCol {
+  position: relative;
+  margin: 0.25em;
+
+  transition: transform 0.1s ease;
+}
+.deleteCol div {
+  border: 1px solid black;
+  border-radius: 50%;
+  height: 1.5em;
+  width: 1.5em;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  transition: all 0.3s ease;
+  user-select: none;
+}
+
+.deleteCol:hover div {
+  background-color: rgb(224, 57, 57);
+  color: white;
+  transform: translate(-50%, -50%) scale(1.2);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 0 3px rgba(223, 43, 43, 0.76);
+}
+
+.copyThisProduct {
+  position: absolute;
+}
+.copyThisProduct div {
+  border: 1px solid black;
+  border-radius: 50%;
+  height: 1.5em;
+  width: 1.5em;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  transition: all 0.3s ease;
+  font-size: 1em;
+}
+
+.copyThisProduct:hover div {
+  background-color: rgb(16, 175, 96);
+  color: white;
+  transform: translate(-50%, -50%) scale(1.2);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 0 3px rgba(16, 175, 96, 0.76);
+}
+
+.reviewCheckContainer {
+  position: fixed;
+  min-width: 100%;
+  min-height: 100%;
+  left: 0;
+  top: 0;
+  z-index: 1000;
+  display: flex;
+}
+
+.backDropReviewCheckBox {
+  background-color: rgb(255, 255, 255);
+  border-radius: 20px;
+  position: fixed;
+  width: 70%;
+  height: 95%;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1001;
+  margin: auto;
+}
+
+.reviewCheckBox {
+  position: fixed;
+  width: 80%;
+  height: 90%;
+  z-index: 1002;
+  left: 50%;
+  top: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  transform: translate(-50%, -50%);
+}
+
+.reviewProductList {
+  height: 60%;
+  background-color: #f2f2f2;
+  overflow: auto;
+  width: 100%;
+  margin-bottom: 1em;
+}
+
+.reviewProductListContent {
+  height: auto;
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
+
+.reviewProductListContent::-webkit-scrollbar {
+  width: 10px;
+}
+
+.reviewProductListContent::-webkit-scrollbar-track {
+  border-radius: 20px;
+}
+
+.reviewProductListContent::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 20px;
+}
+.reviewProductListContent:hover::-webkit-scrollbar-track {
+  background-color: #f2f2f2;
+}
+
+.reviewProductListContent:hover::-webkit-scrollbar-thumb {
+  background-color: #555;
+}
+
+.reviewProductHeadLine {
+  height: 2em;
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto repeat(3, 6em);
+  align-items: end;
+  color: #777777;
+}
+
+.reviewProductHeadLine > div:nth-child(n + 2) {
+  justify-self: center;
+}
+
+.reviewProductRow {
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto repeat(3, 6em);
+  align-items: center;
+  margin: 0.4em 0;
+  padding: 0.6em 0;
+  position: relative;
+  /* background-color: #888; */
+  border-radius: 20px;
+}
+.reviewSummary {
+  width: 100%;
+  height: 40%;
+}
+
+.reviewSummaryLine {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 1em;
+}
+
+.reviewSummaryPersonalContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.reviewSummaryPersonalContainer {
+  width: 60%;
+}
+
+.reviewSummaryPersonalBox {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px;
+  margin: 0 0.5em;
+  padding: 0 0.5em;
+}
+.reviewNamePhoneBox {
+  display: flex;
+  flex-direction: row;
+  height: 25%;
+  width: 100%;
+}
+.reviewAddressBox {
+  height: 75%;
+}
+
+.reviewHead {
+  margin: 0;
+  font-size: 1em;
+  color: #555;
+}
+
+.reviewNameBox,
+.reviewPhoneBox {
+  width: 50%;
+}
+
+.reviewCheckinput {
+  height: 1.5em;
+  border-radius: 20px;
+  padding: 0.5em;
+  background-color: #ffffff;
+  border: 1px #111111 solid;
+  outline: none;
+  width: 80%;
+  transition: all 0.3s ease;
+}
+
+.reviewAddressInputContainer {
+  border: 1px #111111 solid;
+  overflow: hidden;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+  padding: 0.5em;
+  height: 70%;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.labelInput {
+  width: 100%;
+  min-width: 50%;
+  display: flex;
+  padding-right: 0.25em;
+  justify-content: space-around;
+}
+
+.labelInput label {
+  width: 20%;
+  display: flex;
+  justify-content: flex-end;
+  color: #aaa;
+  font-size: 1em;
+}
+
+.reviewCheckinput.reviewaddress {
+  padding: 0.25em 0.25em;
+  width: 70%;
+  border: none;
+  box-shadow: none;
+  background-image: linear-gradient(to right, #aaa, #aaa 50%, transparent 50%);
+  background-size: 100% 1px;
+  background-position: bottom;
+  background-repeat: no-repeat;
+  border-radius: 0;
+}
+
+.reviewAddressInputContainer:focus-within {
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
+}
+.reviewProductListContent > :nth-child(2n) {
+  background-color: #fafafa;
+  border-radius: 0;
+}
+
+.cartSumBox.reviewCheckSection {
+  width: 30%;
+}
+
+.cartSumLine.reviewCheckSection {
+  width: 100%;
+}
+
+.cartSumNetTotalLine.reviewCheckSection {
+  width: 100%;
+}
+
+.cartSumCheckOutLine.reviewCheckSection {
+  width: 100%;
+}
+.cartSumCheckOutLine.checkOut.reviewCheckSection:hover {
+  width: 80%;
+  cursor: pointer;
+  transform: scale(1.2);
+}
+
+.reviewOut {
+  position: fixed;
+  top: 2%;
+  right: 2%;
+  margin: 0.25em;
+  height: 2em;
+  width: 2em;
+  transition: transform 0.1s ease;
+}
+.reviewOut div {
+  border: 1px solid black;
+  border-radius: 50%;
+  height: 2em;
+  width: 2em;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  transition: all 0.3s ease;
+  user-select: none;
+}
+
+.reviewOut:hover div {
+  background-color: rgb(224, 57, 57);
+  color: white;
+  transform: translate(-50%, -50%) scale(1.2);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 0 3px rgba(223, 43, 43, 0.76);
 }

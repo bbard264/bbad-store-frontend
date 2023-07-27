@@ -22,7 +22,7 @@ export default function Header(props) {
       setUserImg();
       setCountItemsInCart(0);
     }
-  }, [location, props.role]);
+  }, [location, props.shareState, props.role]);
 
   return (
     <div className="header">

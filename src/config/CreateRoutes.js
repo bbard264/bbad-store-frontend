@@ -12,7 +12,16 @@ function CreateRoutes(props) {
     <Routes>
       <Route path="/" element={<Navigate to="/home" />} />
       {publicRoutes.map((route) => (
-        <Route path={route.url} key={route.url} element={<route.component />} />
+        <Route
+          path={route.url}
+          key={route.url}
+          element={
+            <route.component
+              shareState={props.shareState}
+              setShareState={props.setShareState}
+            />
+          }
+        />
       ))}
       {privateRoutes.map((route) => (
         <Route
@@ -20,7 +29,11 @@ function CreateRoutes(props) {
           key={route.url}
           element={
             allowedRoutes.includes(route) ? (
-              <route.component setRole={props.setRole} />
+              <route.component
+                setRole={props.setRole}
+                shareState={props.shareState}
+                setShareState={props.setShareState}
+              />
             ) : (
               <Navigate to={roleRedirectRoute} replace />
             )
