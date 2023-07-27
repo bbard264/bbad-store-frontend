@@ -125,7 +125,6 @@ export default function Login(porps) {
       Token.setToken(responseLogin.token);
 
       try {
-        // Wait for the fetchUserInfo() to complete before navigating.
         await RESTapi.fetchUserInfo();
         await CartStorage.setCartStorage();
         navigate(previousRoute);
