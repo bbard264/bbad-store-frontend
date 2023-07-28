@@ -11,6 +11,7 @@ class RESTapi {
       const response = await axios.get(apilink);
       await UserDataStorage.setUserData(response.data.userInfo);
       await UserDataStorage.setUserImage(response.data.userInfo.photo);
+      await UserDataStorage.setUserFavorite();
     } catch (error) {
       console.error('Failed to fetch user information:', error);
     }
@@ -162,7 +163,7 @@ class RESTapi {
     }
   }
   static async addFavorite(props) {
-    const apilink = '/api/Order/addFavorite';
+    const apilink = '/api/User/addFavorite';
     try {
       console.log('Request API', apilink);
       const response = await axios.put(apilink, props);
@@ -181,8 +182,8 @@ class RESTapi {
       };
     }
   }
-  static async removeFavorite() {
-    const apilink = '/api/Order/removeFromCart';
+  static async removeFavorite(props) {
+    const apilink = '/api/User/removeFavorite';
 
     try {
       console.log('Request API', apilink);

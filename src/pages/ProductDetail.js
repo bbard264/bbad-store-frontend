@@ -24,6 +24,7 @@ import faChalee3Image from '../assets/ex_products/FA_chalee3.jpg';
 import chaleeImage from '../assets/ex_products/chalee.jpg';
 import hugMomentImage from '../assets/ex_products/HugMoment.jpg';
 import CartStorage from '../config/services/CartStorage';
+import UserDataStorage from '../config/services/UserDataStorage';
 
 //#region mock userReview
 
@@ -665,16 +666,46 @@ function CommonSection({ product, shareState, setShareState }) {
     );
   }
 
-  // function favoriteButton(favorite) {
-  //   function checkFavorite(favorite) {
-  //     if (favorite) {
-  //       return <img src={fullHeartIcon} alt="truefavorite"></img>;
-  //     } else {
-  //       return <img src={emptyHeartIcon} alt="falsefavorite"></img>;
-  //     }
-  //   }
-  //   return <div className="favoriteButton">{checkFavorite(favorite)}</div>;
-  // }
+  function FavoriteButton() {
+    const userFavorite = UserDataStorage.getUserFavorite();
+    console.log(product);
+    console.log(userFavorite);
+    const { favorite_items: favoriteItems = [] } = userFavorite || {};
+    console.log(favoriteItems);
+    const [isFavorite, setIsFavorite] = useState(
+      favoriteItems.some((item) => item._id === product._id)
+    );
+
+    async function onClickFavorite() {
+      console.log(product);
+      if (isFavorite) {
+        try {
+          await UserDataStorage.removeFavorite(product);
+          setIsFavorite(!isFavorite);
+        } catch (error) {
+          return;
+        }
+      } else if (!isFavorite) {
+        try {
+          await UserDataStorage.addFavorite(product);
+          setIsFavorite(!isFavorite);
+        } catch (error) {
+          return;
+        }
+      }
+      setShareState(shareState + 1);
+    }
+
+    return (
+      <div className="favoriteButton">
+        <img
+          src={isFavorite ? fullHeartIcon : emptyHeartIcon}
+          alt={isFavorite ? `truefavorite` : `falsefavorite`}
+          onClick={onClickFavorite}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="commonSection">
@@ -713,7 +744,7 @@ function CommonSection({ product, shareState, setShareState }) {
             </div>
           </div>
           {addToCartButton()}
-          {/* {favoriteButton(product.favorite)} */}
+          <FavoriteButton />
         </div>
         <div className="warningMessage">{errorMessage}</div>
       </div>

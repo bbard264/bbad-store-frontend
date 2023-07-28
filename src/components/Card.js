@@ -1,17 +1,29 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import addIcon from '../assets/icon/add.png';
+import xIcon from '../assets/icon/x-mark.png';
 import cartIcon from '../assets/icon/cart.png';
 import heartEmptyIcon from '../assets/icon/heart.png';
 import heartFillIcon from '../assets/icon/heart2.png';
 import CartStorage from '../config/services/CartStorage';
 
 import '../styles/components/Card.css';
+import Favorite from './../pages/Favorite';
+import UserDataStorage from '../config/services/UserDataStorage';
 
 export default function Card(props) {
   const navigate = useNavigate();
   const location = useLocation();
-  let favorite = false; // come back to fix later
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const isFavoritePage = props.isFavoritePage || false;
+
+  useEffect(() => {
+    const userFavorite = UserDataStorage.getUserFavorite();
+    const { favorite_items: favoriteItems = [] } = userFavorite || {};
+    setIsFavorite(favoriteItems.some((item) => item._id === props.product._id));
+  }, []);
+
   function handleOnClick(productIdUrl) {
     navigate(
       `/product-detail/${
@@ -56,12 +68,55 @@ export default function Card(props) {
     props.setShareState(props.shareState + 1);
   }
 
+  async function onClickFavorite() {
+    setIsLoading(true);
+    if (isFavoritePage) {
+      try {
+        await UserDataStorage.removeFavorite(props.product);
+        props.setShareState(props.shareState + 1);
+      } catch (error) {
+        setIsLoading(false);
+        return;
+      }
+    } else {
+      if (isFavorite) {
+        try {
+          await UserDataStorage.removeFavorite(props.product);
+          setIsFavorite(!isFavorite);
+          props.setShareState(props.shareState + 1);
+        } catch (error) {
+          setIsLoading(false);
+          return;
+        }
+      } else if (!isFavorite) {
+        try {
+          await UserDataStorage.addFavorite(props.product);
+          setIsFavorite(!isFavorite);
+          props.setShareState(props.shareState + 1);
+        } catch (error) {
+          setIsLoading(false);
+          return;
+        }
+      }
+    }
+    setIsLoading(false);
+  }
+
   return (
     <div className="card">
       <img
         className="heartIcon"
-        src={favorite ? heartFillIcon : heartEmptyIcon}
-        alt={favorite ? 'favoriteTure' : 'favoriteFalse'}
+        src={
+          isFavoritePage ? xIcon : isFavorite ? heartFillIcon : heartEmptyIcon
+        }
+        alt={
+          isFavoritePage
+            ? 'xIcon'
+            : isFavorite
+            ? 'favoriteTure'
+            : 'favoriteFalse'
+        }
+        onClick={isLoading ? () => {} : onClickFavorite}
       />
       <div
         className="cardImg"

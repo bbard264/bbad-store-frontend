@@ -1,0 +1,40 @@
+.favoritePageContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.favoriteHeader {
+  display: flex;
+  width: 80%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.removeAllButton {
+  font-weight: 500;
+
+  color: white;
+  border-radius: 20px;
+  display: flex;
+
+  border: none;
+  transition: all 0.3s ease;
+
+  background-color: #f2f2f2 !important;
+  width: auto;
+  font-size: 1em;
+  padding: 0.5em 1em;
+}
+
+.removeAllButton:hover {
+  width: auto;
+  cursor: pointer;
+  background-color: rgb(228, 61, 61) !important;
+  box-shadow: 0 0 3px rgba(223, 43, 43, 0.76);
+}
+.mainContent.favoritePage {
+  width: 80%;
+}

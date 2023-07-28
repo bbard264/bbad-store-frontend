@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import bbadlogo from '../assets/ex_products/bbadlogo.png';
 import magnifyingGlass from '../assets/icon/magnifying-glass.png';
-import heart2Icon from '../assets/icon/heart2.png';
+import heartEmptyIcon from '../assets/icon/heart.png';
+import heartFillIcon from '../assets/icon/heart2.png';
 import cartIcon from '../assets/icon/cart.png';
 import userIcon from '../assets/icon/user.png';
 import '../styles/components/Header.css';
@@ -12,15 +13,27 @@ import CartStorage from '../config/services/CartStorage';
 export default function Header(props) {
   const navigate = useNavigate();
   const location = useLocation();
-  const [userImg, setUserImg] = useState();
-  const [countItemsInCart, setCountItemsInCart] = useState(0);
+  const [state, setState] = useState({
+    userImg: undefined,
+    countItemsInCart: 0,
+    countFavorite: 0,
+  });
+
   useEffect(() => {
     if (props.role === 'user') {
-      setUserImg(UserDataStorage.getUserImage());
-      setCountItemsInCart(CartStorage.getCountItemsInCart());
+      setState((prevState) => ({
+        ...prevState,
+        userImg: UserDataStorage.getUserImage(),
+        countItemsInCart: CartStorage.getCountItemsInCart(),
+        countFavorite: UserDataStorage.getCountUserFavorite(),
+      }));
     } else {
-      setUserImg();
-      setCountItemsInCart(0);
+      setState((prevState) => ({
+        ...prevState,
+        userImg: undefined,
+        countItemsInCart: 0,
+        countFavorite: 0,
+      }));
     }
   }, [location, props.shareState, props.role]);
 
@@ -49,15 +62,22 @@ export default function Header(props) {
           </div>
           <div className="iconLink" onClick={() => navigate('/favorite')}>
             <div className="iconBox">
-              <img src={heart2Icon} alt="favorite" />
+              {state.countFavorite === 0 ||
+              !UserDataStorage.getCountUserFavorite() ? (
+                <></>
+              ) : (
+                <div className="countFavorite">{state.countFavorite}</div>
+              )}
+              <img src={heartFillIcon} alt="favorite" />
             </div>
           </div>
           <div className="iconLink" onClick={() => navigate('/cart')}>
             <div className="iconBox">
-              {countItemsInCart === 0 || !CartStorage.getCountItemsInCart() ? (
+              {state.countItemsInCart === 0 ||
+              !CartStorage.getCountItemsInCart() ? (
                 <div></div>
               ) : (
-                <div className="countItemsInCart">{countItemsInCart}</div>
+                <div className="countItemsInCart">{state.countItemsInCart}</div>
               )}
               <img src={cartIcon} alt="cart" />
             </div>
@@ -70,8 +90,12 @@ export default function Header(props) {
                   alt="userProfile"
                   className="haveProfile"
                 />
-              ) : userImg ? (
-                <img src={userImg} alt="userProfile" className="haveProfile" />
+              ) : state.userImg ? (
+                <img
+                  src={state.userImg}
+                  alt="userProfile"
+                  className="haveProfile"
+                />
               ) : (
                 <img src={userIcon} alt="guestuser" />
               )}
