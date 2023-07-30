@@ -1,42 +1,20 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import bbadlogo from '../assets/ex_products/bbadlogo.png';
 import '../styles/components/Footer.css';
 import facebookIcon from '../assets/icon/facebook.png';
 import instagramIcon from '../assets/icon/instagram.png';
 import twitterIcon from '../assets/icon/twitter.png';
+import { useNavigate } from 'react-router-dom';
+import CatgoryLastpage from '../config/services/CatagoryLastpage';
 
-class Navi {
-  constructor(name, link) {
-    this.name = name;
-    this.link = link;
-  }
-}
-
-function makeNavi(listNavi) {
-  return listNavi.map((item, index) => (
-    <div className="naviLinkFooter" key={item.name}>
-      <a href={item.link}>{item.name}</a>
-    </div>
-  ));
-}
-// ------------------------------------------------ firstColumnFooter() -------------------------------
-function firstColumnFooter() {
-  let productsLink = new Navi('Products', '#');
-  let promotionsnewsLink = new Navi('Promotions/News', '#');
-  let aboutUsLink = new Navi('About Us', '#');
-  let contactLink = new Navi('Contact', '#');
-  let favoriteLink = new Navi('Favorite', '#');
-  let cartLink = new Navi('Cart', '#');
-  let accountLink = new Navi('Account', '#');
-
+function FirstColumnFooter() {
+  const navigate = useNavigate();
   let listMainNavi = [
-    productsLink,
-    promotionsnewsLink,
-    aboutUsLink,
-    contactLink,
-    favoriteLink,
-    cartLink,
-    accountLink,
+    { name: 'Prouducts', navi: '/products' },
+    { name: 'Order', navi: '/order' },
+    { name: 'Favorite', navi: '/favorite' },
+    { name: 'Cart', navi: '/cart' },
+    { name: 'Account', navi: '/user' },
   ];
 
   return (
@@ -45,34 +23,55 @@ function firstColumnFooter() {
         <img src={bbadlogo} alt="bbadlogo"></img>
         <div className="brandname">.bbad-shop</div>
       </div>
-      <div className="mainNaviFooter">{makeNavi(listMainNavi)}</div>
+      <div className="mainNaviFooter">
+        {listMainNavi.map((item, index) => (
+          <div
+            className="naviLinkFooter"
+            key={item.name}
+            onClick={() => navigate(item.navi)}
+          >
+            {item.name}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
-// ------------------------------------------------ secondColumnFooter()  -------------------------------
-function secondColumnFooter() {
-  let wearablesLink = new Navi('Wearables', '#');
-  let collectiblesLink = new Navi('Collectibles', '#');
-  let artBooksLink = new Navi('Art Books', '#');
-  let digitalProductsLink = new Navi('Digital Products', '#');
 
-  let listProdNavi = [
-    wearablesLink,
-    collectiblesLink,
-    artBooksLink,
-    digitalProductsLink,
+function SecondColumnFooter() {
+  const navigate = useNavigate();
+  let listMainNavi = [
+    { name: 'Wearables', navi: '/products/wearables' },
+    { name: 'Collectibles', navi: '/products/collectibles' },
+    { name: 'Art Books', navi: '/products/art-books' },
+    { name: 'Digital Products', navi: '/products/digital-products' },
   ];
   return (
     <div className="secondColomnFooter">
       <div className="hSecondColomnFooter">
-        <a href="#">Products</a>
+        <div
+          className="naviLinkFooter hFooter"
+          onClick={() => navigate('/products')}
+        >
+          Products
+        </div>
       </div>
-      <div className="listProdNavi">{makeNavi(listProdNavi)}</div>
+      <div className="listProdNavi">
+        {listMainNavi.map((item, index) => (
+          <div
+            className="naviLinkFooter"
+            key={item.name}
+            onClick={() => navigate(item.navi)}
+          >
+            {item.name}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
-// ------------------------------------------------ contactFooter() -------------------------------
-function contactFooter() {
+
+function ContactFooter() {
   class Social {
     constructor(name, link, icon) {
       this.name = name;
@@ -138,9 +137,7 @@ function contactFooter() {
   );
 }
 
-// ------------------------------------------------ helpButtonFooter() -------------------------------
-
-function helpButtonFooter() {
+function HelpButtonFooter() {
   let setting = { language: 'English' };
   let listLanguage = ['English', 'Thai'];
 
@@ -190,12 +187,12 @@ export default function Footer() {
   return (
     <div className="footer">
       <div className="leftFooter">
-        {firstColumnFooter()}
-        {secondColumnFooter()}
+        <FirstColumnFooter />
+        <SecondColumnFooter />
       </div>
       <div className="rightFooter">
-        {contactFooter()}
-        {helpButtonFooter()}
+        <ContactFooter />
+        {/* <HelpButtonFooter /> */}
       </div>
     </div>
   );

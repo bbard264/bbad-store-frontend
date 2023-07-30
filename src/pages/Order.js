@@ -307,6 +307,7 @@ function OrderDetail(props) {
 export default function Order() {
   const [orderData, setOrderData] = useState({});
   const [orderDetail, setOrderDetail] = useState({});
+  console.log(orderData.orderList);
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -318,11 +319,14 @@ export default function Order() {
           responseGetOrder.getOrder &&
           responseGetOrderStatus.getOrderStatus
         ) {
+          let reOrderList = responseGetOrder.data.sort(
+            (a, b) => new Date(b.created_at) - new Date(a.created_at)
+          );
           setOrderData({
-            orderList: responseGetOrder.data,
+            orderList: reOrderList,
             orderStatus: responseGetOrderStatus.data,
           });
-          setOrderDetail(responseGetOrder.data[0]);
+          setOrderDetail(reOrderList[0]);
         }
       } catch (error) {
         console.error('Error fetching orders:', error);

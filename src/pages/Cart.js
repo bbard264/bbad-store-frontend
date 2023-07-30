@@ -597,7 +597,6 @@ export default function Cart(props) {
         window.alert(response.message);
         setReviewCheck({ cart: {}, state: false });
         props.setShareState(props.shareState + 1);
-        window.location.reload();
       } else {
         window.alert('False to place order, please try again later');
         return;

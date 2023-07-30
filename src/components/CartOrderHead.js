@@ -1,25 +1,27 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../styles/components/CartOrderHead.css';
 
 export default function CartOrderHead({ nowPage }) {
+  const navigate = useNavigate();
   return (
     <div className="cartOrderNaviContainer">
-      <a
+      <div
         className={`cartNavi ${
           nowPage === 'CartPage' ? 'isactive' : 'notActive'
         }`}
-        href="/cart"
+        onClick={() => navigate('/cart')}
       >
         Cart
-      </a>
-      <a
+      </div>
+      <div
         className={`orderNavi ${
           nowPage === 'OrderPage' ? 'isactive' : 'notActive'
         }`}
-        href="/order"
+        onClick={() => navigate('/order')}
       >
         Order
-      </a>
+      </div>
     </div>
   );
 }
