@@ -2,84 +2,7 @@ import React, { useEffect, useState } from 'react';
 import CartOrderHeader from '../components/CartOrderHead.js';
 import copyIcon from '../assets/icon/copy.png';
 import '../styles/pages/Order.css';
-
-import wizhogFullImage from '../assets/ex_products/wizhog-full.jpg';
-import faChalee3Image from '../assets/ex_products/FA_chalee3.jpg';
-import chaleeImage from '../assets/ex_products/chalee.jpg';
-import hugMomentImage from '../assets/ex_products/HugMoment.jpg';
 import RESTapi from './../config/services/RESTapi';
-
-//#region mock product
-
-class ProductCart {
-  constructor(
-    userid,
-    cartid,
-    productid,
-    productName = '',
-    productOption = [],
-    quantity = 1,
-    productPhoto = '',
-    productPrice = 0
-  ) {
-    this.userid = userid;
-    this.cartid = cartid;
-    this.productid = productid;
-    this.productName = productName;
-    this.productOption = productOption; // example [optionid1, optionid2 optionid3]
-    this.quantity = quantity;
-    this.productPhoto = productPhoto;
-    this.productPrice = productPrice;
-  }
-}
-
-const product1 = new ProductCart(
-  'user123',
-  'cart1',
-  'product1',
-  'Fitness Tracker',
-  ['XL', 'RED'],
-  2,
-  wizhogFullImage,
-  59.99
-);
-
-const product2 = new ProductCart(
-  'user123',
-  'cart1',
-  'product2',
-  'Smartwatch',
-  ['PRO', 'Cyan'],
-  1,
-  chaleeImage,
-  199.99
-);
-
-const product3 = new ProductCart(
-  'user123',
-  'cart1',
-  'product3',
-  'Wireless Earbuds',
-  [],
-  3,
-  faChalee3Image,
-  79.99
-);
-
-const product4 = new ProductCart(
-  'user123',
-  'cart1',
-  'product4',
-  'T-Shirt',
-  ['XXL', 'BLUE'],
-  1,
-  hugMomentImage,
-  129.99
-);
-
-const productCartList = [product1, product2, product3, product4];
-
-//#endregion
 
 function OrderList(props) {
   const order = props.orderData;
@@ -111,7 +34,6 @@ function OrderList(props) {
 
 function OrderDetail(props) {
   const order = props.orderDetail;
-  console.log(order);
   const orderStatusList = props.orderStatus;
   function renderTimeLine(stage) {
     const stageNum =
@@ -122,7 +44,7 @@ function OrderDetail(props) {
       let isStage = stageNum >= i ? 'currentStage' : '';
       let lineAfterClass = stageNum >= i + 1 ? 'currentStage' : '';
       circleElements.push(
-        <div className={`circleRow col${i}`}>
+        <div className={`circleRow col${i}`} key={`circleRow col${i}`}>
           {i === 1 ? null : <div className={`lineBefore ${isStage}`} />}
           <div className={`circleTimeLine ${isStage}`} />
           {i === 6 ? null : <div className={`lineAfter ${lineAfterClass}`} />}
@@ -307,7 +229,6 @@ function OrderDetail(props) {
 export default function Order() {
   const [orderData, setOrderData] = useState({});
   const [orderDetail, setOrderDetail] = useState({});
-  console.log(orderData.orderList);
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -355,6 +276,7 @@ export default function Order() {
                       orderStatus={orderData.orderStatus}
                       orderDetail={orderDetail}
                       setOrderDetail={setOrderDetail}
+                      key={order._id}
                     />
                   ))
                 )}

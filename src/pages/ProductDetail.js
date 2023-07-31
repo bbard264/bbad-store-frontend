@@ -5,6 +5,7 @@ import Token from '../config/services/Token';
 import '../styles/pages/ProductDetail.css';
 
 import ArrowCorner from '../components/subcomponents/ArrowCorner';
+import StarRating from '../components/subcomponents/StarRating';
 
 import RecommendationsContainter from '../components/RecommendationsContainter';
 import emptyHeartIcon from '../assets/icon/heart.png';
@@ -12,7 +13,6 @@ import fullHeartIcon from '../assets/icon/heart2.png';
 import addIcon from '../assets/icon/add.png';
 import cartIcon from '../assets/icon/cart.png';
 
-import emptyStarIcon from '../assets/icon/star.png';
 import fullStarIcon from '../assets/icon/star2.png';
 
 import kuri from '../assets/ex_products/kuri.jpg';
@@ -522,26 +522,6 @@ function CommonSection({ product, shareState, setShareState }) {
     };
   }, []);
 
-  function renderStarRating(rating) {
-    let maxRating = 5;
-    let percentRating = (rating / 5) * 100 + '%';
-    let emptyStars = [];
-    let fullStars = [];
-    for (let i = 0; i < maxRating; i++) {
-      emptyStars.push(<img key={i} src={emptyStarIcon} alt=""></img>);
-      fullStars.push(<img key={i} src={fullStarIcon} alt=""></img>);
-    }
-
-    return (
-      <div className="star">
-        <div className="nowRating" style={{ width: percentRating }}>
-          {fullStars}
-        </div>
-        <div className="emptyRating">{emptyStars}</div>
-      </div>
-    );
-  }
-
   function renderOption(options, handleOnRadioChange) {
     if (!options || Object.entries(options).length === 0) {
       return null;
@@ -668,10 +648,7 @@ function CommonSection({ product, shareState, setShareState }) {
 
   function FavoriteButton() {
     const userFavorite = UserDataStorage.getUserFavorite();
-    console.log(product);
-    console.log(userFavorite);
     const { favorite_items: favoriteItems = [] } = userFavorite || {};
-    console.log(favoriteItems);
     const [isFavorite, setIsFavorite] = useState(
       favoriteItems.some((item) => item._id === product._id)
     );
@@ -715,7 +692,7 @@ function CommonSection({ product, shareState, setShareState }) {
           <h1>{product.product_name}</h1>
         </div>
         <div className="rateLine">
-          {renderStarRating(4.7)}
+          <StarRating rating={4.7} />
           <div className="numReviews">{userReviews.length} reviews</div>
         </div>
         <div className="priceLine">

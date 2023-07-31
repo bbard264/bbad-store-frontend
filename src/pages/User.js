@@ -9,24 +9,9 @@ import Cropping from '../components/Cropping';
 import profileTemp from '../assets/temp_img/profile_temp.png';
 import UserDataStorage from '../config/services/UserDataStorage';
 import RESTapi from '../config/services/RESTapi';
+import ReviewingBox from '../components/ReviewingBox';
 
-const userPageList = ['profile', 'account'];
-
-function userNavi(handleMenuClick, contentNow, pagelist) {
-  return (
-    <div className="userNaviBox">
-      {pagelist.map((page, index) => (
-        <div
-          key={index}
-          className={`${contentNow === page ? 'userCurrent' : ''}`}
-          onClick={() => handleMenuClick(page)}
-        >
-          {page.charAt(0).toUpperCase() + page.slice(1)}
-        </div>
-      ))}
-    </div>
-  );
-}
+import fullStar from '../assets/icon/star2.png';
 
 function reducer(state, action) {
   switch (action.type) {
@@ -195,6 +180,23 @@ function reducer(state, action) {
     default:
       throw new Error(`Unhandled action type: ${action.type}`);
   }
+}
+
+function UserNavi({ pageNow, pageList }) {
+  const navigate = useNavigate();
+  return (
+    <div className="userNaviBox">
+      {pageList.map((page, index) => (
+        <div
+          key={index}
+          className={`${pageNow === page ? 'userCurrent' : ''}`}
+          onClick={() => navigate(`/user/${page}`)}
+        >
+          {page.charAt(0).toUpperCase() + page.slice(1)}
+        </div>
+      ))}
+    </div>
+  );
 }
 
 const fetchUpdateUser = async (props) => {
@@ -928,6 +930,177 @@ function UserAccount({ userData }) {
 //   );
 // }
 
+function ReviewCard({ item, itemFocus, setItemFocus }) {
+  return (
+    <div
+      className={`reviewCardBox${itemFocus === item ? ' isFocus' : ''}`}
+      onClick={() => setItemFocus(item)}
+    >
+      <div className="productPhotoCol">
+        <img src={item.product_photo} alt={item.product_name} />
+      </div>
+      <div className="nameRatingCol">
+        <div className="productNameLine">{item.product_name}</div>
+        <div className="ratingLine">
+          {Object.keys(item.review).length > 0 ? (
+            <>
+              {Array.from(
+                { length: Math.floor(item.review.rate) },
+                (_, index) => (
+                  <img key={index} src={fullStar} alt="Full Star" />
+                )
+              )}
+            </>
+          ) : (
+            <div className="reviewProductButton">
+              {itemFocus === item ? '' : 'CLICK TO REVIEW!'}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function UserReviews() {
+  const [userReviewsList, setUserReviewsList] = useState({});
+  const [showReviewCard, setShowReviewCard] = useState({
+    name: '',
+  });
+  const [isLoadReviewCard, setIsLoadReviewCard] = useState(false);
+  const [itemFocus, setItemFocus] = useState({});
+
+  useEffect(() => {
+    let prepareObj = {};
+
+    const storedData = sessionStorage.getItem('USER_REVIEWS_LIST');
+    if (!storedData) {
+      RESTapi.getReviewsByUser()
+        .then((result) => {
+          if (result.isSuccess) {
+            prepareObj.showAll = result.data;
+            sessionStorage.setItem(
+              'USER_REVIEWS_LIST',
+              JSON.stringify(result.data)
+            );
+          }
+        })
+        .catch((error) => {
+          console.error('Error fetching reviews:', error);
+        })
+        .finally(() => {
+          const filterReviewList = prepareObj.showAll.reduce(
+            (acc, review) => {
+              const reviewsList =
+                Object.keys(review.review).length === 0
+                  ? 'showNoReview'
+                  : 'showOnlyReview';
+              acc[reviewsList].push(review);
+              return acc;
+            },
+            { showNoReview: [], showOnlyReview: [] }
+          );
+
+          prepareObj.showNoReview = filterReviewList.showNoReview;
+          prepareObj.showOnlyReview = filterReviewList.showOnlyReview;
+
+          setUserReviewsList(prepareObj);
+        });
+    } else {
+      prepareObj.showAll = JSON.parse(storedData);
+
+      const filterReviewList = prepareObj.showAll.reduce(
+        (acc, review) => {
+          const reviewsList =
+            Object.keys(review.review).length === 0
+              ? 'showNoReview'
+              : 'showOnlyReview';
+          acc[reviewsList].push(review);
+          return acc;
+        },
+        { showNoReview: [], showOnlyReview: [] }
+      );
+
+      prepareObj.showNoReview = filterReviewList.showNoReview;
+      prepareObj.showOnlyReview = filterReviewList.showOnlyReview;
+    }
+    setUserReviewsList(prepareObj);
+    setShowReviewCard({
+      name: 'showNoReview',
+    });
+  }, []);
+
+  if (Object.keys(userReviewsList).length === 0) {
+    return <>Loading....</>;
+  }
+
+  async function onClickChangeShowReviewList(e) {
+    setIsLoadReviewCard(true);
+    setShowReviewCard({
+      name: e.target.id,
+    });
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    setIsLoadReviewCard(false);
+  }
+
+  const filteredItems =
+    showReviewCard.name === 'showAll'
+      ? userReviewsList.showAll
+      : showReviewCard.name === 'showNoReview'
+      ? userReviewsList.showNoReview
+      : userReviewsList.showOnlyReview;
+
+  return (
+    <div className="userReviewBox">
+      <div className="currentUserReviewContainer">
+        <ReviewingBox item={itemFocus} setItemFocus={setItemFocus} />
+      </div>
+      <div className="filterUserReview">
+        <div
+          className={`filterNavi${
+            showReviewCard.name === 'showAll' ? ' isActive' : ''
+          }`}
+          onClick={onClickChangeShowReviewList}
+          id="showAll"
+        >
+          <div id="showAll">All</div>
+        </div>
+        <div
+          className={`filterNavi${
+            showReviewCard.name === 'showNoReview' ? ' isActive' : ''
+          }`}
+          onClick={onClickChangeShowReviewList}
+          id="showNoReview"
+        >
+          <div id="showNoReview">Need Review</div>
+        </div>
+        <div
+          className={`filterNavi${
+            showReviewCard.name === 'showOnlyReview' ? ' isActive' : ''
+          }`}
+          onClick={onClickChangeShowReviewList}
+          id="showOnlyReview"
+        >
+          <div id="showOnlyReview">Already Review</div>
+        </div>
+        <div className={`circleSelect ${showReviewCard.name ?? ''}`}></div>
+      </div>
+      <div className="listUserReviewContainer">
+        <div className={`listUserReviewBox${isLoadReviewCard ? ' hide' : ''}`}>
+          {filteredItems.map((item) => (
+            <ReviewCard
+              item={item}
+              key={item._id}
+              itemFocus={itemFocus}
+              setItemFocus={setItemFocus}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function showContent(contentNow, userPageList, userData) {
   if (contentNow === userPageList[0]) {
     return <UserProfile userData={userData} />;
@@ -935,10 +1108,9 @@ function showContent(contentNow, userPageList, userData) {
   if (contentNow === userPageList[1]) {
     return <UserAccount userData={userData} />;
   }
-  // if (contentNow === userPageList[2]) {
-  //   return <UserSettings userData={userData} />;
-  // }
-  else {
+  if (contentNow === userPageList[2]) {
+    return <UserReviews />;
+  } else {
     return;
   }
 }
@@ -967,6 +1139,7 @@ export default function User() {
   const [isLoaded, setIsLoaded] = useState(false);
   let { page } = useParams();
   const navigate = useNavigate();
+  const userPageList = ['profile', 'account', 'review'];
   if (!page) {
     page = userPageList[0];
   }
@@ -992,17 +1165,13 @@ export default function User() {
     }
   }, []);
 
-  function handleMenuClick(page) {
-    if (page) navigate(`/user/${page}`);
-  }
-
   return (
     <div className="userPage">
       <div className="userContainer">
         {isLoaded ? (
           <>
             <div className="userNaviContainer">
-              {userNavi(handleMenuClick, page, userPageList)}
+              <UserNavi pageNow={page} pageList={userPageList} />
             </div>
             <div className="userContentContainer">
               {showContent(page, userPageList, userInfo)}

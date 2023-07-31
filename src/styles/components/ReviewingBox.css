@@ -1,0 +1,43 @@
+.reviewingBox {
+  width: 70%;
+  height: 100%;
+  margin: auto;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.reviewingBox.empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgb(141, 141, 141);
+}
+
+.reviewingHeadLine {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  width: 100%;
+}
+
+.reviewingHeadLinePhotoCol {
+  min-width: 5em;
+  min-height: 5em;
+  max-width: 5em;
+  max-height: 5em;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.reviewingHeadLinePhotoCol img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+textarea {
+  resize: none; /* Disable resizing for both horizontal and vertical directions */
+}

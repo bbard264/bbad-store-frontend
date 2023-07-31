@@ -1,0 +1,41 @@
+.star {
+  position: relative;
+  width: 7.5em;
+  height: 1.5em;
+}
+.star div img {
+  width: 1.5em;
+  position: absolute;
+  height: auto;
+}
+
+.star .nowRating img {
+  z-index: 5;
+}
+.star .emptyRating img {
+  z-index: 4;
+}
+
+.star div img:nth-child(1) {
+  left: 0;
+}
+.star div img:nth-child(2) {
+  left: 1.5em;
+}
+.star div img:nth-child(3) {
+  left: 3em;
+}
+.star div img:nth-child(4) {
+  left: 4.5em;
+}
+.star div img:nth-child(5) {
+  left: 6em;
+}
+.nowRating {
+  position: absolute;
+  height: 1.5em;
+  overflow: hidden;
+}
+.emptyRating {
+  position: absolute;
+}

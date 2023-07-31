@@ -1,12 +1,12 @@
 .userContainer {
   display: flex;
   flex-direction: row;
+  height: 80vh;
   width: 100%;
 }
 
 .userNaviContainer {
-  width: 40%;
-  height: 45em;
+  width: 20%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -48,12 +48,18 @@
 }
 
 .userContentContainer {
-  width: 60%;
-  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
   padding-left: 2em;
-  margin: auto 0;
   transition: all 0.3s ease;
 }
+.userProfileBox {
+  display: flex;
+  flex-direction: column;
+}
+
 .userAccountBox {
   display: flex;
   flex-direction: column;
@@ -289,4 +295,193 @@
   margin-left: 10px;
   font-size: 14px;
   color: #666;
+}
+
+.userReviewBox {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  margin: auto;
+}
+
+.currentUserReviewContainer {
+  width: 100%;
+  height: 40%;
+  background-color: rgb(224, 224, 224);
+}
+
+.listUserReviewContainer {
+  height: 50%;
+  width: 100%;
+  overflow: auto;
+  position: relative;
+}
+
+.listUserReviewBox {
+  height: 100%;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  overflow: auto;
+  align-content: start;
+  transition: all 0.6s ease-in-out;
+  transform: translate(0, 0);
+  opacity: 1;
+  position: absolute;
+}
+
+.listUserReviewBox.hide {
+  visibility: hidden;
+  opacity: 0;
+  transition: none;
+  transform: translate(0, -10%);
+}
+
+.reviewCardBox {
+  display: flex;
+  border: 1px solid #ccc;
+  padding: 0.5em;
+  margin: 0.25em 0.5em;
+  border-radius: 20px;
+  overflow: hidden;
+  width: 90%;
+  height: 3em;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.reviewCardBox.isFocus {
+  opacity: 0;
+  transform: translate(0, -10%);
+}
+
+.reviewCardBox.isFocus .reviewProductButton {
+  visibility: hidden;
+}
+
+.productPhotoCol {
+  min-width: 3em;
+  min-height: 3em;
+  max-width: 3em;
+  max-height: 3em;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.productPhotoCol img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.nameRatingCol {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-left: 1em;
+}
+
+.productNameLine {
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 70%;
+  text-overflow: ellipsis;
+}
+
+.ratingLine {
+  margin-top: 5px;
+}
+
+.reviewProductButton {
+  color: red;
+  position: absolute;
+  top: 70%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+}
+
+.reviewCardBox:hover {
+  cursor: pointer;
+  box-shadow: 0px 0px 2px #000000;
+  transform: scale(1.01);
+}
+
+.reviewCardBox:hover .reviewProductButton {
+  top: 50%;
+  left: 50%;
+  padding: 35% 50%;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  transform: translate(-50%, -50%);
+}
+
+.ratingLine {
+  display: flex;
+  flex-direction: row;
+  height: 1em;
+  width: 1em;
+}
+
+.ratingLine img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.filterUserReview {
+  height: 10%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  justify-content: center;
+  align-items: center;
+  margin: auto 0;
+  position: relative;
+}
+
+.filterNavi {
+  padding: 0.25em 0.5em;
+  border-radius: 20px;
+  user-select: none;
+  cursor: pointer;
+  white-space: nowrap;
+  position: relative;
+  height: 2em;
+}
+
+.filterNavi div {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.filterNavi.isActive {
+  cursor: default;
+}
+
+.circleSelect {
+  position: absolute;
+  height: 2.25em;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border: 1px solid black;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+}
+
+.circleSelect.showAll {
+  left: 16.75%;
+  width: 2.5em;
+}
+
+.circleSelect.showNoReview {
+  left: 50%;
+  width: 8.5em;
+}
+
+.circleSelect.showOnlyReview {
+  left: 83.5%;
+  width: 8.5em;
 }

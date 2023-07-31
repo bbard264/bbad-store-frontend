@@ -79,7 +79,7 @@ class RESTapi {
 
     try {
       console.log('Request API', apilink);
-      await axios.put(apilink, productIdOrAll);
+      await axios.delete(apilink, productIdOrAll);
       return {
         removeFromCart: true,
         message: `Remove product ${productIdOrAll}  from cart successful`,
@@ -162,6 +162,7 @@ class RESTapi {
       };
     }
   }
+
   static async addFavorite(props) {
     const apilink = '/api/User/addFavorite';
     try {
@@ -182,18 +183,112 @@ class RESTapi {
       };
     }
   }
+
   static async removeFavorite(props) {
     const apilink = '/api/User/removeFavorite';
 
     try {
       console.log('Request API', apilink);
-      const response = await axios.put(apilink, props);
+      const response = await axios.delete(apilink, props);
       return response.data;
     } catch (error) {
       console.error(`Failed to remove favorite`, error);
       return {
         removeFavorite: false,
         message: `Failed to remove favorite`,
+      };
+    }
+  }
+
+  static async createNewReview(props) {
+    const apilink = '/api/review/createNewReview';
+
+    try {
+      console.log('Request API', apilink);
+      const response = await axios.post(apilink, {
+        product_id: props._id,
+        rating: props.rating,
+        body: props.body,
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Failed to create new review:', error);
+      return {
+        createNewReview: false,
+        message: 'Failed to create new review',
+      };
+    }
+  }
+
+  static async getReviewsByUser() {
+    const apilink = '/api/review/getReviewsByUser';
+
+    try {
+      console.log('Request API', apilink);
+      const response = await axios.get(apilink, { params: { from: 'user' } });
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch user reviews data:', error);
+      return {
+        getReviewsByUser: false,
+        message: 'Failed to fetch user reviews data',
+      };
+    }
+  }
+
+  static async getReviewsByProduct(props) {
+    const apilink = '/api/review/getReviewsByProduct';
+
+    try {
+      console.log('Request API', apilink);
+      const response = await axios.get(apilink, {
+        from: 'product',
+        _id: props._id,
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch product reviews data:', error);
+      return {
+        getReviewsByProduct: false,
+        message: 'Failed to fetch product reviews data',
+      };
+    }
+  }
+
+  static async removeReview(props) {
+    const apilink = '/api/review/removeReview';
+
+    try {
+      console.log('Request API', apilink);
+      const response = await axios.delete(apilink, {
+        review_id: props.review_id,
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Failed to remove review:', error);
+      return {
+        removeReview: false,
+        message: 'Failed to remove review',
+      };
+    }
+  }
+
+  static async modifyReview(props) {
+    const apilink = '/api/review/modifyReview';
+    console.log(props);
+    try {
+      console.log('Request API', apilink);
+      const response = await axios.put(apilink, {
+        _id: props._id,
+        rating: props.rating,
+        body: props.body,
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Failed to modify review:', error);
+      return {
+        modifyReview: false,
+        message: 'Failed to modify review',
       };
     }
   }
