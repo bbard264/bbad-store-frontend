@@ -552,3 +552,15 @@ input[type='radio'].radioProduct:checked + .radioName {
   justify-content: center;
   color: red;
 }
+
+.reviewThisProductButton {
+  margin: 2em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ReviewingContainerProductDetail {
+  width: 50%;
+  height: 50%;
+}

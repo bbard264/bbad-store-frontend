@@ -23,11 +23,9 @@ import Button from './../components/subcomponents/Button';
 import Backdrop from '../components/subcomponents/Backdrop';
 import ReviewingBox from '../components/ReviewingBox';
 
-function ReviewSection({ reviews, product_id }) {
+function ReviewSection({ reviews, checkUserReviewProduct, product_id }) {
   const columnLength = Math.ceil(reviews.length / 2) - 1;
   const [columnNow, setColumnNow] = useState(0);
-  const checkUserReviewProduct =
-    UserDataStorage.checkUserReviewProduct(product_id);
   const [isReviewing, setIsReviewing] = useState(false);
 
   const handleReviewCornerClick = (direction) => {
@@ -187,6 +185,10 @@ function DetailSection({ product, reviews }) {
   const listPhoto = product.product_photo;
   const [showIndex, setShowIndex] = useState(0);
   const [widthPhoto, setWidthPhoto] = useState(0);
+  const checkUserReviewProduct = UserDataStorage.checkUserReviewProduct(
+    product._id
+  );
+  const [isReviewing, setIsReviewing] = useState(false);
 
   const getIndexList = (index) => {
     setShowIndex(index);
@@ -330,10 +332,36 @@ function DetailSection({ product, reviews }) {
         <div className="fullDetailSection">{product.full_detail}</div>
       </div>
       {reviews ? (
-        <ReviewSection reviews={reviews} product_id={product._id} />
+        <ReviewSection
+          reviews={reviews}
+          checkUserReviewProduct={checkUserReviewProduct}
+        />
       ) : (
-        <></>
+        checkUserReviewProduct !== 'NeverBuy' &&
+        checkUserReviewProduct !== 'HaveReview' &&
+        checkUserReviewProduct === 'HaveBuy' && (
+          <>
+            {isReviewing && (
+              <Backdrop onCancel={() => setIsReviewing(false)}>
+                <div className="ReviewingContainerProductDetail">
+                  <ReviewingBox
+                    item={UserDataStorage.getUserReview(product._id)}
+                    wantReset={false}
+                    letNavigate={false}
+                    onCancel={() => setIsReviewing(false)}
+                  />
+                </div>
+              </Backdrop>
+            )}
+            <div className="reviewThisProductButton">
+              <Button onClick={() => setIsReviewing(true)} type="submit">
+                REVIEW THIS PRODUCT
+              </Button>
+            </div>
+          </>
+        )
       )}
+
       {/* <div className="recommendationsLine">
         <h1 className="headSection">Recommendations</h1>
         <RecommendationsContainter />

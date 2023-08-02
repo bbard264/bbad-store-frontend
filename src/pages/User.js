@@ -1031,7 +1031,9 @@ function UserReviews() {
   return (
     <div className="userReviewBox">
       <div className="currentUserReviewContainer">
-        <ReviewingBox item={itemFocus} onCancel={() => setItemFocus({})} />
+        <div className="ReviewingContainer">
+          <ReviewingBox item={itemFocus} onCancel={() => setItemFocus({})} />
+        </div>
       </div>
       <div className="filterUserReview">
         <div
