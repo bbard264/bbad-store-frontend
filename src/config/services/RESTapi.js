@@ -8,7 +8,6 @@ class RESTapi {
     const apilink = '/api/user/getUserById';
 
     try {
-      console.log('Request API:', apilink);
       const response = await axios.get(apilink);
       await UserDataStorage.setUserData(response.data.userInfo);
       await UserDataStorage.setUserImage(response.data.userInfo.photo);
@@ -24,7 +23,6 @@ class RESTapi {
     const apilink = '/api/user/checkAuthentication';
 
     try {
-      console.log('Request API:', apilink);
       await axios.get(apilink);
       return { isAuthen: true, message: 'Authenticated' };
     } catch (error) {
@@ -44,7 +42,6 @@ class RESTapi {
     const apilink = '/api/Order/getCart';
 
     try {
-      console.log('Request API', apilink);
       const response = await axios.get(apilink);
       return response.data;
     } catch (error) {
@@ -56,7 +53,6 @@ class RESTapi {
   static async addToCart(props) {
     const apilink = '/api/Order/addToCart';
     try {
-      console.log('Request API', apilink);
       await axios.put(apilink, props);
       return {
         addToCart: true,
@@ -81,7 +77,6 @@ class RESTapi {
     const apilink = '/api/Order/removeFromCart';
 
     try {
-      console.log('Request API', apilink);
       await axios.delete(apilink, productIdOrAll);
       return {
         removeFromCart: true,
@@ -102,7 +97,6 @@ class RESTapi {
   static async createOrder(props) {
     const apilink = '/api/Order/createOrder'; // Assuming this is the correct API endpoint for creating orders
     try {
-      console.log('Request API', apilink);
       const response = await axios.post(apilink, props); // Use axios.post for POST requests
       return response.data;
     } catch (error) {
@@ -123,7 +117,6 @@ class RESTapi {
   static async getOrders() {
     const apilink = '/api/Order/getOrders'; // Update the endpoint URL accordingly
     try {
-      console.log('Request API', apilink);
       const response = await axios.get(apilink); // Use axios.get for GET requests
       return response.data;
     } catch (error) {
@@ -138,7 +131,6 @@ class RESTapi {
   static async getOrderStatus() {
     const apilink = '/api/Order/getOrderStatus'; // Update the endpoint URL accordingly
     try {
-      console.log('Request API', apilink);
       const response = await axios.get(apilink); // Use axios.get for GET requests
       return response.data;
     } catch (error) {
@@ -154,7 +146,6 @@ class RESTapi {
     const apilink = '/api/User/getFavorite';
 
     try {
-      console.log('Request API', apilink);
       const response = await axios.get(apilink);
       return response.data;
     } catch (error) {
@@ -169,7 +160,6 @@ class RESTapi {
   static async addFavorite(props) {
     const apilink = '/api/User/addFavorite';
     try {
-      console.log('Request API', apilink);
       const response = await axios.put(apilink, props);
       return response.data;
     } catch (error) {
@@ -191,7 +181,6 @@ class RESTapi {
     const apilink = '/api/User/removeFavorite';
 
     try {
-      console.log('Request API', apilink);
       const response = await axios.delete(apilink, props);
       return response.data;
     } catch (error) {
@@ -207,7 +196,6 @@ class RESTapi {
     const apilink = '/api/review/createNewReview';
 
     try {
-      console.log('Request API', apilink);
       const response = await axios.post(apilink, {
         product_id: props._id,
         rating: props.rating,
@@ -227,7 +215,6 @@ class RESTapi {
     const apilink = '/api/review/getReviewsByUser';
 
     try {
-      console.log('Request API', apilink);
       const response = await axios.get(apilink, { params: { from: 'user' } });
       return response.data;
     } catch (error) {
@@ -243,7 +230,6 @@ class RESTapi {
     const apilink = '/api/review/getReviewsByProduct';
 
     try {
-      console.log('Request API', apilink);
       const response = await axios.get(apilink, {
         params: {
           from: 'product',
@@ -263,7 +249,6 @@ class RESTapi {
   static async removeReview(props) {
     const apilink = '/api/review/removeReview';
     try {
-      console.log('Request API', apilink);
       const response = await axios.delete(apilink, {
         params: {
           review_id: props.review_id,
@@ -283,7 +268,6 @@ class RESTapi {
     const apilink = '/api/review/modifyReview';
 
     try {
-      console.log('Request API', apilink);
       const response = await axios.put(apilink, {
         _id: props._id,
         rating: props.rating,

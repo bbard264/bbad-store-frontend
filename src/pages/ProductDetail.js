@@ -47,7 +47,6 @@ function ReviewSection({ reviews, checkUserReviewProduct, product_id }) {
     const reviewsLeft = document.getElementById('reviewsLeft');
     const reviewsRight = document.getElementById('reviewsRight');
     const reviewsBox = document.querySelector('.reviewsBox');
-
     const reviewsBoxStyle = getComputedStyle(reviewsBox);
     const reviewsBoxWidth =
       +reviewsBox.offsetWidth +
@@ -148,7 +147,10 @@ function ReviewSection({ reviews, checkUserReviewProduct, product_id }) {
         onClick={() => handleReviewCornerClick('right')}
         id={'reviewsRight'}
       />
-      <div className="reviewContainers" id="reviewContainers">
+      <div
+        className={`reviewContainers${reviews.length === 1 ? ' isOne' : ''}`}
+        id="reviewContainers"
+      >
         {reviews.map((review, index) => (
           <div
             className="reviewsBox"
@@ -331,7 +333,7 @@ function DetailSection({ product, reviews }) {
         <h1 className="headSection">DETAIL</h1>
         <div className="fullDetailSection">{product.full_detail}</div>
       </div>
-      {reviews ? (
+      {reviews.length > 0 ? (
         <ReviewSection
           reviews={reviews}
           checkUserReviewProduct={checkUserReviewProduct}
@@ -759,6 +761,9 @@ export default function ProductDetail(props) {
     getReview();
     getProduct();
   }, []);
+  if (!product || !reviews) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <div>

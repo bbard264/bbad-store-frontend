@@ -151,6 +151,11 @@
   transition: all 0.3s ease;
 }
 
+.reviewContainers.isOne {
+  display: grid;
+  grid-template-rows: 1fr;
+}
+
 .reviewContainers > div:nth-child(odd) {
   grid-row: 1;
 }
