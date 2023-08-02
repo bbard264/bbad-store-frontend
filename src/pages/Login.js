@@ -7,6 +7,7 @@ import '../styles/pages/Login.css';
 import Token from '../config/services/Token';
 import RESTapi from '../config/services/RESTapi';
 import CartStorage from '../config/services/CartStorage';
+import UserDataStorage from '../config/services/UserDataStorage';
 
 const initialState = {
   email: {
@@ -63,8 +64,9 @@ const reducer = (state, action) => {
 const login = async (loginData) => {
   try {
     const apilink = '/api/user/login';
-    const response = await axios.post(apilink, loginData);
     console.log('requestAPI', apilink);
+    const response = await axios.post(apilink, loginData);
+
     return response.data;
   } catch (error) {
     if (error.response.status === 500) {
@@ -126,7 +128,7 @@ export default function Login(porps) {
 
       try {
         await RESTapi.fetchUserInfo();
-        await CartStorage.setCartStorage();
+
         navigate(previousRoute);
         porps.setRole('user');
       } catch (error) {

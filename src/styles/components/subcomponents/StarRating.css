@@ -1,12 +1,16 @@
 .star {
+  --image-height: 1.5em;
   position: relative;
-  width: 7.5em;
-  height: 1.5em;
+  height: var(--image-height);
+  width: calc(
+    5 * var(--image-height)
+  ); /* Set width to 5 times the height of the image */
+  transition: all 0.3s ease;
 }
-.star div img {
-  width: 1.5em;
-  position: absolute;
-  height: auto;
+
+.star img {
+  height: var(--image-height);
+  width: auto;
 }
 
 .star .nowRating img {
@@ -14,28 +18,25 @@
 }
 .star .emptyRating img {
   z-index: 4;
-}
-
-.star div img:nth-child(1) {
-  left: 0;
-}
-.star div img:nth-child(2) {
-  left: 1.5em;
-}
-.star div img:nth-child(3) {
-  left: 3em;
-}
-.star div img:nth-child(4) {
-  left: 4.5em;
-}
-.star div img:nth-child(5) {
-  left: 6em;
+  opacity: 0.5;
 }
 .nowRating {
   position: absolute;
-  height: 1.5em;
   overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
 }
 .emptyRating {
+  width: 100%;
+  height: 100%;
   position: absolute;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+.letChange img {
+  cursor: pointer;
 }

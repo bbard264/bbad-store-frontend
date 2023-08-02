@@ -44,7 +44,6 @@ export default class CartStorage {
             note: '',
           };
         });
-        console.log(updatedList);
         localStorage.setItem(this.storage_key, JSON.stringify(updatedList));
       }
       return { getCart: response.getCart, message: response.message };

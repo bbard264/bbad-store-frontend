@@ -308,7 +308,8 @@
 .currentUserReviewContainer {
   width: 100%;
   height: 40%;
-  background-color: rgb(224, 224, 224);
+  display: flex;
+  justify-content: center;
 }
 
 .listUserReviewContainer {
@@ -325,17 +326,7 @@
   grid-template-columns: 1fr 1fr;
   overflow: auto;
   align-content: start;
-  transition: all 0.6s ease-in-out;
-  transform: translate(0, 0);
-  opacity: 1;
   position: absolute;
-}
-
-.listUserReviewBox.hide {
-  visibility: hidden;
-  opacity: 0;
-  transition: none;
-  transform: translate(0, -10%);
 }
 
 .reviewCardBox {
@@ -348,7 +339,6 @@
   width: 90%;
   height: 3em;
   position: relative;
-  transition: all 0.3s ease;
 }
 
 .reviewCardBox.isFocus {
@@ -367,12 +357,14 @@
   max-height: 3em;
   border-radius: 20px;
   overflow: hidden;
+  position: relative;
 }
 
 .productPhotoCol img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  position: absolute;
 }
 
 .nameRatingCol {
@@ -406,7 +398,6 @@
 .reviewCardBox:hover {
   cursor: pointer;
   box-shadow: 0px 0px 2px #000000;
-  transform: scale(1.01);
 }
 
 .reviewCardBox:hover .reviewProductButton {
@@ -433,7 +424,7 @@
 .filterUserReview {
   height: 10%;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
   justify-content: center;
   align-items: center;
   margin: auto 0;
@@ -448,13 +439,9 @@
   white-space: nowrap;
   position: relative;
   height: 2em;
-}
-
-.filterNavi div {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .filterNavi.isActive {
@@ -471,17 +458,12 @@
   transition: all 0.3s ease;
 }
 
-.circleSelect.showAll {
-  left: 16.75%;
-  width: 2.5em;
-}
-
 .circleSelect.showNoReview {
-  left: 50%;
+  left: 25%;
   width: 8.5em;
 }
 
 .circleSelect.showOnlyReview {
-  left: 83.5%;
+  left: 75%;
   width: 8.5em;
 }

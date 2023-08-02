@@ -2,6 +2,7 @@ import React, { useReducer, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CartOrderHeader from '../components/CartOrderHead.js';
 import '../styles/pages/Cart.css';
+import Backdrop from '../components/subcomponents/Backdrop.js';
 
 import CartStorage from './../config/services/CartStorage';
 import UserDataStorage from './../config/services/UserDataStorage';
@@ -609,228 +610,215 @@ export default function Cart(props) {
 
   return (
     <div className="cart">
-      <div className="modifyOptionPosition">
-        {modifyOptionState.state ? (
-          <div className="modifyOptionContainer">
-            <div className="backDropModifyOptionBox">
-              {renderModifyOption(
-                modifyOptionState,
-                setModifyOptionState,
-                cartState
-              )}
-            </div>
-            <div
-              className="backDropCancelBox"
-              onClick={() =>
-                setModifyOptionState({
-                  index: 0,
-                  productToModify: {},
-                  state: false,
-                })
-              }
-            ></div>
-          </div>
-        ) : (
-          <></>
-        )}
-      </div>
-      <div className="reviewCheckOutPosition">
-        {reviewCheck.state ? (
+      {modifyOptionState.state ? (
+        <Backdrop
+          onCancel={() =>
+            setModifyOptionState({
+              index: 0,
+              productToModify: {},
+              state: false,
+            })
+          }
+        >
+          {renderModifyOption(
+            modifyOptionState,
+            setModifyOptionState,
+            cartState
+          )}
+        </Backdrop>
+      ) : (
+        <></>
+      )}
+      {reviewCheck.state ? (
+        <Backdrop onCancel={() => setReviewCheck({ cart: {}, state: false })}>
           <div className="reviewCheckContainer">
-            <div className="backDropReviewCheckBox">
-              <div
-                className="reviewOut"
-                onClick={() => setReviewCheck({ cart: {}, state: false })}
-              >
-                <div>X</div>
+            <div
+              className="reviewOut"
+              onClick={() => setReviewCheck({ cart: {}, state: false })}
+            >
+              <div>X</div>
+            </div>
+            <div className="reviewCheckBox">
+              <div className="reviewProductHeadLine">
+                <div>PRODUCT</div>
+                <div>PRICE</div>
+                <div>QUANTITY</div>
+                <div>TOTAL</div>
               </div>
-              <div className="reviewCheckBox">
-                <div className="reviewProductHeadLine">
-                  <div>PRODUCT</div>
-                  <div>PRICE</div>
-                  <div>QUANTITY</div>
-                  <div>TOTAL</div>
+              <div className="reviewProductList">
+                <div className="reviewProductListContent">
+                  {renderReviewProductList(reviewCheck.cart.items)}
                 </div>
-                <div className="reviewProductList">
-                  <div className="reviewProductListContent">
-                    {renderReviewProductList(reviewCheck.cart.items)}
-                  </div>
-                </div>
-                <div className="reviewSummary">
-                  <form
-                    className="reviewSummaryLine"
-                    id="reviewForm"
-                    onSubmit={onSubmitReviewCheck}
-                  >
-                    <div className="reviewSummaryPersonalContainer">
-                      <div className="reviewSummaryPersonalBox">
-                        <div className="reviewNamePhoneBox">
-                          <div className="reviewNameBox">
-                            <h2 className="reviewHead">NAME</h2>
-                            <label htmlFor="realname" />
+              </div>
+              <div className="reviewSummary">
+                <form
+                  className="reviewSummaryLine"
+                  id="reviewForm"
+                  onSubmit={onSubmitReviewCheck}
+                >
+                  <div className="reviewSummaryPersonalContainer">
+                    <div className="reviewSummaryPersonalBox">
+                      <div className="reviewNamePhoneBox">
+                        <div className="reviewNameBox">
+                          <h2 className="reviewHead">NAME</h2>
+                          <label htmlFor="realname" />
+                          <input
+                            className="reviewCheckinput"
+                            type="text"
+                            name="realname"
+                            id="realname"
+                            placeholder="your real name...."
+                          />
+                        </div>
+                        <div className="reviewPhoneBox">
+                          <h2 className="reviewHead">PHONE</h2>
+                          <label htmlFor="phone" />
+                          <input
+                            className="reviewCheckinput"
+                            type="tel"
+                            name="phone"
+                            id="phone"
+                            defaultValue={
+                              userInfo ? userInfo.phone ?? userInfo.phone : null
+                            }
+                            placeholder="your phone...."
+                          />
+                        </div>
+                      </div>
+                      <div className="reviewAddressBox">
+                        <h2 className="reviewHead">ADDRESS FOR SHIPPING</h2>
+                        <div className="reviewAddressInputContainer">
+                          <div className="labelInput">
+                            <label htmlFor="address1">address</label>
                             <input
-                              className="reviewCheckinput"
+                              className="reviewCheckinput reviewaddress"
                               type="text"
-                              name="realname"
-                              id="realname"
-                              placeholder="your real name...."
-                            />
-                          </div>
-                          <div className="reviewPhoneBox">
-                            <h2 className="reviewHead">PHONE</h2>
-                            <label htmlFor="phone" />
-                            <input
-                              className="reviewCheckinput"
-                              type="tel"
-                              name="phone"
-                              id="phone"
+                              name="address1"
+                              id="address1"
                               defaultValue={
                                 userInfo
-                                  ? userInfo.phone ?? userInfo.phone
+                                  ? userInfo.address.address1 ??
+                                    userInfo.address.address1
                                   : null
                               }
-                              placeholder="your phone...."
+                              placeholder="your address...."
+                            />
+                          </div>
+                          <div className="labelInput">
+                            <label htmlFor="address2">address</label>
+                            <input
+                              className="reviewCheckinput reviewaddress"
+                              type="text"
+                              name="address2"
+                              id="address2"
+                              defaultValue={
+                                userInfo
+                                  ? userInfo.address.address2 ??
+                                    userInfo.address.address2
+                                  : null
+                              }
+                              placeholder="your address...."
+                            />
+                          </div>
+                          <div className="labelInput">
+                            <label htmlFor="district">district</label>
+                            <input
+                              className="reviewCheckinput reviewaddress"
+                              type="text"
+                              name="district"
+                              id="district"
+                              defaultValue={
+                                userInfo
+                                  ? userInfo.address.district ??
+                                    userInfo.address.district
+                                  : null
+                              }
+                              placeholder="district...."
+                            />
+                          </div>
+                          <div className="labelInput">
+                            <label htmlFor="province">province</label>
+                            <input
+                              className="reviewCheckinput reviewaddress"
+                              type="text"
+                              name="province"
+                              id="provinc"
+                              defaultValue={
+                                userInfo
+                                  ? userInfo.address.province ??
+                                    userInfo.address.province
+                                  : null
+                              }
+                              placeholder="province...."
+                            />
+                          </div>
+                          <div className="labelInput">
+                            <label htmlFor="postcode">postcode</label>
+                            <input
+                              className="reviewCheckinput reviewaddress"
+                              type="num"
+                              name="postcode"
+                              id="postcode"
+                              defaultValue={
+                                userInfo
+                                  ? userInfo.address.postcode ??
+                                    userInfo.address.postcode
+                                  : null
+                              }
+                              placeholder="postcode...."
                             />
                           </div>
                         </div>
-                        <div className="reviewAddressBox">
-                          <h2 className="reviewHead">ADDRESS FOR SHIPPING</h2>
-                          <div className="reviewAddressInputContainer">
-                            <div className="labelInput">
-                              <label htmlFor="address1">address</label>
-                              <input
-                                className="reviewCheckinput reviewaddress"
-                                type="text"
-                                name="address1"
-                                id="address1"
-                                defaultValue={
-                                  userInfo
-                                    ? userInfo.address.address1 ??
-                                      userInfo.address.address1
-                                    : null
-                                }
-                                placeholder="your address...."
-                              />
-                            </div>
-                            <div className="labelInput">
-                              <label htmlFor="address2">address</label>
-                              <input
-                                className="reviewCheckinput reviewaddress"
-                                type="text"
-                                name="address2"
-                                id="address2"
-                                defaultValue={
-                                  userInfo
-                                    ? userInfo.address.address2 ??
-                                      userInfo.address.address2
-                                    : null
-                                }
-                                placeholder="your address...."
-                              />
-                            </div>
-                            <div className="labelInput">
-                              <label htmlFor="district">district</label>
-                              <input
-                                className="reviewCheckinput reviewaddress"
-                                type="text"
-                                name="district"
-                                id="district"
-                                defaultValue={
-                                  userInfo
-                                    ? userInfo.address.district ??
-                                      userInfo.address.district
-                                    : null
-                                }
-                                placeholder="district...."
-                              />
-                            </div>
-                            <div className="labelInput">
-                              <label htmlFor="province">province</label>
-                              <input
-                                className="reviewCheckinput reviewaddress"
-                                type="text"
-                                name="province"
-                                id="provinc"
-                                defaultValue={
-                                  userInfo
-                                    ? userInfo.address.province ??
-                                      userInfo.address.province
-                                    : null
-                                }
-                                placeholder="province...."
-                              />
-                            </div>
-                            <div className="labelInput">
-                              <label htmlFor="postcode">postcode</label>
-                              <input
-                                className="reviewCheckinput reviewaddress"
-                                type="num"
-                                name="postcode"
-                                id="postcode"
-                                defaultValue={
-                                  userInfo
-                                    ? userInfo.address.postcode ??
-                                      userInfo.address.postcode
-                                    : null
-                                }
-                                placeholder="postcode...."
-                              />
-                            </div>
-                          </div>
-                        </div>
                       </div>
                     </div>
-                    <div className="cartSumBox reviewCheckSection">
-                      <div className="cartSumLine reviewCheckSection">
-                        <div className="cartSumHeadLine">ORDER SUMMARY</div>
-                        <div className="cartSumBodyLine">
-                          <div className="cartDetailLine">
-                            <div className="cartDetailName">subtotal</div>
-                            <div className="cartDetailValue">
-                              ฿{reviewCheck.cart.summary.subtotal}
-                            </div>
+                  </div>
+                  <div className="cartSumBox reviewCheckSection">
+                    <div className="cartSumLine reviewCheckSection">
+                      <div className="cartSumHeadLine">ORDER SUMMARY</div>
+                      <div className="cartSumBodyLine">
+                        <div className="cartDetailLine">
+                          <div className="cartDetailName">subtotal</div>
+                          <div className="cartDetailValue">
+                            ฿{reviewCheck.cart.summary.subtotal}
                           </div>
-                          {Object.entries(
-                            reviewCheck.cart.summary.priceChange
-                          ).map(([key, value]) =>
-                            // Check if the value is 0, and return null to skip rendering the div
-                            value !== 0 ? (
-                              <div key={key} className="cartDetailLine">
-                                <div className="cartDetailName">{key}</div>
-                                <div className="cartDetailValue">฿{value}</div>
-                              </div>
-                            ) : null
-                          )}
                         </div>
-                        <div className="emptyBox">
-                          <div>.</div>
-                          <div>.</div>
-                        </div>
+                        {Object.entries(
+                          reviewCheck.cart.summary.priceChange
+                        ).map(([key, value]) =>
+                          // Check if the value is 0, and return null to skip rendering the div
+                          value !== 0 ? (
+                            <div key={key} className="cartDetailLine">
+                              <div className="cartDetailName">{key}</div>
+                              <div className="cartDetailValue">฿{value}</div>
+                            </div>
+                          ) : null
+                        )}
                       </div>
-                      <div className="cartSumNetTotalLine reviewCheckSection">
-                        <div>NET</div>
-                        <div>฿{reviewCheck.cart.summary.net}</div>
+                      <div className="emptyBox">
+                        <div>.</div>
+                        <div>.</div>
                       </div>
-                      <button
-                        className="cartSumCheckOutLine checkOut reviewCheckSection"
-                        type="submit"
-                      >
-                        PLACE ORDER
-                      </button>
                     </div>
-                  </form>
-                </div>
+                    <div className="cartSumNetTotalLine reviewCheckSection">
+                      <div>NET</div>
+                      <div>฿{reviewCheck.cart.summary.net}</div>
+                    </div>
+                    <button
+                      className="cartSumCheckOutLine checkOut reviewCheckSection"
+                      type="submit"
+                    >
+                      PLACE ORDER
+                    </button>
+                  </div>
+                </form>
               </div>
             </div>
-            <div
-              className="backDropCancelBox"
-              onClick={() => setReviewCheck({ cart: {}, state: false })}
-            ></div>
           </div>
-        ) : (
-          <></>
-        )}
-      </div>
+        </Backdrop>
+      ) : (
+        <></>
+      )}
+
       <CartOrderHeader nowPage="CartPage" />
       <div className="contentContainer">
         <div className="cartPage">

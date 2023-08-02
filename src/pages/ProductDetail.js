@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from 'react';
+import React, { useState, useEffect, useReducer, useRef } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import axios from '../config/axios';
 import Token from '../config/services/Token';
@@ -15,103 +15,175 @@ import cartIcon from '../assets/icon/cart.png';
 
 import fullStarIcon from '../assets/icon/star2.png';
 
-import kuri from '../assets/ex_products/kuri.jpg';
-import fizri from '../assets/ex_products/fizri.jpg';
-import burni from '../assets/ex_products/Burni.jpg';
-
-import wizhogFullImage from '../assets/ex_products/wizhog-full.jpg';
-import faChalee3Image from '../assets/ex_products/FA_chalee3.jpg';
-import chaleeImage from '../assets/ex_products/chalee.jpg';
-import hugMomentImage from '../assets/ex_products/HugMoment.jpg';
 import CartStorage from '../config/services/CartStorage';
 import UserDataStorage from '../config/services/UserDataStorage';
+import RESTapi from '../config/services/RESTapi';
+import { formatDatetoSTR } from '../config/services/General';
+import Button from './../components/subcomponents/Button';
+import Backdrop from '../components/subcomponents/Backdrop';
+import ReviewingBox from '../components/ReviewingBox';
 
-//#region mock userReview
+function ReviewSection({ reviews, product_id }) {
+  const columnLength = Math.ceil(reviews.length / 2) - 1;
+  const [columnNow, setColumnNow] = useState(0);
+  const checkUserReviewProduct =
+    UserDataStorage.checkUserReviewProduct(product_id);
+  const [isReviewing, setIsReviewing] = useState(false);
 
-class UserReview {
-  constructor(
-    userImg = '',
-    userName = '',
-    userRank = '',
-    reviewsRate = 0,
-    reviewsDetails = '',
-    postDate = ''
-  ) {
-    this.userImg = userImg;
-    this.userName = userName;
-    this.userRank = userRank;
-    this.reviewsRate = reviewsRate;
-    this.reviewsDetails = reviewsDetails;
-    this.postDate = postDate;
-  }
+  const handleReviewCornerClick = (direction) => {
+    if (direction === 'right') {
+      if (columnNow === columnLength) {
+        return;
+      }
+      setColumnNow(columnNow + 1);
+    } else if (direction === 'left') {
+      if (columnNow === 0) {
+        return;
+      }
+      setColumnNow(columnNow - 1);
+    }
+  };
+
+  useEffect(() => {
+    const reviewContainers = document.getElementById('reviewContainers');
+    const reviewsLeft = document.getElementById('reviewsLeft');
+    const reviewsRight = document.getElementById('reviewsRight');
+    const reviewsBox = document.querySelector('.reviewsBox');
+
+    const reviewsBoxStyle = getComputedStyle(reviewsBox);
+    const reviewsBoxWidth =
+      +reviewsBox.offsetWidth +
+      parseFloat(reviewsBoxStyle.marginLeft) +
+      parseFloat(reviewsBoxStyle.marginRight);
+
+    reviewContainers.style.transform = `translate(-${
+      columnNow * reviewsBoxWidth
+    }px, 0)`;
+
+    reviewsLeft.style.opacity = columnNow === 0 ? '0' : '';
+    reviewsLeft.style.cursor = columnNow === 0 ? 'auto' : 'pointer';
+
+    reviewsRight.style.opacity = columnNow === columnLength ? '0' : '';
+    reviewsRight.style.cursor = columnNow === columnLength ? 'auto' : 'pointer';
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [columnNow]);
+
+  useEffect(() => {
+    const adjustReviewLineHeight = () => {
+      const reviewLine = document.querySelector('.reviewLine');
+      const reviewContainers = document.getElementById('reviewContainers');
+      const headSection = document.querySelector('.headSection');
+
+      if (reviewLine && reviewContainers && headSection) {
+        const reviewContainersStyles = getComputedStyle(reviewContainers);
+        const headSectionStyles = getComputedStyle(headSection);
+        const reviewContainersMarginTop = parseInt(
+          reviewContainersStyles.marginTop
+        );
+        const reviewContainersMarginBottom = parseInt(
+          reviewContainersStyles.marginBottom
+        );
+        const headSectionMarginTop = parseInt(headSectionStyles.marginTop);
+        const headSectionMarginBottom = parseInt(
+          headSectionStyles.marginBottom
+        );
+
+        const combinedHeight =
+          reviewContainers.offsetHeight +
+          reviewContainersMarginTop +
+          reviewContainersMarginBottom +
+          headSection.offsetHeight +
+          headSectionMarginTop +
+          headSectionMarginBottom;
+
+        reviewLine.style.height = `${combinedHeight}px`;
+      }
+    };
+
+    // Call the function initially and on window resize
+    adjustReviewLineHeight();
+    window.addEventListener('resize', adjustReviewLineHeight);
+
+    // Clean up event listener on component unmount
+    return () => {
+      window.removeEventListener('resize', adjustReviewLineHeight);
+    };
+  }, [reviews]);
+
+  const getColumnNum = (index) => {
+    let moveto = Math.ceil((index + 1) / 2) - 1;
+    setColumnNow(moveto);
+  };
+  return (
+    <div className="reviewLine">
+      {isReviewing ? (
+        <Backdrop onCancel={() => setIsReviewing(false)}>
+          <ReviewingBox
+            item={UserDataStorage.getUserReview(product_id)}
+            wantReset={false}
+            onCancel={() => setIsReviewing(false)}
+          />
+        </Backdrop>
+      ) : (
+        <></>
+      )}
+      <h1 className="headSection">
+        REVIEWS
+        {checkUserReviewProduct === 'NaverBuy' ? (
+          <></>
+        ) : checkUserReviewProduct === 'HaveReview' ? (
+          <Button onClick={() => setIsReviewing(true)}>EDIT YOUR REVIEW</Button>
+        ) : checkUserReviewProduct === 'HaveBuy' ? (
+          <Button onClick={() => setIsReviewing(true)}>REVIEW PRODUCT</Button>
+        ) : (
+          <></>
+        )}
+      </h1>
+      <ArrowCorner
+        direction="left"
+        onClick={() => handleReviewCornerClick('left')}
+        id={'reviewsLeft'}
+      />
+      <ArrowCorner
+        direction="right"
+        onClick={() => handleReviewCornerClick('right')}
+        id={'reviewsRight'}
+      />
+      <div className="reviewContainers" id="reviewContainers">
+        {reviews.map((review, index) => (
+          <div
+            className="reviewsBox"
+            key={index}
+            onClick={() => getColumnNum(index)}
+          >
+            <div className="reviewsCard">
+              <div className="reviewsCardHeader">
+                <div className="userImg">
+                  <img src={review.user_photo} alt={review.user_display_name} />
+                </div>
+                <div className="userNameRank">
+                  <div className="userName">{review.user_display_name}</div>
+                </div>
+                <div className="reviewsRate">
+                  <img src={fullStarIcon} alt="fullStarIcon" />
+                  <div>{review.rating}/5</div>
+                </div>
+              </div>
+              <div className="reviewsDetails">{review.body}</div>
+              <div className="postDate">
+                {review.modify
+                  ? `Edited:` + formatDatetoSTR(review.updated_at)
+                  : formatDatetoSTR(review.created_at)}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }
-
-const userReviews = [];
-
-const userReview1 = new UserReview(
-  wizhogFullImage,
-  'John Doe',
-  'Tech Enthusiast',
-  4.2,
-  "I've been using this product for a while now, and it has exceeded my expectations. The design is sleek, and the performance is top-notch. I highly recommend it. I've been using this product for a while now, and it has exceeded my expectations. The design is sleek, and the performance is top-notch. I highly recommend it.",
-  '7/1/2023'
-);
-userReviews.push(userReview1);
-
-const userReview2 = new UserReview(
-  faChalee3Image,
-  'Jane Smith',
-  'Fitness Enthusiast',
-  3.8,
-  'As someone who enjoys staying active, I found this product to be a great companion. It helps me track my workouts and stay motivated. However, I wish it had more advanced features for advanced users.',
-  '6/30/2023'
-);
-userReviews.push(userReview2);
-
-const userReview3 = new UserReview(
-  chaleeImage,
-  'Michael Johnson',
-  'Outdoor Adventurer',
-  4.5,
-  "I take this product with me on all my outdoor adventures. It is rugged, waterproof, and withstands tough conditions. It's an essential tool for any outdoor enthusiast.",
-  '6/29/2023'
-);
-userReviews.push(userReview3);
-
-const userReview4 = new UserReview(
-  hugMomentImage,
-  'Emily Davis',
-  'Photography Lover',
-  4.7,
-  "Being a photography enthusiast, this product has enhanced my skills and creativity. The image quality is outstanding, and the controls are intuitive. I'm extremely satisfied with my purchase.",
-  '6/28/2023'
-);
-userReviews.push(userReview4);
-
-const userReview5 = new UserReview(
-  kuri,
-  'David Thompson',
-  'Gaming Enthusiast',
-  3.2,
-  "I bought this product mainly for gaming, and it performs decently. The graphics are good, but I've experienced occasional lag during intensive gaming sessions.",
-  '6/27/2023'
-);
-userReviews.push(userReview5);
-
-const userReview6 = new UserReview(
-  fizri,
-  'Sarah Wilson',
-  'Fashionista',
-  4.9,
-  'This product is not only functional but also stylish. It complements my outfits perfectly and has become a fashion statement for me. I receive compliments wherever I go.',
-  '6/26/2023'
-);
-userReviews.push(userReview6);
-
-//#endregion mock userReview
-
-function DetailSection({ product }) {
-  //#region HANDLE ALL IMG PRODUCT
+function DetailSection({ product, reviews }) {
   const listPhoto = product.product_photo;
   const [showIndex, setShowIndex] = useState(0);
   const [widthPhoto, setWidthPhoto] = useState(0);
@@ -200,6 +272,9 @@ function DetailSection({ product }) {
   }, [showIndex]);
 
   function renderPhotoBoxes() {
+    if (listPhoto === undefined) {
+      return;
+    }
     return listPhoto.map((photo, index) => (
       <div className="photoBox" key={index}>
         <img src={photo} alt={photo} />
@@ -208,6 +283,9 @@ function DetailSection({ product }) {
   }
 
   function renderThumPhotoBoxes() {
+    if (listPhoto === undefined) {
+      return;
+    }
     return listPhoto.map((photo, index) => (
       <div
         className={`thumPhotoBox ${showIndex === index ? 'isShow' : ''}`}
@@ -219,145 +297,6 @@ function DetailSection({ product }) {
     ));
   }
   //#endregion HANDLE ALL IMG PRODUCT
-
-  function ReviewSection({ userReviews }) {
-    const columnLength = Math.ceil(userReviews.length / 2) - 1;
-    const [columnNow, setColumnNow] = useState(0);
-
-    const handleReviewCornerClick = (direction) => {
-      if (direction === 'right') {
-        if (columnNow === columnLength) {
-          return;
-        }
-        setColumnNow(columnNow + 1);
-      } else if (direction === 'left') {
-        if (columnNow === 0) {
-          return;
-        }
-        setColumnNow(columnNow - 1);
-      }
-    };
-
-    useEffect(() => {
-      const reviewContainers = document.getElementById('reviewContainers');
-      const reviewsLeft = document.getElementById('reviewsLeft');
-      const reviewsRight = document.getElementById('reviewsRight');
-      const reviewsBox = document.querySelector('.reviewsBox');
-
-      const reviewsBoxStyle = getComputedStyle(reviewsBox);
-      const reviewsBoxWidth =
-        +reviewsBox.offsetWidth +
-        parseFloat(reviewsBoxStyle.marginLeft) +
-        parseFloat(reviewsBoxStyle.marginRight);
-
-      reviewContainers.style.transform = `translate(-${
-        columnNow * reviewsBoxWidth
-      }px, 0)`;
-
-      reviewsLeft.style.opacity = columnNow === 0 ? '0' : '';
-      reviewsLeft.style.cursor = columnNow === 0 ? 'auto' : 'pointer';
-
-      reviewsRight.style.opacity = columnNow === columnLength ? '0' : '';
-      reviewsRight.style.cursor =
-        columnNow === columnLength ? 'auto' : 'pointer';
-
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [columnNow]);
-
-    useEffect(() => {
-      const adjustReviewLineHeight = () => {
-        const reviewLine = document.querySelector('.reviewLine');
-        const reviewContainers = document.getElementById('reviewContainers');
-        const headSection = document.querySelector('.headSection');
-
-        if (reviewLine && reviewContainers && headSection) {
-          const reviewContainersStyles = getComputedStyle(reviewContainers);
-          const headSectionStyles = getComputedStyle(headSection);
-          const reviewContainersMarginTop = parseInt(
-            reviewContainersStyles.marginTop
-          );
-          const reviewContainersMarginBottom = parseInt(
-            reviewContainersStyles.marginBottom
-          );
-          const headSectionMarginTop = parseInt(headSectionStyles.marginTop);
-          const headSectionMarginBottom = parseInt(
-            headSectionStyles.marginBottom
-          );
-
-          const combinedHeight =
-            reviewContainers.offsetHeight +
-            reviewContainersMarginTop +
-            reviewContainersMarginBottom +
-            headSection.offsetHeight +
-            headSectionMarginTop +
-            headSectionMarginBottom;
-
-          reviewLine.style.height = `${combinedHeight}px`;
-        }
-      };
-
-      // Call the function initially and on window resize
-      adjustReviewLineHeight();
-      window.addEventListener('resize', adjustReviewLineHeight);
-
-      // Clean up event listener on component unmount
-      return () => {
-        window.removeEventListener('resize', adjustReviewLineHeight);
-      };
-    }, [userReviews]);
-
-    const getColumnNum = (index) => {
-      let moveto = Math.ceil((index + 1) / 2) - 1;
-      setColumnNow(moveto);
-    };
-
-    function renderUserReviews(userReviews) {
-      return userReviews.map((userReview, index) => (
-        <div
-          className="reviewsBox"
-          key={index}
-          onClick={() => getColumnNum(index)}
-        >
-          <div className="reviewsCard">
-            <div className="reviewsCardHeader">
-              <div className="userImg">
-                <img src={userReview.userImg} alt={userReview.userImg} />
-              </div>
-              <div className="userNameRank">
-                <div className="userName">{userReview.userName}</div>
-                <div className="userRank">{userReview.userRank}</div>
-              </div>
-              <div className="reviewsRate">
-                <img src={fullStarIcon} alt="fullStarIcon" />
-                <div>{userReview.reviewsRate}/5</div>
-              </div>
-            </div>
-            <div className="reviewsDetails">{userReview.reviewsDetails}</div>
-            <div className="postDate">{userReview.postDate}</div>
-          </div>
-        </div>
-      ));
-    }
-
-    return (
-      <div className="reviewLine">
-        <h1 className="headSection">REVIEWS</h1>
-        <ArrowCorner
-          direction="left"
-          onClick={() => handleReviewCornerClick('left')}
-          id={'reviewsLeft'}
-        />
-        <ArrowCorner
-          direction="right"
-          onClick={() => handleReviewCornerClick('right')}
-          id={'reviewsRight'}
-        />
-        <div className="reviewContainers" id="reviewContainers">
-          {renderUserReviews(userReviews)}
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="detailSection">
@@ -390,7 +329,11 @@ function DetailSection({ product }) {
         <h1 className="headSection">DETAIL</h1>
         <div className="fullDetailSection">{product.full_detail}</div>
       </div>
-      <ReviewSection userReviews={userReviews} />
+      {reviews ? (
+        <ReviewSection reviews={reviews} product_id={product._id} />
+      ) : (
+        <></>
+      )}
       {/* <div className="recommendationsLine">
         <h1 className="headSection">Recommendations</h1>
         <RecommendationsContainter />
@@ -423,7 +366,7 @@ function reducer(state, action) {
         property: { ...state.property, quantity: state.property.quantity + 1 },
       };
     case 'UPDATE_QUANTITY_DECREMENT':
-      if (state.quantity <= 1) {
+      if (state.property.quantity <= 1) {
         return { ...state, property: { ...state.property, quantity: 1 } };
       } else {
         return {
@@ -440,7 +383,7 @@ function reducer(state, action) {
 }
 
 //#region CommonSection
-function CommonSection({ product, shareState, setShareState }) {
+function CommonSection({ product, shareState, setShareState, reviewScore }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [errorMessage, setErrorMessage] = useState('');
@@ -692,8 +635,8 @@ function CommonSection({ product, shareState, setShareState }) {
           <h1>{product.product_name}</h1>
         </div>
         <div className="rateLine">
-          <StarRating rating={4.7} />
-          <div className="numReviews">{userReviews.length} reviews</div>
+          <StarRating rating={reviewScore.avgRating} />
+          <div className="numReviews">{reviewScore.reviewNum} reviews</div>
         </div>
         <div className="priceLine">
           <div>฿ {product.product_price}</div>
@@ -743,10 +686,22 @@ async function fetchProduct(productId) {
   }
 }
 
+function calculateAverageRating(reviews) {
+  if (!reviews || reviews.length === 0) {
+    return 0; // Handle the case when there are no reviews to avoid division by zero.
+  }
+
+  const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
+  const averageRating = totalRating / reviews.length;
+
+  return averageRating;
+}
+
 export default function ProductDetail(props) {
   const { productId } = useParams();
   const location = useLocation();
   const [product, setProduct] = useState(null);
+  const [reviews, setReviews] = useState(null);
 
   useEffect(() => {
     async function getProduct() {
@@ -761,19 +716,35 @@ export default function ProductDetail(props) {
         console.error(error);
       }
     }
-
+    async function getReview() {
+      try {
+        const fetchedReviews = await RESTapi.getReviewsByProduct({
+          _id: productId.slice(3),
+        });
+        if (fetchedReviews.isSuccess) {
+          setReviews(fetchedReviews.data);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    getReview();
     getProduct();
-  }, [location.state]);
+  }, []);
 
   return (
     <div>
       {product ? (
         <div className="contentContainer" id="contentContainer">
-          <DetailSection product={product} />
+          <DetailSection product={product} reviews={reviews} />
           <CommonSection
             product={product}
             shareState={props.shareState}
             setShareState={props.setShareState}
+            reviewScore={{
+              reviewNum: reviews ? reviews.length : 0,
+              avgRating: calculateAverageRating(reviews),
+            }}
           />
         </div>
       ) : (

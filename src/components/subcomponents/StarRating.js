@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import '../../styles/components/subcomponents/StarRating.css';
 import emptyStarIcon from '../../assets/icon/star.png';
 import fullStarIcon from '../../assets/icon/star2.png';
@@ -39,7 +39,7 @@ function StarRating({ rating, isLetChange, setRating }) {
   }
 
   return (
-    <div className="star">
+    <div className={`star${isLetChange ? ' letChange' : ''}`}>
       <div className="nowRating" style={{ width: percentRating }}>
         {fullStars}
       </div>

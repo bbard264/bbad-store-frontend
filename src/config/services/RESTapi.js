@@ -1,6 +1,7 @@
 import axios from 'axios';
 import UserDataStorage from './UserDataStorage';
 import Token from './Token';
+import CartStorage from './CartStorage';
 
 class RESTapi {
   static async fetchUserInfo() {
@@ -12,6 +13,8 @@ class RESTapi {
       await UserDataStorage.setUserData(response.data.userInfo);
       await UserDataStorage.setUserImage(response.data.userInfo.photo);
       await UserDataStorage.setUserFavorite();
+      await UserDataStorage.setUserReviews();
+      await CartStorage.setCartStorage();
     } catch (error) {
       console.error('Failed to fetch user information:', error);
     }
@@ -214,7 +217,7 @@ class RESTapi {
     } catch (error) {
       console.error('Failed to create new review:', error);
       return {
-        createNewReview: false,
+        isSuccess: false,
         message: 'Failed to create new review',
       };
     }
@@ -230,7 +233,7 @@ class RESTapi {
     } catch (error) {
       console.error('Failed to fetch user reviews data:', error);
       return {
-        getReviewsByUser: false,
+        isSuccess: false,
         message: 'Failed to fetch user reviews data',
       };
     }
@@ -242,14 +245,16 @@ class RESTapi {
     try {
       console.log('Request API', apilink);
       const response = await axios.get(apilink, {
-        from: 'product',
-        _id: props._id,
+        params: {
+          from: 'product',
+          _id: props._id,
+        },
       });
       return response.data;
     } catch (error) {
       console.error('Failed to fetch product reviews data:', error);
       return {
-        getReviewsByProduct: false,
+        isSuccess: false,
         message: 'Failed to fetch product reviews data',
       };
     }
@@ -257,17 +262,18 @@ class RESTapi {
 
   static async removeReview(props) {
     const apilink = '/api/review/removeReview';
-
     try {
       console.log('Request API', apilink);
       const response = await axios.delete(apilink, {
-        review_id: props.review_id,
+        params: {
+          review_id: props.review_id,
+        },
       });
       return response.data;
     } catch (error) {
       console.error('Failed to remove review:', error);
       return {
-        removeReview: false,
+        isSuccess: false,
         message: 'Failed to remove review',
       };
     }
@@ -275,7 +281,7 @@ class RESTapi {
 
   static async modifyReview(props) {
     const apilink = '/api/review/modifyReview';
-    console.log(props);
+
     try {
       console.log('Request API', apilink);
       const response = await axios.put(apilink, {
@@ -287,7 +293,7 @@ class RESTapi {
     } catch (error) {
       console.error('Failed to modify review:', error);
       return {
-        modifyReview: false,
+        isSuccess: false,
         message: 'Failed to modify review',
       };
     }

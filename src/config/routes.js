@@ -19,7 +19,7 @@ const components = {
     component: Products,
   },
   productDetail: {
-    url: '/product-detail/:productId/:product_url_name',
+    url: '/product-detail/:productId/:product_url_name?',
     component: ProductDetail,
   },
   cart: {

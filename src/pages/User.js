@@ -945,7 +945,7 @@ function ReviewCard({ item, itemFocus, setItemFocus }) {
           {Object.keys(item.review).length > 0 ? (
             <>
               {Array.from(
-                { length: Math.floor(item.review.rate) },
+                { length: Math.floor(item.review.rating) },
                 (_, index) => (
                   <img key={index} src={fullStar} alt="Full Star" />
                 )
@@ -972,43 +972,23 @@ function UserReviews() {
 
   useEffect(() => {
     let prepareObj = {};
+    let newObj = {};
 
-    const storedData = sessionStorage.getItem('USER_REVIEWS_LIST');
+    let storedData = UserDataStorage.getUserReviews();
+
     if (!storedData) {
-      RESTapi.getReviewsByUser()
+      UserDataStorage.setUserReviews()
         .then((result) => {
           if (result.isSuccess) {
-            prepareObj.showAll = result.data;
-            sessionStorage.setItem(
-              'USER_REVIEWS_LIST',
-              JSON.stringify(result.data)
-            );
+            storedData = UserDataStorage.getUserReviews();
           }
         })
         .catch((error) => {
-          console.error('Error fetching reviews:', error);
-        })
-        .finally(() => {
-          const filterReviewList = prepareObj.showAll.reduce(
-            (acc, review) => {
-              const reviewsList =
-                Object.keys(review.review).length === 0
-                  ? 'showNoReview'
-                  : 'showOnlyReview';
-              acc[reviewsList].push(review);
-              return acc;
-            },
-            { showNoReview: [], showOnlyReview: [] }
-          );
-
-          prepareObj.showNoReview = filterReviewList.showNoReview;
-          prepareObj.showOnlyReview = filterReviewList.showOnlyReview;
-
-          setUserReviewsList(prepareObj);
+          return;
         });
+      window.location.reload();
     } else {
-      prepareObj.showAll = JSON.parse(storedData);
-
+      prepareObj.showAll = storedData;
       const filterReviewList = prepareObj.showAll.reduce(
         (acc, review) => {
           const reviewsList =
@@ -1021,13 +1001,13 @@ function UserReviews() {
         { showNoReview: [], showOnlyReview: [] }
       );
 
-      prepareObj.showNoReview = filterReviewList.showNoReview;
-      prepareObj.showOnlyReview = filterReviewList.showOnlyReview;
+      newObj.showNoReview = filterReviewList.showNoReview;
+      newObj.showOnlyReview = filterReviewList.showOnlyReview;
+      setUserReviewsList(newObj);
+      setShowReviewCard({
+        name: 'showNoReview',
+      });
     }
-    setUserReviewsList(prepareObj);
-    setShowReviewCard({
-      name: 'showNoReview',
-    });
   }, []);
 
   if (Object.keys(userReviewsList).length === 0) {
@@ -1044,27 +1024,16 @@ function UserReviews() {
   }
 
   const filteredItems =
-    showReviewCard.name === 'showAll'
-      ? userReviewsList.showAll
-      : showReviewCard.name === 'showNoReview'
+    showReviewCard.name === 'showNoReview'
       ? userReviewsList.showNoReview
       : userReviewsList.showOnlyReview;
 
   return (
     <div className="userReviewBox">
       <div className="currentUserReviewContainer">
-        <ReviewingBox item={itemFocus} setItemFocus={setItemFocus} />
+        <ReviewingBox item={itemFocus} onCancel={() => setItemFocus({})} />
       </div>
       <div className="filterUserReview">
-        <div
-          className={`filterNavi${
-            showReviewCard.name === 'showAll' ? ' isActive' : ''
-          }`}
-          onClick={onClickChangeShowReviewList}
-          id="showAll"
-        >
-          <div id="showAll">All</div>
-        </div>
         <div
           className={`filterNavi${
             showReviewCard.name === 'showNoReview' ? ' isActive' : ''
@@ -1072,7 +1041,7 @@ function UserReviews() {
           onClick={onClickChangeShowReviewList}
           id="showNoReview"
         >
-          <div id="showNoReview">Need Review</div>
+          Need Review
         </div>
         <div
           className={`filterNavi${
@@ -1081,21 +1050,25 @@ function UserReviews() {
           onClick={onClickChangeShowReviewList}
           id="showOnlyReview"
         >
-          <div id="showOnlyReview">Already Review</div>
+          Already Review
         </div>
         <div className={`circleSelect ${showReviewCard.name ?? ''}`}></div>
       </div>
       <div className="listUserReviewContainer">
-        <div className={`listUserReviewBox${isLoadReviewCard ? ' hide' : ''}`}>
-          {filteredItems.map((item) => (
-            <ReviewCard
-              item={item}
-              key={item._id}
-              itemFocus={itemFocus}
-              setItemFocus={setItemFocus}
-            />
-          ))}
-        </div>
+        {isLoadReviewCard ? (
+          <>Loading....</>
+        ) : (
+          <div className="listUserReviewBox">
+            {filteredItems.map((item) => (
+              <ReviewCard
+                item={item}
+                key={item._id}
+                itemFocus={itemFocus}
+                setItemFocus={setItemFocus}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

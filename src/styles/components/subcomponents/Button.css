@@ -1,0 +1,34 @@
+.Button {
+    border-radius: 20px;
+    padding: 0.5em 1.5em;
+    border: none;  
+    background-color: #ffffff;
+    color: #111111;
+    outline: none;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    border: 1px solid #a0a0a0;
+    margin: 0 0.5em;
+  }
+  
+.Button:hover {
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.7);
+    cursor: pointer;
+}
+
+.Button.submit {
+    background-color: #111111;
+    color: white;
+}
+
+.submit:hover{
+    background-color: #ffffff;
+    color: #111111;
+}
+.warning:hover {
+    background-color: rgb(209, 89, 89);
+    color: #fff;
+    border: rgb(209, 89, 89) 1px solid;
+    box-shadow: 0 0 4px rgba(209, 89, 89, 0.7);
+  }
+  

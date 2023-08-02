@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import axios from '../config/axios';
 import '../styles/pages/Products.css';
 import CatgoryLastpage from '../config/services/CatagoryLastpage';

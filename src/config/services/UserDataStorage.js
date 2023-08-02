@@ -1,6 +1,5 @@
 import Token from './Token';
 import RESTapi from './RESTapi';
-import Favorite from './../../pages/Favorite';
 
 class UserDataStorage {
   static checkTokenAndRun(method) {
@@ -9,13 +8,11 @@ class UserDataStorage {
     } else {
       this.removeUserData();
       return false;
-
-      // Handle the case where the user is not authenticated, e.g., redirect to the login page.
     }
   }
 
   static async setUserData(data) {
-    this.checkTokenAndRun(() => {
+    await this.checkTokenAndRun(() => {
       localStorage.setItem('USER_DATA', JSON.stringify(data));
     });
   }
@@ -31,6 +28,7 @@ class UserDataStorage {
     localStorage.removeItem('USER_IMAGE');
     localStorage.removeItem('USER_CART');
     localStorage.removeItem('USER_FAVORITE');
+    localStorage.removeItem('USER_REVIEWS_LIST');
   }
 
   static async setUserImage(imageUrl) {
@@ -136,6 +134,132 @@ class UserDataStorage {
     } else {
       return 0;
     }
+  }
+
+  static async setUserReviews() {
+    return this.checkTokenAndRun(async () => {
+      try {
+        const response = await RESTapi.getReviewsByUser();
+        if (response.isSuccess) {
+          localStorage.setItem(
+            'USER_REVIEWS_LIST',
+            JSON.stringify(response.data)
+          );
+          return response.data;
+        }
+      } catch (error) {
+        console.error('Error setting user reviews data :', error);
+        throw new Error(
+          'Failed to retrieve user reviews data. Please try again later.'
+        );
+      }
+    });
+  }
+
+  static async removeReview(props) {
+    this.checkTokenAndRun(async () => {
+      try {
+        const response = await RESTapi.removeReview({
+          review_id: props.review.review_id,
+        });
+        if (response.isSuccess) {
+          const oldList = JSON.parse(localStorage.getItem('USER_REVIEWS_LIST'));
+          const newObj = { ...props, review: {} };
+          const newList = oldList.map((item) =>
+            item._id === newObj._id ? newObj : item
+          );
+          localStorage.setItem('USER_REVIEWS_LIST', JSON.stringify(newList));
+        }
+      } catch (error) {
+        console.error('Error Removing reviews data :', error);
+        throw new Error(
+          'Failed to remove user reviews data. Please try again later.'
+        );
+      }
+    });
+  }
+
+  static async createNewReview(props) {
+    return this.checkTokenAndRun(async () => {
+      try {
+        const response = await RESTapi.createNewReview(props.formData);
+
+        if (response.isSuccess) {
+          const oldList = JSON.parse(localStorage.getItem('USER_REVIEWS_LIST'));
+          const newObj = {
+            ...props.item,
+            review: {
+              review_id: response.data,
+              rating: props.formData.rating,
+              body: props.formData.body,
+            },
+          };
+          const newList = oldList.map((item) =>
+            item._id === newObj._id ? newObj : item
+          );
+          localStorage.setItem('USER_REVIEWS_LIST', JSON.stringify(newList));
+        }
+        return response;
+      } catch (error) {
+        console.error('Error create new review:', error);
+        throw new Error('Failed to create new review. Please try again later.');
+      }
+    });
+  }
+
+  static async modifyReview(props) {
+    return this.checkTokenAndRun(async () => {
+      try {
+        const response = await RESTapi.modifyReview(props.formData);
+
+        if (response.isSuccess) {
+          const oldList = JSON.parse(localStorage.getItem('USER_REVIEWS_LIST'));
+          const newObj = {
+            ...props.item,
+            review: props.formData,
+          };
+          console.log(newObj);
+
+          const newList = oldList.map((item) =>
+            item._id === newObj._id ? newObj : item
+          );
+
+          localStorage.setItem('USER_REVIEWS_LIST', JSON.stringify(newList));
+        }
+        return response;
+      } catch (error) {
+        console.error('Error modify review:', error);
+        throw new Error('Failed to modify review. Please try again later.');
+      }
+    });
+  }
+
+  static getUserReviews() {
+    return this.checkTokenAndRun(() => {
+      return JSON.parse(localStorage.getItem('USER_REVIEWS_LIST'));
+    });
+  }
+
+  static getUserReview(product_id) {
+    return this.checkTokenAndRun(() => {
+      const reviews = JSON.parse(localStorage.getItem('USER_REVIEWS_LIST'));
+      const targetReview = reviews.find((review) => review._id === product_id);
+      return targetReview;
+    });
+  }
+
+  static checkUserReviewProduct(product_id) {
+    return this.checkTokenAndRun(() => {
+      const targetReview = this.getUserReview(product_id);
+      if (targetReview) {
+        if (Object.keys(targetReview.review).length === 0) {
+          return 'HaveBuy';
+        }
+        return 'HaveReview';
+      } else {
+        return 'NaverBuy';
+      }
+    });
   }
 }
 

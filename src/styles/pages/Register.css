@@ -129,13 +129,6 @@ label {
   font-weight: normal;
 }
 
-.reset:hover {
-  background-color: rgb(209, 89, 89);
-  color: #fff;
-  border: rgb(209, 89, 89) 1px solid;
-  box-shadow: 0 0 4px rgba(209, 89, 89, 0.7);
-}
-
 .height2 {
   height: 3em !important;
 }

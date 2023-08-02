@@ -7,6 +7,9 @@ export default function Favorite(props) {
   const favoriteList = UserDataStorage.getUserFavorite();
   const [thisState, setThisState] = useState(props.shareState);
   async function onClickRemoveAll() {
+    if (favoriteList.favorite_items.length === 0) {
+      return;
+    }
     if (window.confirm('Remove all items from your favorite?')) {
       try {
         await UserDataStorage.removeFavorite({ _id: 'all' });

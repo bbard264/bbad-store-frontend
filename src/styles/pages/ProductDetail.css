@@ -127,6 +127,8 @@
 .headSection {
   font-size: 1.5em;
   color: rgb(60, 60, 60);
+  display: flex;
+  align-items: center;
 }
 
 .fullDetailLine {
@@ -282,8 +284,7 @@
 
 .FixedCommonSection:hover {
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-  border: 5px solid white;
-  transition: box-shadow 0.3s ease, border 0.3s ease;
+  transition: box-shadow 0.3s ease;
 }
 
 .nameLine {

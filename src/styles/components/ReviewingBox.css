@@ -1,11 +1,16 @@
 .reviewingBox {
-  width: 70%;
+  width: 50%;
   height: 100%;
-  margin: auto;
   border-radius: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  flex-wrap: nowrap;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0 2em;
+  background-color: rgb(255, 255, 255);
+  border: 1px solid #acacac;
 }
 
 .reviewingBox.empty {
@@ -17,10 +22,11 @@
 
 .reviewingHeadLine {
   display: flex;
+  padding: 1em 0;
+  width: 100%;
   flex-direction: row;
   align-items: center;
-
-  width: 100%;
+  justify-content: space-between;
 }
 
 .reviewingHeadLinePhotoCol {
@@ -30,14 +36,57 @@
   max-height: 5em;
   border-radius: 20px;
   overflow: hidden;
+  border: 1px solid #acacac;
+  position: relative;
 }
 
 .reviewingHeadLinePhotoCol img {
-  width: 100%;
   height: 100%;
+  width: 100%;
   object-fit: cover;
+  position: absolute;
 }
 
-textarea {
-  resize: none; /* Disable resizing for both horizontal and vertical directions */
+.reviewingHeadLineNameCol {
+  flex: 1;
+  padding: 0 1em;
+}
+
+.starInputLine {
+  display: flex;
+  flex-direction: row;
+}
+
+.starInputLine .star {
+  --image-height: 1.5em;
+}
+
+.bodyInputLine {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+}
+.reviewTextArea {
+  resize: none;
+  border-radius: 20px;
+  padding: 1em;
+  width: 100%;
+  height: 70%;
+  border: 1px solid #acacac;
+}
+.buttonLine {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  height: 2em;
+  margin-bottom: 1em;
+}
+
+.letNavigate:hover,
+.letNavigate:hover ~ .reviewingHeadLineNameCol {
+  text-decoration: underline;
+  cursor: pointer;
 }
