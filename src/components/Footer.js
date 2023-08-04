@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import bbadlogo from '../assets/ex_products/bbadlogo.png';
 import '../styles/components/Footer.css';
@@ -211,12 +211,34 @@ function OneColumnFooter() {
     { name: 'Art Books', navi: '/products/art-books' },
     { name: 'Digital Products', navi: '/products/digital-products' },
   ];
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (isShowCate) {
+        setIsShowCate(false);
+      }
+    };
+
+    if (isShowCate) {
+      document.addEventListener('click', handleClickOutside);
+      document.addEventListener('touchmove', handleClickOutside);
+      window.addEventListener('scroll', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+      document.removeEventListener('touchmove', handleClickOutside);
+      window.removeEventListener('scroll', handleClickOutside);
+    };
+  }, [isShowCate]);
   return (
     <>
       <div
         className="naviLinkFooterMobile first"
         key={'product_line'}
-        onClick={() => setIsShowCate(!isShowCate)}
+        onClick={(e) => {
+          e.stopPropagation();
+          setIsShowCate(!isShowCate);
+        }}
       >
         PRODUCTS
       </div>

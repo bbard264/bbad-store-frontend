@@ -37,7 +37,9 @@ export default function Header(props) {
         countFavorite: 0,
       });
     }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [location, props.shareState, props.role]);
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (showMenu) {

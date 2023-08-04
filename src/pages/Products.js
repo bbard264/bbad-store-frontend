@@ -9,7 +9,6 @@ import Card from '../components/Card.js';
 import coverpic from '../assets/ex_products/cover_ex.jpg';
 
 export function mainContent(listofProducts, numPage, props) {
-  // console.log('listofProducts', listofProducts);
   if (!listofProducts) {
     return;
   }
@@ -160,8 +159,6 @@ export default function Products(props) {
     }
 
     fetchData(newlocation);
-
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [routeParameter, routeParameter2]);
 
   const handlePageChange = (newPage) => {
