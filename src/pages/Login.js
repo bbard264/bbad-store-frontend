@@ -6,8 +6,6 @@ import '../styles/pages/Login.css';
 
 import Token from '../config/services/Token';
 import RESTapi from '../config/services/RESTapi';
-import CartStorage from '../config/services/CartStorage';
-import UserDataStorage from '../config/services/UserDataStorage';
 
 const initialState = {
   email: {

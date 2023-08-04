@@ -95,12 +95,12 @@ function reducer(state, action) {
   }
 }
 
-function renderOption(
+function RenderOption({
   product,
   setModifyOptionState,
   index,
-  isLetModify = true
-) {
+  isLetModify = true,
+}) {
   if (Object.keys(product.property.option).length === 0) {
     product.validator.isAllOptionSelected = true;
     return;
@@ -154,11 +154,11 @@ function renderOption(
   }
 }
 
-function renderModifyOption(
+function RenderModifyOption({
   modifyOptionState,
   setModifyOptionState,
-  cartState
-) {
+  cartState,
+}) {
   const index = modifyOptionState.index;
   const product = JSON.parse(JSON.stringify(modifyOptionState.productToModify));
 
@@ -311,6 +311,472 @@ const initialState = {
   note: '',
 };
 
+function ReviewCheckOut({ reviewCheck, setReviewCheck }) {
+  const navigate = useNavigate();
+  const userInfo = UserDataStorage.getUserData();
+  console.log(reviewCheck);
+
+  function renderReviewProductList(items) {
+    return items.map((item, index) => (
+      <div className="reviewProductRow" key={index}>
+        <div className="productCol">
+          <div className="productPhotoBox inReview">
+            <img
+              src={item.property.product_photo}
+              alt={item.property.product_name}
+            />
+          </div>
+          <div className="nameOptionBox">
+            <div className="productName inReview">
+              {item.property.product_name}
+            </div>
+            <div className="optionBox">
+              <RenderOption product={item} index={index} isLetModify={false} />
+            </div>
+          </div>
+        </div>
+        <div className="priceCol">฿{item.property.product_price}</div>
+        <div className="quantityCol">
+          <div className="numAmount inReview">
+            <div>{item.property.quantity}</div>
+          </div>
+        </div>
+        <div className="totalCol">฿{item.property.totalPrice}</div>
+      </div>
+    ));
+  }
+
+  async function onSubmitReviewCheck(e) {
+    e.preventDefault();
+    const form = document.getElementById('reviewForm');
+    const formData = new FormData(form);
+    const formDataObj = {};
+    formData.forEach((value, key) => {
+      formDataObj[key] = value;
+    });
+    function checkEmptyValues(obj) {
+      for (const key in obj) {
+        if (obj.hasOwnProperty(key) && obj[key] === '') {
+          return false;
+        }
+      }
+      return true;
+    }
+    if (!checkEmptyValues(formDataObj)) {
+      window.alert('Please Fill All Information');
+      return;
+    } else if (window.confirm('Confirm your information?')) {
+      console.log(reviewCheck.cart);
+      const newOrder = {
+        user_id: '',
+        items: reviewCheck.cart.items.map((item) => ({
+          product_id: item.product_id,
+          property: {
+            product_name: item.property.product_name,
+            product_photo: item.property.product_photo,
+            option: item.property.option.choice,
+            product_price: item.property.product_price,
+            quantity: item.property.quantity,
+            totalPrice: item.property.totalPrice,
+            priceChange: item.property.priceChange,
+          },
+          note: item.note,
+        })),
+        summary: reviewCheck.cart.summary,
+        status_id: 'stage1',
+        contact_info: {
+          real_name: formDataObj.realname,
+          phone: formDataObj.phone,
+          address: {
+            adress1: formDataObj.address1,
+            adress2: formDataObj.address2,
+            district: formDataObj.district,
+            province: formDataObj.province,
+            postcode: formDataObj.postcode,
+          },
+        },
+        shipping_Info: { shipping_company: '', shipping_track: '' },
+        payment_info: { payment_id: '', payment_status: '' },
+        order_note: reviewCheck.cart.note,
+      };
+      console.log(newOrder);
+      const response = await RESTapi.createOrder(newOrder);
+      if (response.createOrder) {
+        await CartStorage.removeFromCart({ all: true });
+        window.alert(response.message);
+        setReviewCheck({ cart: {}, state: false });
+        UserDataStorage.setUserReviews();
+        navigate('/order');
+      } else {
+        window.alert('False to place order, please try again later');
+        return;
+      }
+    } else {
+      return;
+    }
+  }
+
+  return (
+    <div className="reviewCheckContainer">
+      <div
+        className="reviewOut"
+        onClick={() => setReviewCheck({ cart: {}, state: false })}
+      >
+        <div>X</div>
+      </div>
+      <div className="reviewCheckBox">
+        <div className="reviewProductHeadLine">
+          <div>PRODUCT</div>
+          <div>PRICE</div>
+          <div>QUANTITY</div>
+          <div>TOTAL</div>
+        </div>
+        <div className="reviewProductList">
+          <div className="reviewProductListContent">
+            {renderReviewProductList(reviewCheck.cart.items)}
+          </div>
+        </div>
+        <div className="reviewSummary">
+          <form
+            className="reviewSummaryLine"
+            id="reviewForm"
+            onSubmit={onSubmitReviewCheck}
+          >
+            <div className="reviewSummaryPersonalContainer">
+              <div className="reviewSummaryPersonalBox">
+                <div className="reviewNamePhoneBox">
+                  <div className="reviewNameBox">
+                    <h2 className="reviewHead">NAME</h2>
+                    <label htmlFor="realname" />
+                    <input
+                      className="reviewCheckinput"
+                      type="text"
+                      name="realname"
+                      id="realname"
+                      placeholder="your real name...."
+                    />
+                  </div>
+                  <div className="reviewPhoneBox">
+                    <h2 className="reviewHead">PHONE</h2>
+                    <label htmlFor="phone" />
+                    <input
+                      className="reviewCheckinput"
+                      type="tel"
+                      name="phone"
+                      id="phone"
+                      defaultValue={
+                        userInfo ? userInfo.phone ?? userInfo.phone : null
+                      }
+                      placeholder="your phone...."
+                    />
+                  </div>
+                </div>
+                <div className="reviewAddressBox">
+                  <h2 className="reviewHead">ADDRESS FOR SHIPPING</h2>
+                  <div className="reviewAddressInputContainer">
+                    <div className="labelInput">
+                      <label htmlFor="address1">address</label>
+                      <input
+                        className="reviewCheckinput reviewaddress"
+                        type="text"
+                        name="address1"
+                        id="address1"
+                        defaultValue={userInfo?.address?.address1 ?? null}
+                        placeholder="your address...."
+                      />
+                    </div>
+                    <div className="labelInput">
+                      <label htmlFor="address2">address</label>
+                      <input
+                        className="reviewCheckinput reviewaddress"
+                        type="text"
+                        name="address2"
+                        id="address2"
+                        defaultValue={userInfo?.address?.address2 ?? null}
+                        placeholder="your address...."
+                      />
+                    </div>
+                    <div className="labelInput">
+                      <label htmlFor="district">district</label>
+                      <input
+                        className="reviewCheckinput reviewaddress"
+                        type="text"
+                        name="district"
+                        id="district"
+                        defaultValue={userInfo?.address?.district ?? null}
+                        placeholder="district...."
+                      />
+                    </div>
+                    <div className="labelInput">
+                      <label htmlFor="province">province</label>
+                      <input
+                        className="reviewCheckinput reviewaddress"
+                        type="text"
+                        name="province"
+                        id="province"
+                        defaultValue={userInfo?.address?.province ?? null}
+                        placeholder="province...."
+                      />
+                    </div>
+                    <div className="labelInput">
+                      <label htmlFor="postcode">postcode</label>
+                      <input
+                        className="reviewCheckinput reviewaddress"
+                        type="num"
+                        name="postcode"
+                        id="postcode"
+                        defaultValue={userInfo?.address?.postcode ?? null}
+                        placeholder="postcode...."
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="cartSumBox reviewCheckSection">
+              <div className="cartSumLine reviewCheckSection">
+                <div className="cartSumHeadLine">ORDER SUMMARY</div>
+                <div className="cartSumBodyLine">
+                  <div className="cartDetailLine">
+                    <div className="cartDetailName">subtotal</div>
+                    <div className="cartDetailValue">
+                      ฿{reviewCheck.cart.summary.subtotal}
+                    </div>
+                  </div>
+                  {Object.entries(reviewCheck.cart.summary.priceChange).map(
+                    ([key, value]) =>
+                      value !== 0 ? (
+                        <div key={key} className="cartDetailLine">
+                          <div className="cartDetailName">{key}</div>
+                          <div className="cartDetailValue">฿{value}</div>
+                        </div>
+                      ) : null
+                  )}
+                </div>
+                <div className="emptyBox">
+                  <div>.</div>
+                  <div>.</div>
+                </div>
+              </div>
+              <div className="cartSumNetTotalLine reviewCheckSection">
+                <div>NET</div>
+                <div>฿{reviewCheck.cart.summary.net}</div>
+              </div>
+              <button
+                className="cartSumCheckOutLine checkOut reviewCheckSection"
+                type="submit"
+              >
+                PLACE ORDER
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function CartList({
+  cartState,
+  onClickRemoveAll,
+  onClickQuantity,
+  onClickToRemove,
+  onClickNaviagate,
+  onClickCopyThisProduct,
+  setModifyOptionState,
+}) {
+  return (
+    <div className="cartListContainer">
+      {Object.keys(cartState).length === 0 ? (
+        <p>loading....</p>
+      ) : (
+        <div className="cartListBox">
+          <div className="cartListHeadLine">
+            <div>PRODUCT</div>
+            <div>PRICE</div>
+            <div>QUANTITY</div>
+            <div>TOTAL</div>
+          </div>
+          <div className="cartContentContainer">
+            {cartState.items === null ||
+            cartState.items === undefined ||
+            cartState.items.length === 0 ? (
+              <div className="emptyCart">EMPTY CART</div>
+            ) : (
+              <>
+                <CartContent
+                  items={cartState.items}
+                  setModifyOptionState={setModifyOptionState}
+                  onClickQuantity={onClickQuantity}
+                  onClickToRemove={onClickToRemove}
+                  onClickNaviagate={onClickNaviagate}
+                  onClickCopyThisProduct={onClickCopyThisProduct}
+                />
+                <div
+                  className="cartSumCheckOutLine removeCart"
+                  onClick={onClickRemoveAll}
+                >
+                  REMOVE ALL ITEMS IN CART
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function CartContent({
+  items,
+  setModifyOptionState,
+  onClickQuantity,
+  onClickToRemove,
+  onClickNaviagate,
+  onClickCopyThisProduct,
+}) {
+  return (
+    <>
+      {items.map((item, index) => (
+        <div className="productLine" key={index}>
+          <div
+            className="copyThisProduct"
+            onClick={() => onClickCopyThisProduct(index)}
+          >
+            <div>+</div>
+          </div>
+          <div className="productCol">
+            <div
+              className="productPhotoBox pointer"
+              onClick={() =>
+                onClickNaviagate(
+                  item.product_id,
+                  item.property.product_url_name
+                )
+              }
+            >
+              <img
+                src={item.property.product_photo}
+                alt={item.property.product_name}
+              />
+            </div>
+            <div className="nameOptionBox">
+              <div
+                className="productName pointer"
+                onClick={() =>
+                  onClickNaviagate(
+                    item.product_id,
+                    item.property.product_url_name
+                  )
+                }
+              >
+                {item.property.product_name}
+              </div>
+              <div className="optionBox">
+                <RenderOption
+                  product={item}
+                  setModifyOptionState={setModifyOptionState}
+                  index={index}
+                />
+              </div>
+            </div>
+          </div>
+          <div className="priceCol">฿{item.property.product_price}</div>
+          <div className="quantityCol">
+            <div className="plusMinusButton">
+              <div
+                className="minus"
+                onClick={(e) => onClickQuantity(e)}
+                id={`MINUS_${index}`}
+              >
+                <div id={`MINUS_${index}`}>-</div>
+              </div>
+              <div className="numAmount">
+                <div>{item.property.quantity}</div>
+              </div>
+              <div
+                className="plus"
+                onClick={(e) => onClickQuantity(e)}
+                id={`PLUS_${index}`}
+              >
+                <div id={`PLUS_${index}`}>+</div>
+              </div>
+            </div>
+          </div>
+          <div className="totalCol">฿{item.property.totalPrice}</div>
+          <div className="deleteCol" onClick={() => onClickToRemove(index)}>
+            <div>X</div>
+          </div>
+        </div>
+      ))}
+    </>
+  );
+}
+
+function CartSummaryBox({ cartState, onClickCheckOut }) {
+  cartState.IsPassValidate = true;
+  for (const item of cartState.items) {
+    if (!item.validator.isAllOptionSelected) {
+      cartState.IsPassValidate = false;
+    }
+  }
+
+  return (
+    <div className="cartSumContainer">
+      {Object.keys(cartState).length === 0 ? (
+        <p>loading....</p>
+      ) : (
+        <div className="cartSumBox">
+          <div className="cartSumLine">
+            <div className="cartSumHeadLine">CART SUMMARY</div>
+            <div className="cartSumBodyLine">
+              <div className="cartDetailLine">
+                <div className="cartDetailName">subtotal</div>
+                <div className="cartDetailValue">
+                  ฿{cartState.summary.subtotal}
+                </div>
+              </div>
+              {Object.entries(cartState.summary.priceChange).map(
+                ([key, value]) =>
+                  // Check if the value is 0, and return null to skip rendering the div
+                  value !== 0 ? (
+                    <div key={key} className="cartDetailLine">
+                      <div className="cartDetailName">{key}</div>
+                      <div className="cartDetailValue">฿{value}</div>
+                    </div>
+                  ) : null
+              )}
+            </div>
+            <div className="emptyBox">
+              <div>.</div>
+              <div>.</div>
+            </div>
+          </div>
+          <div className="cartSumNetTotalLine">
+            <div>NET</div>
+            <div>฿{cartState.summary.net}</div>
+          </div>
+          {cartState.items === null ||
+          cartState.items === undefined ||
+          cartState.items.length === 0 ||
+          cartState.IsPassValidate === false ? (
+            <div className="cartSumCheckOutLine checkOut disbled">
+              CHECK OUT
+            </div>
+          ) : (
+            <div
+              className="cartSumCheckOutLine checkOut"
+              onClick={onClickCheckOut}
+            >
+              CHECK OUT
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function Cart(props) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -321,7 +787,6 @@ export default function Cart(props) {
     state: false,
   });
   const [reviewCheck, setReviewCheck] = useState({ cart: {}, state: false });
-  const userInfo = UserDataStorage.getUserData();
   const [rerender, setRerender] = useState(0);
 
   useEffect(() => {
@@ -364,7 +829,7 @@ export default function Cart(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rerender]);
   useEffect(() => {
-    setRerender(rerender + 1);
+    setRerender((e) => e + 1);
   }, [location]);
 
   const onClickNaviagate = (product_id, product_url_name) => {
@@ -446,445 +911,55 @@ export default function Cart(props) {
     }
   };
 
-  function renderCartContent(items) {
-    return items.map((item, index) => (
-      <div className="productLine" key={index}>
-        <div
-          className="copyThisProduct"
-          onClick={() => onClickCopyThisProduct(index)}
-        >
-          <div>+</div>
-        </div>
-        <div className="productCol">
-          <div
-            className="productPhotoBox pointer"
-            onClick={() =>
-              onClickNaviagate(item.product_id, item.property.product_url_name)
-            }
-          >
-            <img
-              src={item.property.product_photo}
-              alt={item.property.product_name}
-            />
-          </div>
-          <div className="nameOptionBox">
-            <div
-              className="productName pointer"
-              onClick={() =>
-                onClickNaviagate(
-                  item.product_id,
-                  item.property.product_url_name
-                )
-              }
-            >
-              {item.property.product_name}
-            </div>
-            <div className="optionBox">
-              {renderOption(item, setModifyOptionState, index)}
-            </div>
-          </div>
-        </div>
-        <div className="priceCol">฿{item.property.product_price}</div>
-        <div className="quantityCol">
-          <div className="plusMinusButton">
-            <div
-              className="minus"
-              onClick={(e) => onClickQuantity(e)}
-              id={`MINUS_${index}`}
-            >
-              <div id={`MINUS_${index}`}>-</div>
-            </div>
-            <div className="numAmount">
-              <div>{item.property.quantity}</div>
-            </div>
-            <div
-              className="plus"
-              onClick={(e) => onClickQuantity(e)}
-              id={`PLUS_${index}`}
-            >
-              <div id={`PLUS_${index}`}>+</div>
-            </div>
-          </div>
-        </div>
-        <div className="totalCol">฿{item.property.totalPrice}</div>
-        <div className="deleteCol" onClick={() => onClickToRemove(index)}>
-          <div>X</div>
-        </div>
-      </div>
-    ));
-  }
-
-  function renderReviewProductList(items) {
-    return items.map((item, index) => (
-      <div className="reviewProductRow" key={index}>
-        <div className="productCol">
-          <div className="productPhotoBox inReview">
-            <img
-              src={item.property.product_photo}
-              alt={item.property.product_name}
-            />
-          </div>
-          <div className="nameOptionBox">
-            <div className="productName inReview">
-              {item.property.product_name}
-            </div>
-            <div className="optionBox">
-              {renderOption(item, setModifyOptionState, index, false)}
-            </div>
-          </div>
-        </div>
-        <div className="priceCol">฿{item.property.product_price}</div>
-        <div className="quantityCol">
-          <div className="numAmount inReview">
-            <div>{item.property.quantity}</div>
-          </div>
-        </div>
-        <div className="totalCol">฿{item.property.totalPrice}</div>
-      </div>
-    ));
-  }
-
-  async function onSubmitReviewCheck(e) {
-    e.preventDefault();
-    const form = document.getElementById('reviewForm');
-    const formData = new FormData(form);
-    const formDataObj = {};
-    formData.forEach((value, key) => {
-      formDataObj[key] = value;
-    });
-    function checkEmptyValues(obj) {
-      for (const key in obj) {
-        if (obj.hasOwnProperty(key) && obj[key] === '') {
-          return false;
-        }
-      }
-      return true;
-    }
-    if (!checkEmptyValues(formDataObj)) {
-      window.alert('Please Fill All Information');
-      return;
-    } else if (window.confirm('Confirm your information?')) {
-      console.log(cartState);
-      const newOrder = {
-        user_id: '',
-        items: cartState.items.map((item) => ({
-          product_id: item.product_id,
-          property: {
-            product_name: item.property.product_name,
-            product_photo: item.property.product_photo,
-            option: item.property.option.choice,
-            product_price: item.property.product_price,
-            quantity: item.property.quantity,
-            totalPrice: item.property.totalPrice,
-            priceChange: item.property.priceChange,
-          },
-          note: item.note,
-        })),
-        summary: cartState.summary,
-        status_id: 'stage1',
-        contact_info: {
-          real_name: formDataObj.realname,
-          phone: formDataObj.phone,
-          address: {
-            adress1: formDataObj.address1,
-            adress2: formDataObj.address2,
-            district: formDataObj.district,
-            province: formDataObj.province,
-            postcode: formDataObj.postcode,
-          },
-        },
-        shipping_Info: { shipping_company: '', shipping_track: '' },
-        payment_info: { payment_id: '', payment_status: '' },
-        order_note: cartState.note,
-      };
-      console.log(newOrder);
-      const response = await RESTapi.createOrder(newOrder);
-      if (response.createOrder) {
-        await CartStorage.removeFromCart({ all: true });
-        window.alert(response.message);
-        setReviewCheck({ cart: {}, state: false });
-        props.setShareState(props.shareState + 1);
-        UserDataStorage.setUserReviews();
-        navigate('/order');
-      } else {
-        window.alert('False to place order, please try again later');
-        return;
-      }
-    } else {
-      return;
-    }
-  }
-
   return (
     <div className="cart">
-      {modifyOptionState.state ? (
-        <Backdrop
-          onCancel={() =>
-            setModifyOptionState({
-              index: 0,
-              productToModify: {},
-              state: false,
-            })
-          }
-        >
-          {renderModifyOption(
-            modifyOptionState,
-            setModifyOptionState,
-            cartState
-          )}
-        </Backdrop>
-      ) : (
-        <></>
-      )}
-      {reviewCheck.state ? (
-        <Backdrop onCancel={() => setReviewCheck({ cart: {}, state: false })}>
-          <div className="reviewCheckContainer">
-            <div
-              className="reviewOut"
-              onClick={() => setReviewCheck({ cart: {}, state: false })}
-            >
-              <div>X</div>
-            </div>
-            <div className="reviewCheckBox">
-              <div className="reviewProductHeadLine">
-                <div>PRODUCT</div>
-                <div>PRICE</div>
-                <div>QUANTITY</div>
-                <div>TOTAL</div>
-              </div>
-              <div className="reviewProductList">
-                <div className="reviewProductListContent">
-                  {renderReviewProductList(reviewCheck.cart.items)}
-                </div>
-              </div>
-              <div className="reviewSummary">
-                <form
-                  className="reviewSummaryLine"
-                  id="reviewForm"
-                  onSubmit={onSubmitReviewCheck}
-                >
-                  <div className="reviewSummaryPersonalContainer">
-                    <div className="reviewSummaryPersonalBox">
-                      <div className="reviewNamePhoneBox">
-                        <div className="reviewNameBox">
-                          <h2 className="reviewHead">NAME</h2>
-                          <label htmlFor="realname" />
-                          <input
-                            className="reviewCheckinput"
-                            type="text"
-                            name="realname"
-                            id="realname"
-                            placeholder="your real name...."
-                          />
-                        </div>
-                        <div className="reviewPhoneBox">
-                          <h2 className="reviewHead">PHONE</h2>
-                          <label htmlFor="phone" />
-                          <input
-                            className="reviewCheckinput"
-                            type="tel"
-                            name="phone"
-                            id="phone"
-                            defaultValue={
-                              userInfo ? userInfo.phone ?? userInfo.phone : null
-                            }
-                            placeholder="your phone...."
-                          />
-                        </div>
-                      </div>
-                      <div className="reviewAddressBox">
-                        <h2 className="reviewHead">ADDRESS FOR SHIPPING</h2>
-                        <div className="reviewAddressInputContainer">
-                          <div className="labelInput">
-                            <label htmlFor="address1">address</label>
-                            <input
-                              className="reviewCheckinput reviewaddress"
-                              type="text"
-                              name="address1"
-                              id="address1"
-                              defaultValue={userInfo?.address?.address1 ?? null}
-                              placeholder="your address...."
-                            />
-                          </div>
-                          <div className="labelInput">
-                            <label htmlFor="address2">address</label>
-                            <input
-                              className="reviewCheckinput reviewaddress"
-                              type="text"
-                              name="address2"
-                              id="address2"
-                              defaultValue={userInfo?.address?.address2 ?? null}
-                              placeholder="your address...."
-                            />
-                          </div>
-                          <div className="labelInput">
-                            <label htmlFor="district">district</label>
-                            <input
-                              className="reviewCheckinput reviewaddress"
-                              type="text"
-                              name="district"
-                              id="district"
-                              defaultValue={userInfo?.address?.district ?? null}
-                              placeholder="district...."
-                            />
-                          </div>
-                          <div className="labelInput">
-                            <label htmlFor="province">province</label>
-                            <input
-                              className="reviewCheckinput reviewaddress"
-                              type="text"
-                              name="province"
-                              id="province"
-                              defaultValue={userInfo?.address?.province ?? null}
-                              placeholder="province...."
-                            />
-                          </div>
-                          <div className="labelInput">
-                            <label htmlFor="postcode">postcode</label>
-                            <input
-                              className="reviewCheckinput reviewaddress"
-                              type="num"
-                              name="postcode"
-                              id="postcode"
-                              defaultValue={userInfo?.address?.postcode ?? null}
-                              placeholder="postcode...."
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="cartSumBox reviewCheckSection">
-                    <div className="cartSumLine reviewCheckSection">
-                      <div className="cartSumHeadLine">ORDER SUMMARY</div>
-                      <div className="cartSumBodyLine">
-                        <div className="cartDetailLine">
-                          <div className="cartDetailName">subtotal</div>
-                          <div className="cartDetailValue">
-                            ฿{reviewCheck.cart.summary.subtotal}
-                          </div>
-                        </div>
-                        {Object.entries(
-                          reviewCheck.cart.summary.priceChange
-                        ).map(([key, value]) =>
-                          value !== 0 ? (
-                            <div key={key} className="cartDetailLine">
-                              <div className="cartDetailName">{key}</div>
-                              <div className="cartDetailValue">฿{value}</div>
-                            </div>
-                          ) : null
-                        )}
-                      </div>
-                      <div className="emptyBox">
-                        <div>.</div>
-                        <div>.</div>
-                      </div>
-                    </div>
-                    <div className="cartSumNetTotalLine reviewCheckSection">
-                      <div>NET</div>
-                      <div>฿{reviewCheck.cart.summary.net}</div>
-                    </div>
-                    <button
-                      className="cartSumCheckOutLine checkOut reviewCheckSection"
-                      type="submit"
-                    >
-                      PLACE ORDER
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        </Backdrop>
-      ) : (
-        <></>
-      )}
-
       <CartOrderHeader nowPage="CartPage" />
       <div className="contentContainer">
         <div className="cartPage">
-          <div className="cartListContainer">
-            {Object.keys(cartState).length === 0 ? (
-              <p>loading....</p>
-            ) : (
-              <div className="cartListBox">
-                <div className="cartListHeadLine">
-                  <div>PRODUCT</div>
-                  <div>PRICE</div>
-                  <div>QUANTITY</div>
-                  <div>TOTAL</div>
-                </div>
-                <div className="cartContentContainer">
-                  {cartState.items === null ||
-                  cartState.items === undefined ||
-                  cartState.items.length === 0 ? (
-                    <div className="emptyCart">EMPTY CART</div>
-                  ) : (
-                    <>
-                      {renderCartContent(cartState.items)}
-                      <div
-                        className="cartSumCheckOutLine removeCart"
-                        onClick={onClickRemoveAll}
-                      >
-                        REMOVE ALL ITEMS IN CART
-                      </div>
-                    </>
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
-          <div className="cartSumContainer">
-            {Object.keys(cartState).length === 0 ? (
-              <p>loading....</p>
-            ) : (
-              <div className="cartSumBox">
-                <div className="cartSumLine">
-                  <div className="cartSumHeadLine">CART SUMMARY</div>
-                  <div className="cartSumBodyLine">
-                    <div className="cartDetailLine">
-                      <div className="cartDetailName">subtotal</div>
-                      <div className="cartDetailValue">
-                        ฿{cartState.summary.subtotal}
-                      </div>
-                    </div>
-                    {Object.entries(cartState.summary.priceChange).map(
-                      ([key, value]) =>
-                        // Check if the value is 0, and return null to skip rendering the div
-                        value !== 0 ? (
-                          <div key={key} className="cartDetailLine">
-                            <div className="cartDetailName">{key}</div>
-                            <div className="cartDetailValue">฿{value}</div>
-                          </div>
-                        ) : null
-                    )}
-                  </div>
-                  <div className="emptyBox">
-                    <div>.</div>
-                    <div>.</div>
-                  </div>
-                </div>
-                <div className="cartSumNetTotalLine">
-                  <div>NET</div>
-                  <div>฿{cartState.summary.net}</div>
-                </div>
-                {cartState.items === null ||
-                cartState.items === undefined ||
-                cartState.items.length === 0 ? (
-                  <div className="cartSumCheckOutLine checkOut disbled">
-                    CHECK OUT
-                  </div>
-                ) : (
-                  <div
-                    className="cartSumCheckOutLine checkOut"
-                    onClick={onClickCheckOut}
-                  >
-                    CHECK OUT
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
+          <CartList
+            cartState={cartState}
+            setModifyOptionState={setModifyOptionState}
+            onClickNaviagate={onClickNaviagate}
+            onClickQuantity={onClickQuantity}
+            onClickToRemove={onClickToRemove}
+            onClickCopyThisProduct={onClickCopyThisProduct}
+            onClickRemoveAll={onClickRemoveAll}
+          />
+          {modifyOptionState.state ? (
+            <Backdrop
+              onCancel={() =>
+                setModifyOptionState({
+                  index: 0,
+                  productToModify: {},
+                  state: false,
+                })
+              }
+            >
+              <RenderModifyOption
+                modifyOptionState={modifyOptionState}
+                setModifyOptionState={setModifyOptionState}
+                cartState={cartState}
+              />
+            </Backdrop>
+          ) : (
+            <></>
+          )}
+          <CartSummaryBox
+            cartState={cartState}
+            onClickCheckOut={onClickCheckOut}
+          />
+          {reviewCheck.state ? (
+            <Backdrop
+              onCancel={() => setReviewCheck({ cart: {}, state: false })}
+            >
+              <ReviewCheckOut
+                reviewCheck={reviewCheck}
+                setReviewCheck={setReviewCheck}
+              />
+            </Backdrop>
+          ) : (
+            <></>
+          )}
         </div>
       </div>
     </div>

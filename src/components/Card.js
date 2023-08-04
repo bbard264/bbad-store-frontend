@@ -8,7 +8,6 @@ import heartFillIcon from '../assets/icon/heart2.png';
 import CartStorage from '../config/services/CartStorage';
 
 import '../styles/components/Card.css';
-import Favorite from './../pages/Favorite';
 import UserDataStorage from '../config/services/UserDataStorage';
 
 export default function Card(props) {
@@ -22,6 +21,7 @@ export default function Card(props) {
     const userFavorite = UserDataStorage.getUserFavorite();
     const { favorite_items: favoriteItems = [] } = userFavorite || {};
     setIsFavorite(favoriteItems.some((item) => item._id === props.product._id));
+    // eslint-disable-next-line
   }, []);
 
   function handleOnClick(productIdUrl) {

@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from '../config/axios';
 import '../styles/pages/Products.css';
 import CatgoryLastpage from '../config/services/CatagoryLastpage';
-
 import CategoryNavi from '../components/CategoryNavi';
-
-import RecommendationsContainter from '../components/RecommendationsContainter';
+// import RecommendationsContainter from '../components/RecommendationsContainter';
 import Card from '../components/Card.js';
-
 import coverpic from '../assets/ex_products/cover_ex.jpg';
 
 export function mainContent(listofProducts, numPage, props) {
@@ -105,7 +102,6 @@ const fetchProductList = async (category, page) => {
   }`;
 
   try {
-    console.log('requestAPI', apilink);
     const resProductList = await axios.get(apilink);
     return resProductList.data;
   } catch (error) {

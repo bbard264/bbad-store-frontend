@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { useMediaQuery } from 'react-responsive';
 import { useNavigate } from 'react-router-dom';
 import bbadlogo from '../assets/ex_products/bbadlogo.png';
 import '../styles/components/Footer.css';
 import facebookIcon from '../assets/icon/facebook.png';
 import instagramIcon from '../assets/icon/instagram.png';
 import twitterIcon from '../assets/icon/twitter.png';
+import { useMediaContext } from '../config/services/MediaContext';
 
-import CatgoryLastpage from '../config/services/CatagoryLastpage';
+// import CatgoryLastpage from '../config/services/CatagoryLastpage';
 
 function FirstColumnFooter() {
   const navigate = useNavigate();
@@ -117,15 +117,15 @@ function ContactFooter({ isMobile = false }) {
           <div className="socialMediaBox">{socialIconLink(mySocial)}</div>
         </div>
         <div className="textContact">
-          <a href="#" className="contactLink">
+          <div className="contactLink" onClikc={() => navigate('/contact')}>
             {myContact.call}
-          </a>
-          <a href="#" className="contactLink">
+          </div>
+          <div className="contactLink" onClikc={() => navigate('/contact')}>
             {myContact.email}
-          </a>
-          <a href="#" className="contactLink">
+          </div>
+          <div className="contactLink" onClikc={() => navigate('/contact')}>
             {myContact.address}
-          </a>
+          </div>
         </div>
       </div>
     );
@@ -134,66 +134,66 @@ function ContactFooter({ isMobile = false }) {
       <div className="contactFooter">
         <div className="socialList">{socialIconLink(mySocial)}</div>
         <div className="textContact">
-          <a href="#" className="contactLink">
+          <div className="contactLink" onClikc={() => navigate('/contact')}>
             {myContact.call}
-          </a>
-          <a href="#" className="contactLink">
+          </div>
+          <div className="contactLink" onClikc={() => navigate('/contact')}>
             {myContact.email}
-          </a>
-          <a href="#" className="contactLink">
+          </div>
+          <div className="contactLink" onClikc={() => navigate('/contact')}>
             {myContact.address}
-          </a>
+          </div>
         </div>
       </div>
     );
   }
 }
 
-function HelpButtonFooter() {
-  let setting = { language: 'English' };
-  let listLanguage = ['English', 'Thai'];
+// function HelpButtonFooter() {
+//   let setting = { language: 'English' };
+//   let listLanguage = ['English', 'Thai'];
 
-  function changeLanguage(newLanguage) {
-    setting.language = newLanguage;
-    console.log(setting.language);
-  }
+//   function changeLanguage(newLanguage) {
+//     setting.language = newLanguage;
+//     console.log(setting.language);
+//   }
 
-  function makeListLanguage(listLanguage) {
-    return listLanguage.map((language, index) => (
-      <div
-        onClick={() => changeLanguage(language)}
-        className="dropupList"
-        key={language}
-      >
-        {language}
-      </div>
-    ));
-  }
+//   function makeListLanguage(listLanguage) {
+//     return listLanguage.map((language, index) => (
+//       <div
+//         onClick={() => changeLanguage(language)}
+//         className="dropupList"
+//         key={language}
+//       >
+//         {language}
+//       </div>
+//     ));
+//   }
 
-  return (
-    <div className="helpButtonFooter">
-      <div>
-        <div className="changeLaguagedropup">
-          <button className="button-dropup">
-            <div>{setting.language}</div>
-            <div className="triangleButton"></div>
-          </button>
-          <div className="dropup-content">{makeListLanguage(listLanguage)}</div>
-        </div>
-      </div>
-      <div>
-        <a href="#" className="buttonFooter">
-          <button className="button">Contact</button>
-        </a>
-      </div>
-      <div>
-        <a href="#" className="buttonFooter">
-          <button className="button">Help</button>
-        </a>
-      </div>
-    </div>
-  );
-}
+//   return (
+//     <div className="helpButtonFooter">
+//       <div>
+//         <div className="changeLaguagedropup">
+//           <button className="button-dropup">
+//             <div>{setting.language}</div>
+//             <div className="triangleButton"></div>
+//           </button>
+//           <div className="dropup-content">{makeListLanguage(listLanguage)}</div>
+//         </div>
+//       </div>
+//       <div>
+//         <a href="#" className="buttonFooter">
+//           <button className="button">Contact</button>
+//         </a>
+//       </div>
+//       <div>
+//         <a href="#" className="buttonFooter">
+//           <button className="button">Help</button>
+//         </a>
+//       </div>
+//     </div>
+//   );
+// }
 
 function OneColumnFooter() {
   const navigate = useNavigate();
@@ -250,11 +250,7 @@ function OneColumnFooter() {
 }
 
 export default function Footer() {
-  const isDesktop = useMediaQuery({ query: '(min-width: 1280px)' });
-  const isTablet = useMediaQuery({
-    query: '(min-width: 768px) and (max-width: 1279px)',
-  });
-  const isMobile = useMediaQuery({ query: '(max-width: 767px)' });
+  const { isDesktop, isTablet, isMobile } = useMediaContext();
   if (isDesktop) {
     return (
       <div className="footer">

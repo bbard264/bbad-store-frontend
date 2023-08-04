@@ -7,7 +7,7 @@ import not169 from '../assets/ex_products/OC_vince.jpg';
 import testimg1691 from '../assets/ex_products/16-9test2.jpg';
 import testimg1692 from '../assets/ex_products/16-9test3.jpg';
 import testimg1693 from '../assets/ex_products/16-9test5.jpg';
-import { useMediaQuery } from 'react-responsive';
+import { useMediaContext } from '../config/services/MediaContext';
 
 function centerPoint(imgChoosingIndex, numCircle, onClick) {
   return (
@@ -148,11 +148,7 @@ function CoverContent({ isMobile = false, isTablet = false }) {
 }
 
 export default function Home() {
-  const isDesktop = useMediaQuery({ query: '(min-width: 1280px)' });
-  const isTablet = useMediaQuery({
-    query: '(min-width: 768px) and (max-width: 1279px)',
-  });
-  const isMobile = useMediaQuery({ query: '(max-width: 767px)' });
+  const { isTablet, isMobile } = useMediaContext();
   return (
     <div className="HomeContainer">
       <CoverContent isMobile={isMobile} isTablet={isTablet} />

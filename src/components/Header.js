@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useMediaQuery } from 'react-responsive';
 import bbadlogo from '../assets/ex_products/bbadlogo.png';
 import heartFillIcon from '../assets/icon/heart2.png';
 import cartIcon from '../assets/icon/cart.png';
@@ -11,6 +10,7 @@ import UserDataStorage from '../config/services/UserDataStorage';
 import CartStorage from '../config/services/CartStorage';
 import hamburgerMenuIcon from '../assets/icon/menus.png';
 import Token from '../config/services/Token';
+import { useMediaContext } from '../config/services/MediaContext';
 
 export default function Header(props) {
   const navigate = useNavigate();
@@ -21,11 +21,7 @@ export default function Header(props) {
     countFavorite: 0,
   });
   const [showMenu, setShowMenu] = useState(false);
-  const isDesktop = useMediaQuery({ query: '(min-width: 1280px)' });
-  const isTablet = useMediaQuery({
-    query: '(min-width: 768px) and (max-width: 1279px)',
-  });
-  const isMobile = useMediaQuery({ query: '(max-width: 767px)' });
+  const { isDesktop, isTablet, isMobile } = useMediaContext();
 
   useEffect(() => {
     if (props.role === 'user') {

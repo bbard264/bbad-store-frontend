@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import '../styles/components/ReviewingBox.css';
 import StarRating from './subcomponents/StarRating';
-import { NaviToProudctDetail } from '../config/services/General';
 import Button from './subcomponents/Button';
 import UserDataStorage from '../config/services/UserDataStorage';
 import { useNavigate } from 'react-router-dom';

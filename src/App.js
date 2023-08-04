@@ -1,14 +1,21 @@
 import './App.css';
-import { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter } from 'react-router-dom';
+import { useMediaQuery } from 'react-responsive';
 import CreateRoutes from './config/CreateRoutes';
 import CartStorage from './config/services/CartStorage';
 import Token from './config/services/Token';
-import RESTapi from './config/services/RESTapi';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import MediaContext from './config/services/MediaContext';
 
 function App() {
+  const isDesktop = useMediaQuery({ query: '(min-width: 1280px)' });
+  const isTablet = useMediaQuery({
+    query: '(min-width: 768px) and (max-width: 1279px)',
+  });
+  const isMobile = useMediaQuery({ query: '(max-width: 767px)' });
+
   const [role, setRole] = useState(Token.getRole()); // Initial state set to null
   const [shareState, setShareState] = useState(
     CartStorage.getCountItemsInCart()
@@ -16,14 +23,16 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Header role={role} shareState={shareState} />
-      <CreateRoutes
-        role={role}
-        setRole={setRole}
-        shareState={shareState}
-        setShareState={setShareState}
-      />
-      <Footer role={role} />
+      <MediaContext.Provider value={{ isDesktop, isTablet, isMobile }}>
+        <Header role={role} shareState={shareState} />
+        <CreateRoutes
+          role={role}
+          setRole={setRole}
+          shareState={shareState}
+          setShareState={setShareState}
+        />
+        <Footer role={role} />
+      </MediaContext.Provider>
     </BrowserRouter>
   );
 }

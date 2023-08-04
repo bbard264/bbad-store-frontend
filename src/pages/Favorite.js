@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import UserDataStorage from '../config/services/UserDataStorage';
 import '../styles/pages/Favorite.css';
 import Card from '../components/Card.js';
 
 export default function Favorite(props) {
   const favoriteList = UserDataStorage.getUserFavorite();
-  const [thisState, setThisState] = useState(props.shareState);
   async function onClickRemoveAll() {
     if (favoriteList.favorite_items.length === 0) {
       return;

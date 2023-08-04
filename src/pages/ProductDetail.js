@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer, useRef } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import axios from '../config/axios';
 import Token from '../config/services/Token';
@@ -7,7 +7,7 @@ import '../styles/pages/ProductDetail.css';
 import ArrowCorner from '../components/subcomponents/ArrowCorner';
 import StarRating from '../components/subcomponents/StarRating';
 
-import RecommendationsContainter from '../components/RecommendationsContainter';
+// import RecommendationsContainter from '../components/RecommendationsContainter';
 import emptyHeartIcon from '../assets/icon/heart.png';
 import fullHeartIcon from '../assets/icon/heart2.png';
 import addIcon from '../assets/icon/add.png';
@@ -380,15 +380,15 @@ function DetailSection({ product, reviews }) {
   );
 }
 
-const emptyProductToCart = {
-  productId: '',
-  productName: '',
-  productPhoto: '',
-  option: {},
-  unitPrice: 0, // Numeric data type instead of 0
-  quantity: 0, // Numeric data type instead of 0
-  priceChange: { discount: 0 },
-};
+// const emptyProductToCart = {
+//   productId: '',
+//   productName: '',
+//   productPhoto: '',
+//   option: {},
+//   unitPrice: 0, // Numeric data type instead of 0
+//   quantity: 0, // Numeric data type instead of 0
+//   priceChange: { discount: 0 },
+// };
 
 function reducer(state, action) {
   switch (action.type) {
@@ -768,6 +768,7 @@ export default function ProductDetail(props) {
     }
     getReview();
     getProduct();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   if (!product || !reviews) {
     return <p>Loading...</p>;

@@ -1113,7 +1113,6 @@ export default function User() {
   const [userInfo, dispatch] = useReducer(reducer, emptyUser);
   const [isLoaded, setIsLoaded] = useState(false);
   let { page } = useParams();
-  const navigate = useNavigate();
   const userPageList = ['profile', 'account', 'review'];
   if (!page) {
     page = userPageList[0];

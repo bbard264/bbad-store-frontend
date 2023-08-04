@@ -53,7 +53,7 @@ const components = {
 };
 
 // Which Role can access what?
-export default {
+const routesConfig = {
   route: {
     publicRoutes: [
       components.home,
@@ -87,3 +87,5 @@ export default {
     },
   },
 };
+
+export default routesConfig;

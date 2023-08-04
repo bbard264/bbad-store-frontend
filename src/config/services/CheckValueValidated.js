@@ -1,5 +1,5 @@
 export default function checkValue(fieldCheck) {
-  const error = { status: true, message: '', isTouched: true };
+  // const error = { status: true, message: '', isTouched: true };
   if (!fieldCheck.validator) {
     return { status: false, message: '', isTouched: true };
   }

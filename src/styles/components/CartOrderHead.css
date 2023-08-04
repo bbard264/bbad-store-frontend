@@ -39,3 +39,13 @@
   transition: all 0.3s ease;
   cursor: pointer;
 }
+
+@media screen and (max-width: 768px) {
+  .cartOrderNaviContainer {
+    border-radius: 0;
+  }
+  .cartNavi,
+  .orderNavi {
+    border-radius: 0;
+  }
+}
