@@ -117,13 +117,13 @@ function ContactFooter({ isMobile = false }) {
           <div className="socialMediaBox">{socialIconLink(mySocial)}</div>
         </div>
         <div className="textContact">
-          <div className="contactLink" onClikc={() => navigate('/contact')}>
+          <div className="contactLink" onClick={() => navigate('/contact')}>
             {myContact.call}
           </div>
-          <div className="contactLink" onClikc={() => navigate('/contact')}>
+          <div className="contactLink" onClick={() => navigate('/contact')}>
             {myContact.email}
           </div>
-          <div className="contactLink" onClikc={() => navigate('/contact')}>
+          <div className="contactLink" onClick={() => navigate('/contact')}>
             {myContact.address}
           </div>
         </div>
@@ -134,13 +134,13 @@ function ContactFooter({ isMobile = false }) {
       <div className="contactFooter">
         <div className="socialList">{socialIconLink(mySocial)}</div>
         <div className="textContact">
-          <div className="contactLink" onClikc={() => navigate('/contact')}>
+          <div className="contactLink" onClick={() => navigate('/contact')}>
             {myContact.call}
           </div>
-          <div className="contactLink" onClikc={() => navigate('/contact')}>
+          <div className="contactLink" onClick={() => navigate('/contact')}>
             {myContact.email}
           </div>
-          <div className="contactLink" onClikc={() => navigate('/contact')}>
+          <div className="contactLink" onClick={() => navigate('/contact')}>
             {myContact.address}
           </div>
         </div>

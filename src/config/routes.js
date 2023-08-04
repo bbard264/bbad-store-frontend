@@ -23,7 +23,7 @@ const components = {
     component: ProductDetail,
   },
   cart: {
-    url: '/cart',
+    url: '/cart/reviewCheckOut?',
     component: Cart,
   },
   order: {

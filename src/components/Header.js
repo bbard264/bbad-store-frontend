@@ -37,8 +37,10 @@ export default function Header(props) {
         countFavorite: 0,
       });
     }
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [location, props.shareState, props.role]);
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [location]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {

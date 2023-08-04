@@ -47,5 +47,18 @@
   .cartNavi,
   .orderNavi {
     border-radius: 0;
+    font-size: 1.5em !important;
+  }
+  .notActive:hover {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5em;
+    background-color: #aaa;
+    font-weight: 600;
+    color: #999;
+    transition: all 0.3s ease;
+    cursor: default;
   }
 }

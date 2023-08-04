@@ -95,6 +95,7 @@
   cursor: default !important;
   background-color: #ddd;
   width: 60% !important;
+  box-shadow: unset;
 }
 
 .cartSumCheckOutLine.checkOut:hover {
@@ -176,6 +177,7 @@
   flex-direction: row;
   padding-left: 1em;
   align-items: center;
+  overflow: hidden;
 }
 
 .productCol .productPhotoBox {
@@ -206,9 +208,11 @@
   display: flex;
   flex-direction: row;
 }
+
 .productName {
   font-weight: 500;
-  font-size: 1.11em;
+  font-size: 1em;
+  white-space: nowrap;
 }
 .option {
   height: 100%;
@@ -281,7 +285,7 @@
   padding: 2em;
   position: absolute;
   width: 30%;
-  height: 50%;
+  min-height: 35%;
   border-radius: 20px;
   left: 50%;
   top: 50%;
@@ -587,6 +591,7 @@
   height: 2em;
   width: 2em;
   transition: transform 0.1s ease;
+  z-index: 2000;
 }
 .reviewOut div {
   border: 1px solid black;
@@ -614,6 +619,7 @@
 }
 
 .SubmitLine {
+  margin-top: 1.5em;
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
@@ -637,4 +643,232 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.contentContainerMobile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+@media screen and (max-width: 1280px) {
+  .cartListContainer {
+    min-width: 100%;
+    font-size: 14px;
+  }
+  .productCol {
+    padding-left: 1.5em;
+  }
+  .reviewProductRow .productCol {
+    padding-left: 0;
+  }
+  .productName {
+    font-size: 1em;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    cursor: default !important;
+    text-decoration: none !important;
+  }
+  .productLine {
+    height: 6em;
+    margin: 0;
+    padding: 0;
+    grid-template-columns: auto 7em 3em;
+    border-radius: 0;
+  }
+  .cartListHeadLine {
+    grid-template-columns: auto 7em 3em;
+  }
+  .copyThisProduct {
+    left: 1.25em;
+  }
+  .totalCol {
+    display: flex;
+    justify-content: center;
+  }
+  .quantityCol {
+    display: flex;
+    justify-content: center;
+  }
+  .plusMinusButton {
+    margin: 0 0 1em 0;
+    transform: scale(1.25);
+  }
+  .option:hover {
+    transform: unset;
+  }
+  .deleteCol:hover div {
+    background-color: unset;
+    color: unset;
+    transform: translate(-50%, -50%);
+    cursor: unset;
+    border: 1px solid black;
+    box-shadow: unset;
+  }
+  .copyThisProduct {
+    user-select: none;
+  }
+  .copyThisProduct:hover div {
+    background-color: unset;
+    color: unset;
+    transform: translate(-50%, -50%);
+    cursor: unset;
+    border: 1px solid black;
+    box-shadow: unset;
+  }
+
+  .plusMinusButton .minus:hover,
+  .plusMinusButton .plus:hover {
+    background-color: unset;
+    cursor: default;
+  }
+  .plusMinusButton .minus:hover div,
+  .plusMinusButton .plus:hover div {
+    color: unset;
+    cursor: default;
+  }
+
+  .plusMinusButton:hover {
+    box-shadow: unset;
+    cursor: default;
+  }
+  .cartSumCheckOutLine.removeCart {
+    background-color: rgb(247, 181, 181) !important;
+    width: auto;
+    font-size: 1em;
+    padding: 0.5em 1em;
+    align-self: center;
+    box-shadow: 0 0 3px rgba(247, 181, 181, 0.76);
+    cursor: default;
+    margin-bottom: 1em;
+  }
+  .cartSumContainer {
+    width: 100%;
+  }
+  .cartSumBox {
+    width: auto;
+    padding: 0;
+  }
+  .cartSumLine {
+    width: 100%;
+    border-radius: 0;
+  }
+  .cartSumNetTotalLine {
+    width: 100%;
+    border-radius: 0;
+  }
+  .cartSumCheckOutLine {
+    align-self: center;
+    background-color: rgb(16, 175, 96);
+    font-size: 1.125em;
+    font-weight: 500;
+    width: 60% !important;
+    color: white;
+    border-radius: 20px;
+    display: flex;
+    padding: 0.5em 0;
+    margin-top: 1em;
+    justify-content: center;
+    border: none;
+    transition: all 0.3s ease;
+    user-select: none;
+    box-shadow: 0 0 3px rgb(16, 175, 96);
+  }
+  .cartSumCheckOutLine.checkOut:hover {
+    width: 50%;
+    cursor: pointer;
+    transform: unset;
+  }
+  .emptyCart {
+    border-radius: 0;
+    margin-bottom: 1em;
+  }
+  .modifyOptionBox {
+    width: auto;
+  }
+
+  .reviewCheckBox {
+    font-size: 14px;
+    height: 95%;
+    justify-content: flex-end;
+  }
+  .reviewProductHeadLine {
+    grid-template-columns: auto 3em 5em;
+  }
+  .reviewProductHeadLine div {
+    font-size: 10px;
+  }
+  .reviewProductHeadLine div:first-child {
+    margin-left: 1em;
+  }
+  .reviewProductRow {
+    grid-template-columns: auto 3em 5em;
+  }
+  .productName.inReviewP {
+    white-space: normal;
+  }
+  .cartSumBox.reviewCheckSection {
+    margin: 0;
+    flex: 1;
+    width: 100%;
+    margin-bottom: 1em;
+  }
+  .cartSumCheckOutLine.checkOut.reviewCheckSection {
+    width: 40% !important;
+  }
+  .cartSumCheckOutLine.checkOut.reviewCheckSection:hover {
+    transform: unset;
+  }
+  .cartSumLine.reviewCheckSection .cartSumHeadLine {
+    margin: 1em 0;
+    padding: 0;
+    align-self: center;
+  }
+  .reviewCheckinput {
+    border-radius: 5px;
+  }
+  .reviewAddressInputContainer {
+    border-radius: 5px;
+  }
+  .reviewSummaryPersonalContainer {
+    width: 100%;
+  }
+  .reviewNamePhoneBox {
+    margin-bottom: 1em;
+  }
+  .reviewNamePhoneBox div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .reviewAddressBox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .reviewAddressInputContainer {
+    flex: 1;
+  }
+  .reviewHead {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1em;
+  }
+  .buttonLineReviewCheckMobile {
+    display: flex;
+    justify-content: space-evenly;
+  }
+  .cartSumCheckOutLine.checkOut.reviewCheckSection.cancel {
+    background-color: rgb(247, 181, 181);
+    box-shadow: 0 0 3px rgba(247, 181, 181, 0.76);
+  }
+}
+@media screen and (max-width: 768px) {
+  .reviewCheckContainer {
+    width: 100%;
+  }
+  .reviewCheckBox {
+    width: 100%;
+  }
 }
