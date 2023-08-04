@@ -64,7 +64,10 @@
 }
 
 .cardName {
-  font-size: 1.25em;
+  font-size: 1.15em;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .cardTag {
@@ -74,7 +77,8 @@
 }
 
 .cardPrice {
-  font-size: 1.25em;
+  font-size: 1.15em;
+  font-weight: 600;
 }
 
 .addCartButton {
@@ -96,4 +100,22 @@
   transform: translate(7.5%, -7.5%);
   transition: filter 0.2s ease, width 0.2s ease, height 0.2s ease,
     transform 0.2s ease;
+}
+
+@media screen and (max-width: 1600px) {
+  .card {
+    margin: 0.5em;
+    padding: 0.5em;
+  }
+  .card .heartIcon {
+    top: 1.5em;
+    right: 1.5em;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .card .heartIcon {
+    top: 1.5em;
+    right: 1.5em;
+  }
 }
