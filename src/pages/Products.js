@@ -83,14 +83,14 @@ function pageNavi(numPage, lastNumPage, handlePageChange) {
   return (
     <div className="pageNavi">
       <button
-        disabled={numPage === 1}
+        className={numPage === 1 ? `isDisbled` : ``}
         onClick={() => handlePageOnClick(numPage - 1)}
       >
         <div className="triangle left"></div>
       </button>
       {renderPageNumbers()}
       <button
-        disabled={numPage === lastNumPage}
+        className={numPage === lastNumPage ? `isDisbled` : ``}
         onClick={() => handlePageOnClick(numPage + 1)}
       >
         <div className="triangle right"></div>
@@ -180,12 +180,12 @@ export default function Products(props) {
     <div className="ProductsPage">
       <CategoryNavi currentCategory={state.category.category_id} />
       {state.productList && state.category.lastPage ? (
-        <React.Fragment>
-          {pageNavi(state.numPage, state.category.lastPage, handlePageChange)}
+        <>
+          {/* {pageNavi(state.numPage, state.category.lastPage, handlePageChange)} */}
           {mainContent(state.productList, state.numPage, props)}
           {pageNavi(state.numPage, state.category.lastPage, handlePageChange)}
           {/* <RecommendationsContainter /> */}
-        </React.Fragment>
+        </>
       ) : (
         <p>Loading...</p>
       )}

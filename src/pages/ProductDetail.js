@@ -12,6 +12,7 @@ import emptyHeartIcon from '../assets/icon/heart.png';
 import fullHeartIcon from '../assets/icon/heart2.png';
 import addIcon from '../assets/icon/add.png';
 import cartIcon from '../assets/icon/cart.png';
+import profileTemp from '../assets/temp_img/profile_temp.png';
 
 import fullStarIcon from '../assets/icon/star2.png';
 
@@ -23,10 +24,14 @@ import Button from './../components/subcomponents/Button';
 import Backdrop from '../components/subcomponents/Backdrop';
 import ReviewingBox from '../components/ReviewingBox';
 
-function ReviewSection({ reviews, checkUserReviewProduct, product_id }) {
+function ReviewSection({ reviews, product_id }) {
   const columnLength = Math.ceil(reviews.length / 2) - 1;
   const [columnNow, setColumnNow] = useState(0);
   const [isReviewing, setIsReviewing] = useState(false);
+  console.log(product_id);
+  const checkUserReviewProduct =
+    UserDataStorage.checkUserReviewProduct(product_id);
+  console.log(checkUserReviewProduct);
 
   const handleReviewCornerClick = (direction) => {
     if (direction === 'right') {
@@ -116,11 +121,14 @@ function ReviewSection({ reviews, checkUserReviewProduct, product_id }) {
     <div className="reviewLine">
       {isReviewing ? (
         <Backdrop onCancel={() => setIsReviewing(false)}>
-          <ReviewingBox
-            item={UserDataStorage.getUserReview(product_id)}
-            wantReset={false}
-            onCancel={() => setIsReviewing(false)}
-          />
+          <div className="ReviewingContainerProductDetail">
+            <ReviewingBox
+              item={UserDataStorage.getUserReview(product_id)}
+              wantReset={false}
+              letNavigate={false}
+              onCancel={() => setIsReviewing(false)}
+            />
+          </div>
         </Backdrop>
       ) : (
         <></>
@@ -160,7 +168,10 @@ function ReviewSection({ reviews, checkUserReviewProduct, product_id }) {
             <div className="reviewsCard">
               <div className="reviewsCardHeader">
                 <div className="userImg">
-                  <img src={review.user_photo} alt={review.user_display_name} />
+                  <img
+                    src={review.user_photo ? review.user_photo : profileTemp}
+                    alt={review.user_display_name}
+                  />
                 </div>
                 <div className="userNameRank">
                   <div className="userName">{review.user_display_name}</div>
@@ -334,10 +345,7 @@ function DetailSection({ product, reviews }) {
         <div className="fullDetailSection">{product.full_detail}</div>
       </div>
       {reviews.length > 0 ? (
-        <ReviewSection
-          reviews={reviews}
-          checkUserReviewProduct={checkUserReviewProduct}
-        />
+        <ReviewSection reviews={reviews} product_id={product._id} />
       ) : (
         checkUserReviewProduct !== 'NeverBuy' &&
         checkUserReviewProduct !== 'HaveReview' &&

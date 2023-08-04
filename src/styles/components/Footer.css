@@ -4,7 +4,7 @@
   margin-bottom: 2em;
   margin-top: 2em;
   padding-top: 2em;
-  border-top: 1px solid black;
+  border-top: 1px solid #ddd;
   width: 100%;
 }
 
@@ -193,3 +193,84 @@
   bottom: 1.9em;
   transition: bottom 0.1s ease, opacity 0.3s ease, visibility 0.1s ease;
 }
+
+/* #region MOBILE  */
+
+.footer.moblie {
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 2em;
+}
+.cateFooterToogle {
+  width: 100%;
+}
+.cateFooterContainer {
+  height: 0;
+  transition: none;
+  opacity: 0;
+  transform: translate(0, -10%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  transition: all 0.3s ease;
+}
+.cateFooterContainer.show {
+  height: 14.83em;
+  transition: all 0.3s ease;
+  opacity: 1;
+  transform: none;
+}
+
+.naviLinkFooterMobile,
+.naviProdFooterMobile {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 0.5em 0;
+  font-size: 1.15em;
+  border-top: 1px solid #ddd;
+  letter-spacing: 0.1em;
+}
+.naviProdFooterMobile {
+  visibility: hidden;
+}
+
+.naviProdFooterMobile.show {
+  background-color: #ddd;
+  visibility: visible;
+}
+.naviLinkFooterMobile.first {
+  border-top: none;
+}
+.naviLinkFooterMobile.last {
+  border-bottom: 1px solid #ddd;
+}
+
+@media screen and (max-width: 768px) {
+  .contactFooter {
+    width: 100%;
+  }
+  .socialList {
+    display: flex;
+    justify-content: space-between;
+    margin: 2em auto;
+    max-width: 100%;
+    overflow: hidden;
+  }
+  .socialMediaBox {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+  }
+  .textContact {
+    margin: 0;
+    justify-content: center;
+    align-items: center;
+  }
+  .socialIcon {
+    height: 2em;
+  }
+}
+
+/* #endregion */

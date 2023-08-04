@@ -111,3 +111,39 @@
 .mainContent.productsPage {
   width: 90%;
 }
+.isDisbled {
+  display: none;
+}
+
+@media screen and (max-width: 768px) {
+  .cardBox.cover {
+    width: 100%;
+  }
+  .cardBox {
+    width: 50%;
+  }
+  .mainContent.productsPage {
+    width: 100%;
+  }
+  .pageNavi button {
+    color: #000000 !important;
+    background-color: #ffffff !important;
+  }
+  .triangle {
+    border-left-color: #000 !important;
+    border-right-color: #000 !important;
+  }
+  .cardBox.cover div {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+  }
+
+  .cardBox.cover img {
+    width: 100%;
+    border-radius: 0;
+    object-fit: cover;
+  }
+}

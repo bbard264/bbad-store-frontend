@@ -1,19 +1,13 @@
 import React, { useState } from 'react';
-
 import CategoryNavi from '../components/CategoryNavi';
-
 import '../styles/pages/Home.css';
-// --------------------- CoverContent import --------------------------------------------
 import ArrowCorner from '../components/subcomponents/ArrowCorner.js';
 import coverpic from '../assets/ex_products/cover_ex.jpg';
 import not169 from '../assets/ex_products/OC_vince.jpg';
 import testimg1691 from '../assets/ex_products/16-9test2.jpg';
 import testimg1692 from '../assets/ex_products/16-9test3.jpg';
 import testimg1693 from '../assets/ex_products/16-9test5.jpg';
-// --------------------- MainContent import ------------------------------------------
-// import Card from '../components/Card.js';
-
-// ---------------------------- CoverContent()--------------------------------------------
+import { useMediaQuery } from 'react-responsive';
 
 function centerPoint(imgChoosingIndex, numCircle, onClick) {
   return (
@@ -70,7 +64,7 @@ function renderImgCover(imgList, topImg, lastImg) {
     }
   });
 }
-function CoverContent() {
+function CoverContent({ isMobile = false, isTablet = false }) {
   const [topImg, setTopImg] = useState(0);
   const [lastImg, setLastImg] = useState(imgCoverList.length);
 
@@ -100,135 +94,69 @@ function CoverContent() {
       return index;
     });
   }
+  let startX = 0;
 
-  return (
-    <div className="cover-container">
-      <div className="cover-img-container">
-        <ArrowCorner
-          direction="left"
-          onClick={() => handleCornerClick('left')}
-        />
-        {centerPoint(topImg, imgCoverList.length, onCircleClick)}
-        <ArrowCorner
-          direction="right"
-          onClick={() => handleCornerClick('right')}
-        />
-        {renderImgCover(imgCoverList, topImg, lastImg)}
+  const handleTouchStart = (e) => {
+    startX = e.touches[0].clientX;
+    console.log(startX);
+  };
+
+  const handleTouchEnd = (e) => {
+    const endX = e.changedTouches[0].clientX;
+    console.log(endX);
+    const diff = endX - startX;
+
+    if (diff > 50) {
+      handleCornerClick('left');
+    } else if (diff < -50) {
+      handleCornerClick('right');
+    }
+  };
+  if (isMobile || isTablet) {
+    return (
+      <div className="cover-container">
+        <div className="cover-img-container">
+          {centerPoint(topImg, imgCoverList.length, onCircleClick)}
+          <div
+            className="imgCoverContainer"
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+          >
+            {renderImgCover(imgCoverList, topImg, lastImg)}
+          </div>
+        </div>
       </div>
-    </div>
-  );
+    );
+  } else {
+    return (
+      <div className="cover-container">
+        <div className="cover-img-container">
+          <ArrowCorner
+            direction="left"
+            onClick={() => handleCornerClick('left')}
+          />
+          {centerPoint(topImg, imgCoverList.length, onCircleClick)}
+          <ArrowCorner
+            direction="right"
+            onClick={() => handleCornerClick('right')}
+          />
+          {renderImgCover(imgCoverList, topImg, lastImg)}
+        </div>
+      </div>
+    );
+  }
 }
 
-// ---------------------------- CoverContent()--------------------------------------------
-
-// ----------------------------- MainContent()----------------------------------------------------
-
-// class Product {
-//   constructor(
-//     name,
-//     photo,
-//     price,
-//     favorite = false,
-//     salesValue = 0,
-//     promotion = false,
-//     promName = '',
-//     promPrice = 0,
-//     promDayleft = 0
-//   ) {
-//     this.name = name;
-//     this.photo = photo;
-//     this.price = price;
-//     this.favorite = favorite; // true or false // get from user
-//     this.salesValue = salesValue;
-//     this.promotion = promotion; // true or false only // get from admin
-//     this.promName = promName; // if promotion = false, this should be empty
-//     this.promPrice = promPrice; // if promotion = false, this should be empty
-//     this.promDayleft = promDayleft; // if promotion = false, this should be empty
-//   }
-// }
-
-// let promTestProd = new Product(
-//   'promTestProd',
-//   product1,
-//   '4999',
-//   true,
-//   300,
-//   true,
-//   'TestProm',
-//   '300',
-//   '24'
-// );
-// let testProd = new Product(
-//   'testProd',
-//   product2,
-//   '3000',
-//   false,
-//   300,
-//   false,
-//   '',
-//   '',
-//   ''
-// );
-
-// function SeeMoreCard() {
-//   return (
-//     <div className="seeMoreCard">
-//       <div>
-//         <div>SEE MORE</div>
-//         <div>PRODUCTS</div>
-//       </div>
-//     </div>
-//   );
-// }
-
-// function renderProductCards(products, handleFavoriteChange) {
-//   return products.map((product, index) => (
-//     <div className="cardBox" key={index}>
-//       <Card
-//         product={product}
-//         index={index}
-//         onFavoriteChange={handleFavoriteChange}
-//       />
-//     </div>
-//   ));
-// }
-
-// function MainContent() {
-//   function handleFavoriteChange(index, updatedFavorite) {
-//     const updatedProducts = [...products];
-//     updatedProducts[index].favorite = updatedFavorite;
-//     setProducts(updatedProducts);
-//   }
-
-//   const [products, setProducts] = useState([
-//     testProd,
-//     promTestProd,
-//     testProd,
-//     promTestProd,
-//     testProd,
-//     testProd,
-//     testProd,
-//     testProd,
-//   ]);
-
-//   return (
-//     <div className="mainContent">
-//       {renderProductCards(products, handleFavoriteChange)}
-//       <div className="cardBox">
-//         <SeeMoreCard />
-//       </div>
-//     </div>
-//   );
-// }
-
-// --------------------- MainContent()------------------------------------------
-
 export default function Home() {
+  const isDesktop = useMediaQuery({ query: '(min-width: 1280px)' });
+  const isTablet = useMediaQuery({
+    query: '(min-width: 768px) and (max-width: 1279px)',
+  });
+  const isMobile = useMediaQuery({ query: '(max-width: 767px)' });
   return (
-    <div>
-      <CoverContent />
-      <CategoryNavi />
-      {/* <MainContent /> */}
+    <div className="HomeContainer">
+      <CoverContent isMobile={isMobile} isTablet={isTablet} />
+      <CategoryNavi currentPage={'home'} />
     </div>
   );
 }

@@ -35,7 +35,8 @@ if (!CatgoryLastpage.getCatgoryLastpage()) {
   await fetchCategoryList();
 }
 
-export default function CategoryNavi({ currentCategory }) {
+export default function CategoryNavi({ currentCategory, currentPage }) {
+  console.log(currentPage);
   const navigate = useNavigate();
   const categoryMap = CatgoryLastpage.getCatgoryLastpage();
 
@@ -47,7 +48,7 @@ export default function CategoryNavi({ currentCategory }) {
         <>
           <div
             className={`categoryLink ${
-              currentCategory ? '' : 'activeCategory'
+              currentCategory || currentPage === 'home' ? '' : 'activeCategory'
             }`}
             key={`all`}
             onClick={() => navigate('/products')}

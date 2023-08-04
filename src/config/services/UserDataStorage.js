@@ -38,7 +38,6 @@ class UserDataStorage {
       const reader = new FileReader();
 
       reader.onloadend = function () {
-        // reader.result contains the base64 encoded image data
         localStorage.setItem('USER_IMAGE', reader.result);
       };
 
@@ -50,7 +49,7 @@ class UserDataStorage {
 
   static getUserImage() {
     return this.checkTokenAndRun(() => {
-      return localStorage.getItem('USER_IMAGE'); // Corrected key from this.storage_key to 'USER_IMAGE'
+      return localStorage.getItem('USER_IMAGE');
     });
   }
 

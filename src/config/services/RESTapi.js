@@ -2,6 +2,7 @@ import axios from 'axios';
 import UserDataStorage from './UserDataStorage';
 import Token from './Token';
 import CartStorage from './CartStorage';
+import profileTemp from '../../assets/temp_img/profile_temp.png';
 
 class RESTapi {
   static async fetchUserInfo() {
@@ -10,7 +11,9 @@ class RESTapi {
     try {
       const response = await axios.get(apilink);
       await UserDataStorage.setUserData(response.data.userInfo);
-      await UserDataStorage.setUserImage(response.data.userInfo.photo);
+      await UserDataStorage.setUserImage(
+        response.data.userInfo.photo ?? profileTemp
+      );
       await UserDataStorage.setUserFavorite();
       await UserDataStorage.setUserReviews();
       await CartStorage.setCartStorage();
@@ -73,23 +76,26 @@ class RESTapi {
     }
   }
 
-  static async removeFromCart(productIdOrAll) {
+  static async removeFromCart(props) {
     const apilink = '/api/Order/removeFromCart';
+    console.log(props);
 
     try {
-      await axios.delete(apilink, productIdOrAll);
+      await axios.delete(apilink, {
+        params: props,
+      });
       return {
         removeFromCart: true,
-        message: `Remove product ${productIdOrAll}  from cart successful`,
+        message: `Remove product ${props.product_id}  from cart successful`,
       };
     } catch (error) {
       console.error(
-        `Failed to remove product ${productIdOrAll} from cart`,
+        `Failed to remove product ${props.product_id} from cart`,
         error
       );
       return {
         removeFromCart: false,
-        message: `Failed to remove product ${productIdOrAll} from cart`,
+        message: `Failed to remove product ${props.product_id} from cart`,
       };
     }
   }
@@ -179,9 +185,10 @@ class RESTapi {
 
   static async removeFavorite(props) {
     const apilink = '/api/User/removeFavorite';
-
     try {
-      const response = await axios.delete(apilink, props);
+      const response = await axios.delete(apilink, {
+        params: props,
+      });
       return response.data;
     } catch (error) {
       console.error(`Failed to remove favorite`, error);

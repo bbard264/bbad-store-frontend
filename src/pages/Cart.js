@@ -1,5 +1,5 @@
 import React, { useReducer, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import CartOrderHeader from '../components/CartOrderHead.js';
 import '../styles/pages/Cart.css';
 import Backdrop from '../components/subcomponents/Backdrop.js';
@@ -7,6 +7,7 @@ import Backdrop from '../components/subcomponents/Backdrop.js';
 import CartStorage from './../config/services/CartStorage';
 import UserDataStorage from './../config/services/UserDataStorage';
 import RESTapi from './../config/services/RESTapi';
+import Button from '../components/subcomponents/Button.js';
 
 // {
 //   items: [...items,{
@@ -66,8 +67,8 @@ function reducer(state, action) {
         items: updatedItemsQuantity,
         summary: {
           ...state.summary,
-          subtotal: newSubtotal.toFixed(2),
-          net: newNet.toFixed(2),
+          subtotal: parseFloat(newSubtotal.toFixed(2)),
+          net: parseFloat(newNet.toFixed(2)),
         },
       };
     case 'SET_CART':
@@ -113,7 +114,7 @@ function renderOption(
       ) {
         options.push(
           <div
-            className={`option ${isLetModify ? '' : 'notLetMidify'}`}
+            className={`option ${isLetModify ? '' : 'notLetModify'}`}
             key={key}
             onClick={
               isLetModify
@@ -268,17 +269,18 @@ function renderModifyOption(
     return (
       <div className="modifyOptionBox">
         <div className="productCol modifyOption">
-          <div className="productPhotoBox modifyOption pointer">
+          <div className="productPhotoBox modifyOption">
             <img src={product.product_photo} alt={'none'} />
           </div>
           <div className="nameOptionBox modifyOption">
-            <div className="productName modifyOption pointer">
+            <div className="textHeader modifyOption">Select Options for:</div>
+            <div className="productName modifyOption">
               {product.product_name}
             </div>
           </div>
         </div>
         <form
-          className="optionsLine"
+          className="optionsLine modifyOption"
           id="modifyOptionLine"
           onSubmit={onSumbitModifyOption}
         >
@@ -287,10 +289,10 @@ function renderModifyOption(
           )}
         </form>
         <div className="SubmitLine">
-          <button onClick={onClickCancel}>CANCEL</button>
-          <button type="submit" form="modifyOptionLine">
+          <Button onClick={onClickCancel}>CANCEL</Button>
+          <Button type="submit" form="modifyOptionLine">
             SUBMIT
-          </button>
+          </Button>
         </div>
       </div>
     );
@@ -311,6 +313,7 @@ const initialState = {
 
 export default function Cart(props) {
   const navigate = useNavigate();
+  const location = useLocation();
   const [cartState, dispatch] = useReducer(reducer, initialState);
   const [modifyOptionState, setModifyOptionState] = useState({
     index: 0,
@@ -360,6 +363,9 @@ export default function Cart(props) {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rerender]);
+  useEffect(() => {
+    setRerender(rerender + 1);
+  }, [location]);
 
   const onClickNaviagate = (product_id, product_url_name) => {
     const sendto = `/product-detail/${
@@ -598,11 +604,12 @@ export default function Cart(props) {
         window.alert(response.message);
         setReviewCheck({ cart: {}, state: false });
         props.setShareState(props.shareState + 1);
+        UserDataStorage.setUserReviews();
+        navigate('/order');
       } else {
         window.alert('False to place order, please try again later');
         return;
       }
-      navigate('/order');
     } else {
       return;
     }
@@ -695,12 +702,7 @@ export default function Cart(props) {
                               type="text"
                               name="address1"
                               id="address1"
-                              defaultValue={
-                                userInfo
-                                  ? userInfo.address.address1 ??
-                                    userInfo.address.address1
-                                  : null
-                              }
+                              defaultValue={userInfo?.address?.address1 ?? null}
                               placeholder="your address...."
                             />
                           </div>
@@ -711,12 +713,7 @@ export default function Cart(props) {
                               type="text"
                               name="address2"
                               id="address2"
-                              defaultValue={
-                                userInfo
-                                  ? userInfo.address.address2 ??
-                                    userInfo.address.address2
-                                  : null
-                              }
+                              defaultValue={userInfo?.address?.address2 ?? null}
                               placeholder="your address...."
                             />
                           </div>
@@ -727,12 +724,7 @@ export default function Cart(props) {
                               type="text"
                               name="district"
                               id="district"
-                              defaultValue={
-                                userInfo
-                                  ? userInfo.address.district ??
-                                    userInfo.address.district
-                                  : null
-                              }
+                              defaultValue={userInfo?.address?.district ?? null}
                               placeholder="district...."
                             />
                           </div>
@@ -742,13 +734,8 @@ export default function Cart(props) {
                               className="reviewCheckinput reviewaddress"
                               type="text"
                               name="province"
-                              id="provinc"
-                              defaultValue={
-                                userInfo
-                                  ? userInfo.address.province ??
-                                    userInfo.address.province
-                                  : null
-                              }
+                              id="province"
+                              defaultValue={userInfo?.address?.province ?? null}
                               placeholder="province...."
                             />
                           </div>
@@ -759,12 +746,7 @@ export default function Cart(props) {
                               type="num"
                               name="postcode"
                               id="postcode"
-                              defaultValue={
-                                userInfo
-                                  ? userInfo.address.postcode ??
-                                    userInfo.address.postcode
-                                  : null
-                              }
+                              defaultValue={userInfo?.address?.postcode ?? null}
                               placeholder="postcode...."
                             />
                           </div>
@@ -785,7 +767,6 @@ export default function Cart(props) {
                         {Object.entries(
                           reviewCheck.cart.summary.priceChange
                         ).map(([key, value]) =>
-                          // Check if the value is 0, and return null to skip rendering the div
                           value !== 0 ? (
                             <div key={key} className="cartDetailLine">
                               <div className="cartDetailName">{key}</div>
@@ -837,9 +818,7 @@ export default function Cart(props) {
                   {cartState.items === null ||
                   cartState.items === undefined ||
                   cartState.items.length === 0 ? (
-                    <div className="productLine">
-                      <p>... empty cart ...</p>
-                    </div>
+                    <div className="emptyCart">EMPTY CART</div>
                   ) : (
                     <>
                       {renderCartContent(cartState.items)}
@@ -889,12 +868,20 @@ export default function Cart(props) {
                   <div>NET</div>
                   <div>฿{cartState.summary.net}</div>
                 </div>
-                <div
-                  className="cartSumCheckOutLine checkOut"
-                  onClick={onClickCheckOut}
-                >
-                  CHECK OUT
-                </div>
+                {cartState.items === null ||
+                cartState.items === undefined ||
+                cartState.items.length === 0 ? (
+                  <div className="cartSumCheckOutLine checkOut disbled">
+                    CHECK OUT
+                  </div>
+                ) : (
+                  <div
+                    className="cartSumCheckOutLine checkOut"
+                    onClick={onClickCheckOut}
+                  >
+                    CHECK OUT
+                  </div>
+                )}
               </div>
             )}
           </div>

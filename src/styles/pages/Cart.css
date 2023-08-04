@@ -87,7 +87,16 @@
   justify-content: center;
   border: none;
   transition: all 0.3s ease;
+  user-select: none;
 }
+
+.cartSumCheckOutLine.checkOut.disbled {
+  transform: none !important;
+  cursor: default !important;
+  background-color: #ddd;
+  width: 60% !important;
+}
+
 .cartSumCheckOutLine.checkOut:hover {
   width: 50%;
   cursor: pointer;
@@ -171,8 +180,10 @@
 
 .productCol .productPhotoBox {
   position: relative;
-  height: 3em;
-  width: 3em;
+  min-height: 3em;
+  min-width: 3em;
+  max-height: 3em;
+  max-width: 3em;
   overflow: hidden;
   margin: 0 1em;
   border-radius: 4px;
@@ -219,7 +230,7 @@
   margin-right: 0.5em;
 }
 
-.option:hover.notLetMidify {
+.option:hover.notLetModify {
   transform: none;
   cursor: default;
 }
@@ -248,6 +259,12 @@
 .productName:hover {
   cursor: pointer;
   text-decoration: underline;
+}
+
+.productPhotoBox.modifyOption,
+.productName.modifyOption {
+  cursor: default;
+  text-decoration: none !important;
 }
 
 .productPhotoBox:hover + .nameOptionBox .productName {
@@ -281,9 +298,12 @@
   height: 5em;
 }
 .productPhotoBox.modifyOption {
-  height: 5em;
-  width: 5em;
+  min-height: 5em;
+  min-width: 5em;
+  max-height: 5em;
+  max-width: 5em;
   margin: 0 1em 0 0;
+  border-radius: 20px;
 }
 
 .deleteCol {
@@ -591,4 +611,30 @@
   cursor: pointer;
   border: none;
   box-shadow: 0 0 3px rgba(223, 43, 43, 0.76);
+}
+
+.SubmitLine {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+.optionsLine.modifyOption {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  flex: 1;
+  margin-bottom: 0.5em;
+  overflow: auto;
+}
+
+.emptyCart {
+  background-color: #e9e9e9;
+  color: #797979;
+  height: 20vh;
+  width: 100%;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

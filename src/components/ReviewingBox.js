@@ -73,7 +73,7 @@ function ReviewingBox({
         const response = await UserDataStorage.modifyReview({ item, formData });
         window.alert(`Editting Review is success? ` + response.isSuccess);
 
-        // window.location.reload();
+        window.location.reload();
       } else {
         const formData = {
           _id: item._id,

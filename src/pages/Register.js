@@ -116,7 +116,6 @@ const postRegisterUser = async (registerData) => {
   console.log('sending registerData to backend');
   try {
     const apilink = '/api/user/register';
-    console.log('requestAPI', apilink);
     const response = await axios.post(apilink, registerData);
     return response.data;
   } catch (error) {
@@ -140,7 +139,6 @@ export default function Register() {
       console.log('failed to validated by frontend');
       return;
     } else {
-      console.log('validate pass by frontend');
       let registData = {
         email: state.registerInfo.email.value,
         displayname: state.registerInfo.displayname.value,
@@ -185,7 +183,6 @@ export default function Register() {
             type: 'UPDATE_ERROR_MESSAGE',
             payload: { value: `Can't Register, Please try again later` },
           });
-          console.log(state.errorMessage);
         }
       }
     }
@@ -317,7 +314,7 @@ export default function Register() {
               </label>
             </div>
           </div>
-          <div className="buttonLine">
+          <div className="buttonLineRegister">
             <button className="submitBotton reset" type="reset">
               Reset
             </button>

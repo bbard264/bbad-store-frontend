@@ -13,25 +13,6 @@ function App() {
   const [shareState, setShareState] = useState(
     CartStorage.getCountItemsInCart()
   );
-  useEffect(() => {
-    RESTapi.fetchCheckAuthen()
-      .then((result) => {
-        if (result.isAuthen) {
-          setRole(Token.getRole());
-          setShareState(shareState + 1);
-        } else {
-          Token.removeToken();
-          setRole(Token.getRole());
-          setShareState(shareState + 1);
-        }
-      })
-      .catch((error) => {
-        // Handle any errors that may occur during the API call
-        console.error('An error occurred:', error);
-      });
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <BrowserRouter>

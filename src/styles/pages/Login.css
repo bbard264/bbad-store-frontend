@@ -1,6 +1,7 @@
 .loginLink {
   text-decoration: underline;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .loginContainer {

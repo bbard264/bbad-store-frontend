@@ -1,14 +1,27 @@
+.HomeContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
 /* #region coverContent*/
 .cover-container {
   background-color: rgb(255, 255, 255);
-  height: auto;
-  margin: 1em 3em;
+  width: 100%;
+  padding-bottom: 56.25%;
+  position: relative;
+  margin: 2em;
 }
 
 .cover-img-container {
-  padding-top: 56.25%;
   overflow: hidden;
-  position: relative;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
   border-radius: 20px;
   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
   transition: box-shadow 0.3s ease;
@@ -101,3 +114,17 @@
   transition: font-weight 0.3s ease, color 0.3s ease;
 }
 /* #endregion cmainContent()*/
+@media screen and (max-width: 768px) {
+  .cover-img-container {
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .circle {
+    width: 0.5em;
+    height: 0.5em;
+  }
+}
+
+.imgCoverContainer {
+  height: 100%;
+}

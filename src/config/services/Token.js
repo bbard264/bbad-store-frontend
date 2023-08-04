@@ -12,7 +12,6 @@ class Token {
 
   static removeToken() {
     localStorage.removeItem(this.storage_key);
-    sessionStorage.removeItem('USER_REVIEWS_LIST');
     UserDataStorage.removeUserData();
   }
 

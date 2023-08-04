@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import { useMediaQuery } from 'react-responsive';
+import { useNavigate } from 'react-router-dom';
 import bbadlogo from '../assets/ex_products/bbadlogo.png';
 import '../styles/components/Footer.css';
 import facebookIcon from '../assets/icon/facebook.png';
 import instagramIcon from '../assets/icon/instagram.png';
 import twitterIcon from '../assets/icon/twitter.png';
-import { useNavigate } from 'react-router-dom';
+
 import CatgoryLastpage from '../config/services/CatagoryLastpage';
 
 function FirstColumnFooter() {
@@ -71,70 +73,80 @@ function SecondColumnFooter() {
   );
 }
 
-function ContactFooter() {
-  class Social {
-    constructor(name, link, icon) {
-      this.name = name;
-      this.link = link;
-      this.icon = icon;
-    }
-  }
-
-  let facebookContact = new Social(
-    'Facebook',
-    'https://www.facebook.com',
-    facebookIcon
-  );
-  let instagramContact = new Social(
-    'Instagram',
-    'https://www.instagram.com',
-    instagramIcon
-  );
-  let twitterContact = new Social(
-    'Twitter',
-    'https://www.twitter.com',
-    twitterIcon
-  );
-
-  let mySocial = [facebookContact, instagramContact, twitterContact];
-
-  class Contact {
-    constructor(call, email, address) {
-      this.call = call;
-      this.email = email;
-      this.address = address;
-    }
-  }
-
-  let myContact = new Contact(
-    '123 456 7890',
-    'contact@bbad.com',
-    '123 Street, City 12345'
-  );
+function ContactFooter({ isMobile = false }) {
+  const navigate = useNavigate();
+  const myContact = {
+    call: '099 999 9999',
+    email: 'contact@bbad.com',
+    address: '123 Street, City 12345',
+  };
+  const mySocial = {
+    facebook: {
+      link: 'https://www.facebook.com',
+      icon: facebookIcon,
+    },
+    instagram: {
+      link: 'https://www.instagram.com',
+      icon: instagramIcon,
+    },
+    twitter: {
+      link: 'https://www.twitter.com',
+      icon: twitterIcon,
+    },
+  };
 
   function socialIconLink(mySocial) {
-    return mySocial.map((social, index) => (
-      <a href={social.link} className="socialLink" key={social.name}>
-        <img src={social.icon} alt={social.name} className="socialIcon" />
-      </a>
-    ));
+    return Object.keys(mySocial).map((socialKey) => {
+      const social = mySocial[socialKey];
+      return (
+        <a href={social.link} className="socialLink" key={socialKey}>
+          <img src={social.icon} alt={socialKey} className="socialIcon" />
+        </a>
+      );
+    });
   }
-  return (
-    <div className="contactFooter">
-      <div className="socialList">{socialIconLink(mySocial)}</div>
-      <div className="textContact">
-        <a href="#" className="contactLink">
-          {myContact.call}
-        </a>
-        <a href="#" className="contactLink">
-          {myContact.email}
-        </a>
-        <a href="#" className="contactLink">
-          {myContact.address}
-        </a>
+
+  if (isMobile === true) {
+    return (
+      <div className="contactFooter">
+        <div className="socialList">
+          <div className="logo" onClick={() => navigate('/home')}>
+            <img src={bbadlogo} alt="bbadlogo"></img>
+            <div className="brandname">.bbad-shop</div>
+          </div>
+          <div className="socialMediaBox">{socialIconLink(mySocial)}</div>
+        </div>
+        <div className="textContact">
+          <a href="#" className="contactLink">
+            {myContact.call}
+          </a>
+          <a href="#" className="contactLink">
+            {myContact.email}
+          </a>
+          <a href="#" className="contactLink">
+            {myContact.address}
+          </a>
+        </div>
       </div>
-    </div>
-  );
+    );
+  } else {
+    return (
+      <div className="contactFooter">
+        <div className="socialList">{socialIconLink(mySocial)}</div>
+        <div className="textContact">
+          <a href="#" className="contactLink">
+            {myContact.call}
+          </a>
+          <a href="#" className="contactLink">
+            {myContact.email}
+          </a>
+          <a href="#" className="contactLink">
+            {myContact.address}
+          </a>
+        </div>
+      </div>
+    );
+  }
 }
 
 function HelpButtonFooter() {
@@ -183,17 +195,99 @@ function HelpButtonFooter() {
   );
 }
 
-export default function Footer() {
+function OneColumnFooter() {
+  const navigate = useNavigate();
+  const [isShowCate, setIsShowCate] = useState(false);
+  let listMainNavi = [
+    { name: 'ORDER', navi: '/order' },
+    { name: 'FAVORITE', navi: '/favorite' },
+    { name: 'CART', navi: '/cart' },
+    { name: 'ACCOUNT', navi: '/user' },
+  ];
+  let listCateNavi = [
+    { name: 'All', navi: '/products/all' },
+    { name: 'Wearables', navi: '/products/wearables' },
+    { name: 'Collectibles', navi: '/products/collectibles' },
+    { name: 'Art Books', navi: '/products/art-books' },
+    { name: 'Digital Products', navi: '/products/digital-products' },
+  ];
   return (
-    <div className="footer">
-      <div className="leftFooter">
-        <FirstColumnFooter />
-        <SecondColumnFooter />
+    <>
+      <div
+        className="naviLinkFooterMobile first"
+        key={'product_line'}
+        onClick={() => setIsShowCate(!isShowCate)}
+      >
+        PRODUCTS
       </div>
-      <div className="rightFooter">
-        <ContactFooter />
-        {/* <HelpButtonFooter /> */}
+      <div className="cateFooterToogle">
+        <div className={`cateFooterContainer${isShowCate ? ' show' : ''}`}>
+          {listCateNavi.map((item, index) => (
+            <div
+              className={`naviProdFooterMobile${isShowCate ? ' show' : ''}`}
+              key={item.name}
+              onClick={() => navigate(item.navi)}
+            >
+              {item.name}
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+      {listMainNavi.map((item, index) => (
+        <div
+          className={`naviLinkFooterMobile ${
+            index === listMainNavi.length - 1 ? 'last' : ''
+          }`}
+          key={item.name}
+          onClick={() => navigate(item.navi)}
+        >
+          {item.name}
+        </div>
+      ))}
+      <ContactFooter isMobile={true} />
+    </>
   );
+}
+
+export default function Footer() {
+  const isDesktop = useMediaQuery({ query: '(min-width: 1280px)' });
+  const isTablet = useMediaQuery({
+    query: '(min-width: 768px) and (max-width: 1279px)',
+  });
+  const isMobile = useMediaQuery({ query: '(max-width: 767px)' });
+  if (isDesktop) {
+    return (
+      <div className="footer">
+        <div className="leftFooter">
+          <FirstColumnFooter />
+          <SecondColumnFooter />
+        </div>
+        <div className="rightFooter">
+          <ContactFooter />
+          {/* <HelpButtonFooter /> */}
+        </div>
+      </div>
+    );
+  } else if (isTablet) {
+    return (
+      <div className="footer">
+        <div className="leftFooter">
+          <FirstColumnFooter />
+          <SecondColumnFooter />
+        </div>
+        <div className="rightFooter">
+          <ContactFooter />
+          {/* <HelpButtonFooter /> */}
+        </div>
+      </div>
+    );
+  } else if (isMobile) {
+    return (
+      <div className="footer moblie">
+        <OneColumnFooter />
+      </div>
+    );
+  } else {
+    return <></>;
+  }
 }

@@ -151,3 +151,12 @@ label {
   height: 1.25em;
   position: relative;
 }
+
+.buttonLineRegister {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  height: 2em;
+  margin-bottom: 1em;
+}

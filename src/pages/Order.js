@@ -62,7 +62,7 @@ function OrderDetail(props) {
       const options = [];
       for (const key in option) {
         options.push(
-          <div className={`option notLetMidify`} key={key}>
+          <div className={`option notLetModify`} key={key}>
             {option[key][0]}
           </div>
         );
@@ -258,6 +258,15 @@ export default function Order() {
 
   if (orderData === {} || orderDetail === {}) {
     return <div>loading....</div>;
+  } else if (orderData.orderList === [] || orderDetail === undefined) {
+    return (
+      <div className="order">
+        <CartOrderHeader nowPage="OrderPage" />
+        <div className="orderPage">
+          <div className="emptyOrder">EMPTY ORDER HISTORY</div>
+        </div>
+      </div>
+    );
   } else {
     return (
       <div className="order">

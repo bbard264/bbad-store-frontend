@@ -27,22 +27,30 @@ export default function Favorite(props) {
     <div className="favoritePageContainer">
       <div className="favoriteHeader">
         <h1>Your Favorite Items</h1>
-        <div className="removeAllButton" onClick={onClickRemoveAll}>
-          REMOVE ALL ITEMS
-        </div>
+        {favoriteList.favorite_items.length === 0 ? (
+          <></>
+        ) : (
+          <div className="removeAllButton" onClick={onClickRemoveAll}>
+            REMOVE ALL ITEMS
+          </div>
+        )}
       </div>
       <div className="mainContent favoritePage">
-        {favoriteList.favorite_items.map((product, index) => (
-          <div className="cardBox" key={index}>
-            <Card
-              product={product}
-              index={index}
-              shareState={props.shareState}
-              setShareState={props.setShareState}
-              isFavoritePage={true}
-            />
-          </div>
-        ))}
+        {favoriteList.favorite_items.length === 0 ? (
+          <div className="emptyFavorite">Empty Favorite</div>
+        ) : (
+          favoriteList.favorite_items.map((product, index) => (
+            <div className="cardBox" key={index}>
+              <Card
+                product={product}
+                index={index}
+                shareState={props.shareState}
+                setShareState={props.setShareState}
+                isFavoritePage={true}
+              />
+            </div>
+          ))
+        )}
       </div>
     </div>
   );

@@ -92,7 +92,6 @@ export default class CartStorage {
   }
 
   static async removeFromCart(props) {
-    console.log(props);
     try {
       if (props.all) {
         await RESTapi.removeFromCart({ product_id: 'all' });
@@ -102,20 +101,15 @@ export default class CartStorage {
       } else {
         const cartData = JSON.parse(localStorage.getItem(this.storage_key));
 
-        console.log(cartData[props.index]);
         if (props.index >= 0 && props.index < cartData.length) {
           cartData.splice(props.index, 1);
         } else {
-          console.log('Invalid index. Element cannot be removed.');
         }
         localStorage.setItem(this.storage_key, JSON.stringify(cartData));
         if (!cartData.some((item) => item.product_id === props.product_id)) {
           await RESTapi.removeFromCart({ product_id: props.product_id });
         }
 
-        console.log(
-          `Product ${props.product_id} removed from cart successfully.`
-        );
         return {
           success: true,
           message: `Product ${props.product_id} removed from cart successfully.`,

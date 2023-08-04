@@ -439,7 +439,7 @@ function UserProfile({ userData }) {
               src={
                 croppedImg
                   ? croppedImg
-                  : userData.photo
+                  : UserDataStorage.getUserImage()
                   ? UserDataStorage.getUserImage()
                   : profileTemp
               }
