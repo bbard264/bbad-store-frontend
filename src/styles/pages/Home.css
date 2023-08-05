@@ -7,9 +7,20 @@
   height: 100%;
 }
 
+.mainContent {
+  width: 100%;
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+.cardBox {
+  width: 33.33%;
+  position: relative;
+  overflow: hidden;
+}
+
 /* #region coverContent*/
 .cover-container {
-  background-color: rgb(255, 255, 255);
   width: 100%;
   padding-bottom: 56.25%;
   position: relative;
@@ -23,7 +34,7 @@
   object-fit: cover;
   position: absolute;
   border-radius: 20px;
-  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
   transition: box-shadow 0.3s ease;
 }
 
@@ -66,15 +77,14 @@
   width: 1em;
   height: 1em;
   border-radius: 50%;
-  background-color: rgba(100, 100, 100, 0.7);
+  background-color: var(--darker2-bg-color);
   margin: 0 0.5em 1em 0.5em;
   transition: background-color 0.1s ease;
   cursor: pointer;
 }
 
 .circle-choosing {
-  background-color: white;
-  transition: background-color 0.1s ease;
+  background-color: var(--bg-color);
   cursor: default;
 }
 /* #endregion coverContent*/

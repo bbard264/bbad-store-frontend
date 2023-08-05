@@ -2,6 +2,7 @@ import React from 'react';
 import UserDataStorage from '../config/services/UserDataStorage';
 import '../styles/pages/Favorite.css';
 import Card from '../components/Card.js';
+import Button from '../components/subcomponents/Button';
 
 export default function Favorite(props) {
   const favoriteList = UserDataStorage.getUserFavorite();
@@ -29,9 +30,13 @@ export default function Favorite(props) {
         {favoriteList.favorite_items.length === 0 ? (
           <></>
         ) : (
-          <div className="removeAllButton" onClick={onClickRemoveAll}>
+          <Button
+            className="removeAllButton"
+            onClick={onClickRemoveAll}
+            type="warning"
+          >
             REMOVE ALL ITEMS
-          </div>
+          </Button>
         )}
       </div>
       <div className="mainContent favoritePage">

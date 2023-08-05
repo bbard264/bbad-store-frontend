@@ -62,7 +62,6 @@ const reducer = (state, action) => {
 const login = async (loginData) => {
   try {
     const apilink = '/api/user/login';
-    console.log('requestAPI', apilink);
     const response = await axios.post(apilink, loginData);
 
     return response.data;

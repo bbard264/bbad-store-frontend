@@ -98,12 +98,11 @@ function CoverContent({ isMobile = false, isTablet = false }) {
 
   const handleTouchStart = (e) => {
     startX = e.touches[0].clientX;
-    console.log(startX);
   };
 
   const handleTouchEnd = (e) => {
     const endX = e.changedTouches[0].clientX;
-    console.log(endX);
+
     const diff = endX - startX;
 
     if (diff > 50) {

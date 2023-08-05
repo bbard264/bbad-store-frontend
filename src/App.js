@@ -17,13 +17,26 @@ function App() {
   const isMobile = useMediaQuery({ query: '(max-width: 767px)' });
 
   const [role, setRole] = useState(Token.getRole()); // Initial state set to null
-  const [shareState, setShareState] = useState(
-    CartStorage.getCountItemsInCart()
-  );
+  const [shareState, setShareState] = useState(0);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  const toggleTheme = () => {
+    setIsDarkMode((p) => !p);
+
+    const root = document.documentElement;
+    if (isDarkMode) {
+      root.classList.remove('dark-theme');
+    } else {
+      root.classList.add('dark-theme');
+    }
+  };
 
   return (
     <BrowserRouter>
       <MediaContext.Provider value={{ isDesktop, isTablet, isMobile }}>
+        <button onClick={toggleTheme} className="changeTheme">
+          Change to Dark
+        </button>
         <Header role={role} shareState={shareState} />
         <CreateRoutes
           role={role}

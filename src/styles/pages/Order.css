@@ -1,19 +1,25 @@
-.orderPage {
-  display: inline-flex;
-  width: 100%;
-}
-.orderListContainer {
-  width: 40%;
+.order {
   display: flex;
   flex-direction: column;
-  margin: 0.5em 1em 0.5em auto;
+  align-items: center;
+  width: 100%;
+}
+
+.cartOrderContainer {
+  width: 125vh;
+  display: grid;
+  grid-template-columns: 40% 60%;
+}
+.orderListContainer {
+  display: flex;
+  flex-direction: column;
   padding: 1em;
-  background-color: #e0e0e0;
+  color: var(--font-color);
   border-radius: 20px;
 }
 
 .orderListContainer div {
-  font-size: 90%;
+  font-size: 14px;
 }
 
 .orderList {
@@ -23,14 +29,18 @@
   margin: 0.5em auto;
   padding: 0.5em 1em;
   border-radius: 20px;
-  background-color: rgb(173, 173, 173);
+  background-color: var(--darker-bg-color);
+  color: var(--darker2-bg-color);
+  border: 1px solid var(--darker-bg-color);
   overflow: hidden;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .orderList.isSelected {
-  background-color: white;
+  border: 1px solid var(--bg-color-invert);
+  background-color: var(--bg-color);
+  color: var(--font-color);
   overflow: hidden;
   cursor: default;
 }
@@ -40,6 +50,7 @@
   flex-direction: row;
   width: 50%;
   overflow: hidden;
+  flex: 1;
 }
 
 .dateHCol div {
@@ -50,13 +61,13 @@
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
-  width: 50%;
 }
 
 .statusHCol div {
   margin-left: 1em;
   width: auto;
   justify-content: center;
+  white-space: nowrap;
 }
 
 .statusHHead {
@@ -65,12 +76,11 @@
 }
 
 .orderDetailContainer {
-  width: 60%;
   display: flex;
   flex-direction: column;
-  margin: 0.5em auto 0.5em 1em;
   padding: 1em;
-  background-color: #f5f5f5;
+  background-color: var(--darker-bg-color-lit);
+  color: var(--font-color);
   border-radius: 20px;
 }
 .orderDetailBox {
@@ -85,24 +95,32 @@
 
 .orderHeadLine h1 {
   margin-top: 0;
-  margin-bottom: 0;
+  margin-bottom: 0.5em;
   margin-right: auto;
   font-size: 1.5em;
 }
 
 .orderDetail {
   display: flex;
+  margin-bottom: 1em;
   flex-direction: row;
   width: 100%;
   justify-content: space-between;
 }
-
+.orderIDCol h2 {
+  margin: 0 0.5em 0 0;
+  font-size: 1em;
+  color: var(--font-color);
+}
 .orderDetail h2 {
   margin: 0 0.5em 0 0;
   font-size: 1em;
-  color: #555;
+  color: var(--font-color);
 }
-
+.orderIDCol,
+.dateCol {
+  margin-right: 1em;
+}
 .orderIDCol,
 .dateCol,
 .statusCol {
@@ -116,55 +134,42 @@
 .dateValue,
 .statusValue {
   padding: 0.25em 0.5em;
-  background-color: white;
+  background-color: var(--bg-color);
   border-radius: 20px;
+  white-space: nowrap;
+  flex: 1;
 }
-
-.orderTimeLine {
-  padding: 0.5em 0 1em 0;
-  margin: 0.5em 0 1em 0;
-}
-
-.gridTimeLine {
-  display: grid;
-  width: 100%;
-  grid-template-columns: repeat(7, auto);
-  font-size: 0.9em;
-  grid-template-rows: auto 1em;
-}
-.col1,
-.col2,
-.col3,
-.col4,
-.col5,
-.col6 {
+.orderTimeLineContainer {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
+  flex: 1;
+}
+.orderTimeLineBox {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  flex: 1;
 }
 
-.col1 > div,
-.col2 > div,
-.col3 > div,
-.col4 > div,
-.col5 > div,
-.col6 > div {
-  align-self: center;
+.circleColumn {
+  display: grid;
+  width: 4em;
+  height: 100%;
+  grid-template-rows: repeat(6, 1fr);
+}
+.detailTimeLineColumn {
+  display: grid;
+  width: 50%;
+  height: 100%;
+  grid-template-rows: repeat(6, 1fr);
 }
 
-.col5 {
-  grid-column: 5 / span 2;
-}
-
-.col6 {
-  grid-column: 7;
-}
 .copyIcon {
   width: 1em;
   height: 1em;
+  filter: var(--img-filter-invert);
 }
-
 .circleRow {
   height: 100%;
   width: 100%;
@@ -173,136 +178,123 @@
 .lineBefore {
   content: '';
   position: absolute;
-  top: 50%;
-  right: 50%;
-  transform: translate(0, -50%);
-  width: 50%;
-  height: 0.5em;
-  background-color: #e0e0e0;
+  top: -30%;
+  left: 50%;
+  transform: translate(-50%, 0);
+  height: 50%;
+  width: 0.2em;
+  background-color: var(--darker-bg-color);
   z-index: 1;
 }
 .lineAfter {
   content: '';
   position: absolute;
-  top: 50%;
+  top: 20%;
   left: 50%;
-  transform: translate(0, -50%);
-  width: 50%;
-  height: 0.5em;
-  background-color: #e0e0e0;
-  z-index: 1;
+  transform: translate(-50%, 0);
+  height: 50%;
+  width: 0.2em;
+  background-color: var(--darker-bg-color);
+  z-index: 0;
 }
 .circleTimeLine {
-  width: 2em;
-  height: 2em;
+  width: 1em;
+  height: 1em;
   border-radius: 50%;
-  background-color: #e0e0e0;
-  top: 50%;
+  background-color: var(--darker-bg-color);
+  top: 20%;
   left: 50%;
   transform: translate(-50%, -50%);
   margin: auto;
   position: absolute;
-  z-index: 2;
+  z-index: 1;
   transition: all 0.3s ease;
 }
 
 .currentStage {
-  background-color: rgb(16, 175, 96);
+  background-color: var(--color-green);
   transition: all 0.3s ease;
 }
-.nameTimeLine {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 1em;
-}
 
-.addressOrderSumLine {
-  width: 100%;
+.secondOrderDetailLine {
   display: flex;
   flex-direction: row;
+}
+
+.addressOrderSumContainer {
+  display: flex;
+  width: 50%;
+  flex-direction: column;
   margin-bottom: 1em;
 }
 
 .addressContainer,
 .orderSumContainer {
   display: flex;
+  flex-direction: column;
+  margin-bottom: 1em;
+}
+.orderSumContainer {
+  flex: 1;
+}
+
+.namePhoneBox {
+  display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-}
-
-.addressContainer {
-  width: 40%;
-  height: 100%;
-}
-
-.orderSumContainer {
-  width: 60%;
-}
-
-.realNameBox,
-.phoneBox {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
   border-radius: 20px;
-  padding: 0 0.9em;
-  font-size: 0.9em;
-  flex-basis: 1;
+  font-size: 1em;
+  padding: 0 1em;
+  margin-bottom: 0.5em;
+}
+
+.namePhoneBox div {
+  flex: 1;
 }
 
 .addressBox {
-  flex-basis: 2;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  margin: 0.25em;
-  border-radius: 20px;
-  padding: 0 0.9em;
-  font-size: 0.9em;
-  margin: auto;
+  padding: 0 1em;
+  font-size: 1em;
 }
 
 .orderSumBox {
   flex: 1;
-  height: 100%;
   display: flex;
+  height: 300px;
   flex-direction: column;
   justify-content: space-between;
-  margin: 0.25em;
   border-radius: 20px;
-  padding: 0 3em;
+  padding: 0.5em 1em;
   font-size: 0.9em;
   margin: 0;
-  background-color: white;
+  background-color: var(--bg-color);
 }
 
 .orderSumLine {
-  margin: auto;
   width: 100%;
   font-size: 0.9em;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  margin-top: 0.5em;
 }
 
 .netLine {
-  width: 80%;
-  padding-top: 0.5em;
-  margin-top: 0.5em;
-  border-top: 1px black solid;
+  padding-top: 0.25em;
+  border-top: 1px var(--bg-color-invert) solid;
   font-size: 1.25em;
   font-weight: bold;
-  color: #555;
+  color: var(--font-color);
+  margin-bottom: 0.5em;
 }
-.addressHead,
-.orderSumHead,
+
 .thisOrderHead {
-  margin: 0;
+  margin: 0 0 0.5em 0;
   font-size: 1em;
-  color: #555;
+  color: var(--font-color);
   width: 100%;
 }
 
@@ -311,14 +303,11 @@
   flex-direction: column;
   justify-content: space-between;
   margin: 0.25em;
-  border-radius: 20px;
-  padding: 0.9em;
-  font-size: 90%;
 }
 
 .emptyOrder {
-  background-color: #e9e9e9;
-  color: #797979;
+  background-color: var(--darker-bg-color-lit);
+  color: var(--darker-bg-color);
   height: 20vh;
   width: 100%;
   border-radius: 20px;
@@ -326,3 +315,237 @@
   justify-content: center;
   align-items: center;
 }
+
+.inOrderDetail {
+  padding: 0;
+}
+.reviewProductHeadLine.tablet div {
+  font-size: unset;
+}
+.reviewProductHeadLine.tablet,
+.reviewProductRow.tablet {
+  grid-template-columns: auto 5em 5em;
+}
+.reviewProductListContent.inOrderDetail > :nth-child(2n) {
+  background-color: var(--darker-bg-color-lit) !important;
+}
+.reviewProductListContent.inOrderDetail > .reviewProductRow {
+  background-color: var(--bg-color);
+  border-radius: 0;
+}
+
+/* #region mobile zone  */
+.orderDetailContainerMobile {
+  display: flex;
+  flex-direction: column;
+  padding: 1em;
+  background-color: var(--darker-bg-color-lit);
+  color: var(--font-color);
+  border-radius: 20px;
+}
+.namePhoneBox div {
+  white-space: nowrap;
+}
+@media screen and (max-width: 768px) {
+  .order {
+    align-items: unset;
+  }
+  .cartOrderContainerMobile {
+    width: 100%;
+    overflow: hidden;
+    border-radius: 0;
+    padding: 0;
+  }
+  .orderDetailContainerMobile {
+    width: 100%;
+    align-items: center;
+  }
+  .orderDetailBox {
+    width: 95%;
+    font-size: 14px;
+  }
+  .orderDetail {
+    display: flex;
+    margin-bottom: 1em;
+    flex-direction: column;
+    width: 100%;
+    justify-content: space-between;
+  }
+  .circleColumn {
+    width: 1em;
+  }
+  .detailTimeLineColumn {
+    width: 30%;
+  }
+  .addressOrderSumContainer {
+    flex: 2;
+  }
+  .orderTimeLineBox {
+    justify-content: flex-start;
+  }
+  .stageName {
+    margin-left: 1em;
+  }
+  .orderDetailBox h2 {
+    margin: 0 0.5em 0 0;
+    font-size: 1em;
+    color: var(--font-color);
+  }
+  .orderIDCol {
+    margin-bottom: 1em;
+  }
+  .dateCol {
+    margin-bottom: 0.5em;
+    width: auto;
+  }
+  .statusCol {
+    width: 100%;
+  }
+  .SameLine {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 1em;
+  }
+  .hamburgerOrderBox {
+    min-height: 2em;
+    min-width: 2em;
+    max-height: 2em;
+    max-width: 2em;
+    padding: 0.2em;
+    margin-right: 1em;
+    border-radius: 2px;
+    position: relative;
+    outline: 2px solid var(--bg-color-invert);
+  }
+  .hamburgerOrderIcon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 2em;
+    filter: var(--img-filter-invert);
+  }
+  .thisOrderHead {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0.5em !important;
+  }
+}
+
+/* #endregion */
+
+.orderListContainerMobile {
+  position: relative;
+  background-color: var(--bg-color);
+  transition: all 0.3s ease;
+  transform: translate(-100%, 0);
+  z-index: 3;
+}
+
+.orderListContainerMobile.show {
+  transform: unset;
+}
+
+.orderListHeadLine {
+  position: fixed;
+}
+.orderListBoxMobile {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  color: var(--font-color);
+  background-color: var(--bg-color);
+  border-radius: 20px;
+  z-index: 100;
+  height: 60vh;
+  width: 80%;
+  padding: 0.5em;
+}
+.orderListConentMobile {
+  height: 100%;
+  padding: 1em;
+  overflow: scroll;
+  overflow-x: hidden;
+}
+.orderListHeadLineMobile h1 {
+  font-size: 1.25em;
+  display: flex;
+  justify-content: center;
+  margin: 0.5em;
+}
+.backDropOrderList {
+  visibility: hidden;
+}
+.backDropOrderList.show {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: var(--bg-color-invert);
+  opacity: 0.75;
+  height: 100vh;
+  width: 100vw;
+  z-index: 2;
+  visibility: visible;
+}
+.orderListOut {
+  left: 85%;
+  position: fixed;
+  margin: 0.25em;
+  height: 2em;
+  width: 2em;
+  transition: transform 0.1s ease;
+  z-index: 2000;
+}
+.orderListOut img {
+  height: 2.5em;
+  width: 2.5em;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  position: absolute;
+  transition: all 0.3s ease;
+  user-select: none;
+}
+
+/* #region tablet zone */
+@media screen and (max-width: 1280px) {
+  .cartOrderContainer {
+    width: 100%;
+  }
+  .orderDetailContainer {
+    width: 100%;
+  }
+  .circleColumn {
+    width: 2em;
+  }
+  .orderTimeLineContainer {
+    flex: unset;
+  }
+  .detailTimeLineColumn {
+    width: 100%;
+    margin: 0 0.5em;
+  }
+  .orderTimeLineBox {
+    justify-content: flex-start;
+    width: auto;
+  }
+  .secondOrderDetailLine {
+    justify-content: space-between;
+  }
+  .addressOrderSumContainer {
+    width: 55%;
+  }
+  .orderIDCol {
+    margin-bottom: 1em;
+  }
+  .orderList {
+    flex-direction: column;
+  }
+  .orderList .dateHCol {
+    width: 100%;
+  }
+  .statusHCol {
+    justify-content: unset;
+  }
+}
+/* #endregion */

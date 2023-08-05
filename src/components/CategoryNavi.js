@@ -36,7 +36,6 @@ if (!CatgoryLastpage.getCatgoryLastpage()) {
 }
 
 export default function CategoryNavi({ currentCategory, currentPage }) {
-  console.log(currentPage);
   const navigate = useNavigate();
   const categoryMap = CatgoryLastpage.getCatgoryLastpage();
 

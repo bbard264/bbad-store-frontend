@@ -5,6 +5,8 @@ html {
   height: 100%;
   overflow: auto;
   scroll-behavior: smooth;
+  background-color: var(--bg-color);
+  color: var(--font-color);
 }
 
 ::-webkit-scrollbar {
@@ -38,6 +40,12 @@ code {
 h1 {
   white-space: nowrap;
 }
+
+a {
+  color: black;
+  text-decoration: none;
+}
+
 @media screen and (max-width: 1280px) {
   body {
     width: 90%;

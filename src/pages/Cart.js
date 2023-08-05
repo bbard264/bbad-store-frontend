@@ -4,37 +4,10 @@ import { useMediaContext } from '../config/services/MediaContext';
 import CartOrderHeader from '../components/CartOrderHead.js';
 import '../styles/pages/Cart.css';
 import Backdrop from '../components/subcomponents/Backdrop.js';
-
 import CartStorage from './../config/services/CartStorage';
 import UserDataStorage from './../config/services/UserDataStorage';
 import RESTapi from './../config/services/RESTapi';
 import Button from '../components/subcomponents/Button.js';
-
-// {
-//   items: [...items,{
-//   product_id: cartState.product_id,
-//   property: {
-//     product_name: cartState.property.product_name,
-//     product_photo: cartState.property.product_photo,
-//     product_url_name: cartState.property.product_url_name,
-//     option: cartState.property.option,
-//     product_price: cartState.property.product_price,
-//     quantity: cartState.property.quantity,
-//     totalPrice: 0,
-//     priceChange: { discount: 0 },
-//   },
-//   validator: { isStock: false },
-//   note: '',
-// }],
-//   summary: {
-//     subtotal: 0,
-//     priceChange: { shipping: 0, TAX: 0, discount: 0 },
-//     net: 0,
-//   },
-//   errorMessage: '',
-//   IsPassValidate: false,
-//   note: '',
-// };
 
 function reducer(state, action) {
   switch (action.type) {
@@ -300,18 +273,6 @@ function RenderModifyOption({
   }
 }
 
-const initialState = {
-  items: [],
-  summary: {
-    subtotal: 0,
-    priceChange: { shipping: 0, TAX: 0, discount: 0 },
-    net: 0,
-  },
-  errorMessage: '',
-  IsPassValidate: false,
-  note: '',
-};
-
 function ReviewCheckOut({ reviewCheck, onCalcelReviewCheckOut, media }) {
   const navigate = useNavigate();
   const userInfo = UserDataStorage.getUserData();
@@ -563,19 +524,20 @@ function ReviewCheckOut({ reviewCheck, onCalcelReviewCheckOut, media }) {
               </div>
             </form>
             <div className="buttonLineReviewCheckMobile">
-              <button
-                className="cartSumCheckOutLine checkOut reviewCheckSection cancel"
+              <Button
+                className="cartSumCheckOutLine checkOut reviewCheckSection"
+                type="warning"
                 onClick={onCalcelReviewCheckOut}
               >
                 Cancel
-              </button>
-              <button
+              </Button>
+              <Button
                 className="cartSumCheckOutLine checkOut reviewCheckSection"
-                type="submit"
+                type="submit&green"
                 form="reviewCheckOutForm"
               >
                 PLACE ORDER
-              </button>
+              </Button>
             </div>
           </>
         ) : (
@@ -705,12 +667,12 @@ function ReviewCheckOut({ reviewCheck, onCalcelReviewCheckOut, media }) {
                   <div>NET</div>
                   <div>฿{reviewCheck.cart.summary.net}</div>
                 </div>
-                <button
+                <Button
                   className="cartSumCheckOutLine checkOut reviewCheckSection"
-                  type="submit"
+                  type="submit&green"
                 >
                   PLACE ORDER
-                </button>
+                </Button>
               </div>
             </form>
           </div>
@@ -758,12 +720,13 @@ function CartList({
                   onClickCopyThisProduct={onClickCopyThisProduct}
                   media={media}
                 />
-                <div
+                <Button
+                  type="warning"
                   className="cartSumCheckOutLine removeCart"
                   onClick={onClickRemoveAll}
                 >
                   REMOVE ALL ITEMS IN CART
-                </div>
+                </Button>
               </>
             )}
           </div>
@@ -785,7 +748,10 @@ function CartContent({
   return (
     <>
       {items.map((item, index) => (
-        <div className="productLine" key={index}>
+        <div
+          className={`productLine${index % 2 === 1 ? ' odd' : ''}`}
+          key={index}
+        >
           <div
             className="copyThisProduct"
             onClick={() => onClickCopyThisProduct(index)}
@@ -899,10 +865,12 @@ function CartContent({
 }
 
 function CartSummaryBox({ cartState, onClickCheckOut, media }) {
-  cartState.IsPassValidate = true;
-  for (const item of cartState.items) {
-    if (!item.validator.isAllOptionSelected) {
-      cartState.IsPassValidate = false;
+  if (cartState.items !== null) {
+    cartState.IsPassValidate = true;
+    for (const item of cartState.items) {
+      if (!item.validator.isAllOptionSelected) {
+        cartState.IsPassValidate = false;
+      }
     }
   }
 
@@ -945,22 +913,39 @@ function CartSummaryBox({ cartState, onClickCheckOut, media }) {
           cartState.items === undefined ||
           cartState.items.length === 0 ||
           cartState.IsPassValidate === false ? (
-            <div className="cartSumCheckOutLine checkOut disbled">
+            <Button
+              type="green"
+              className="cartSumCheckOutLine"
+              isDisabled={true}
+            >
               CHECK OUT
-            </div>
+            </Button>
           ) : (
-            <div
-              className="cartSumCheckOutLine checkOut"
+            <Button
+              type="green"
+              className="cartSumCheckOutLine"
               onClick={onClickCheckOut}
             >
               CHECK OUT
-            </div>
+            </Button>
           )}
         </div>
       )}
     </div>
   );
 }
+
+const initialState = {
+  items: [],
+  summary: {
+    subtotal: 0,
+    priceChange: { shipping: 0, TAX: 0, discount: 0 },
+    net: 0,
+  },
+  errorMessage: '',
+  IsPassValidate: false,
+  note: '',
+};
 
 export default function Cart(props) {
   const navigate = useNavigate();
@@ -1109,7 +1094,7 @@ export default function Cart(props) {
     return (
       <div className="cart">
         <CartOrderHeader nowPage="CartPage" />
-        <div className="contentContainerMobile">
+        <div className="cartOrderContainerMobile">
           <CartList
             cartState={cartState}
             setModifyOptionState={setModifyOptionState}
@@ -1162,7 +1147,7 @@ export default function Cart(props) {
     return (
       <div className="cart">
         <CartOrderHeader nowPage="CartPage" />
-        <div className="contentContainer">
+        <div className="cartOrederContainer">
           <div className="cartPage">
             <CartList
               cartState={cartState}

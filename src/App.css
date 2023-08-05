@@ -1,33 +1,42 @@
-a {
-  color: black;
-  text-decoration: none;
+:root {
+  transition: all 0.3s ease !important;
+  --bg-color: #fff;
+  --darker-bg-color-lit: #eee;
+  --darker-bg-color: #bbb;
+  --darker2-bg-color: #777;
+  --bg-color-invert: #333;
+  --font-color: #333;
+  --font-color-invert: #f0f0f0;
+  --img-filter-invert: invert(0);
+  --warning-color: rgb(241, 72, 72);
+  --warning-color-hover: #e03737;
+  --warning-color-font: #e03737;
+  --color-green: rgb(40, 197, 145);
+  --color-green-hover: rgb(16, 212, 104);
+  --absolute-white: #fff;
+  --absolute-black: #333;
 }
 
-.logo {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
+.dark-theme {
+  transition: all 0.3s ease !important;
+  --bg-color: #333;
+  --darker-bg-color-lit: #444;
+  --darker-bg-color: #777;
+  --darker2-bg-color: #bbb;
+  --bg-color-invert: #fff;
+  --font-color: #f0f0f0;
+  --font-color-invert: #333;
+  --img-filter-invert: invert(1);
+  --warning-color: #8a2626;
+  --warning-color-hover: #ad1818;
+  --warning-color-font: #e03737;
+  --color-green: rgb(16, 116, 82);
+  --color-green-hover: rgb(7, 146, 70);
+  --absolute-white: #fff;
+  --absolute-black: #333;
 }
 
-.logo img {
-  height: 2.5em;
-  margin-right: 0.5em;
-}
-.brandname {
-  margin-right: 1em;
-  font-size: 1.2em;
-  font-weight: 900;
-  white-space: nowrap;
-}
-
-.mainContent {
-  width: 100%;
-  display: inline-flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-}
-.cardBox {
-  width: 33.33%;
-  position: relative;
-  overflow: hidden;
+.changeTheme {
+  position: fixed;
+  z-index: 3000;
 }

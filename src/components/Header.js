@@ -11,6 +11,7 @@ import CartStorage from '../config/services/CartStorage';
 import hamburgerMenuIcon from '../assets/icon/menus.png';
 import Token from '../config/services/Token';
 import { useMediaContext } from '../config/services/MediaContext';
+import RESTapi from '../config/services/RESTapi';
 
 export default function Header(props) {
   const navigate = useNavigate();
@@ -30,7 +31,9 @@ export default function Header(props) {
         countItemsInCart: CartStorage.getCountItemsInCart(),
         countFavorite: UserDataStorage.getCountUserFavorite(),
       });
-    } else {
+    }
+    if (!UserDataStorage.getUserImage()) {
+      Token.removeToken();
       setState({
         userImg: userIcon,
         countItemsInCart: 0,
@@ -39,6 +42,9 @@ export default function Header(props) {
     }
   }, [location, props.shareState, props.role]);
   useEffect(() => {
+    if (!location.pathname === '/login' || !location.pathname === '/register') {
+      RESTapi.fetchCheckAuthen();
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [location]);
 

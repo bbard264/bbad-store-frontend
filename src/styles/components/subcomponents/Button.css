@@ -1,34 +1,61 @@
 .Button {
-    border-radius: 20px;
-    padding: 0.5em 1.5em;
-    border: none;  
-    background-color: #ffffff;
-    color: #111111;
-    outline: none;
-    transition: all 0.3s ease;
-    font-weight: 500;
-    border: 1px solid #a0a0a0;
-    margin: 0 0.5em;
-  }
-  
+  border-radius: 20px;
+  padding: 0.5em 1.5em;
+  border: none;
+  background-color: var(--bg-color);
+  color: var(--font-color);
+  outline: none;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  border: 1px solid var(--darker-bg-color);
+  margin: 0 0.5em;
+}
+
+.Button.disabled {
+  background-color: var(--darker-bg-color-lit) !important;
+  color: var(--darker-bg-color) !important;
+  border: 1px solid var(--darker-bg-color-lit) !important;
+  box-shadow: none !important;
+  cursor: default !important;
+}
+
 .Button:hover {
-    box-shadow: 0 0 4px rgba(0, 0, 0, 0.7);
-    cursor: pointer;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.7);
+  cursor: pointer;
 }
 
 .Button.submit {
-    background-color: #111111;
-    color: white;
+  background-color: var(--bg-color-invert);
+  color: var(--font-color-invert);
 }
 
-.submit:hover{
-    background-color: #ffffff;
-    color: #111111;
+.Button.submit:hover {
+  background-color: var(--bg-color);
+  color: var(--font-color);
 }
-.warning:hover {
-    background-color: rgb(209, 89, 89);
-    color: #fff;
-    border: rgb(209, 89, 89) 1px solid;
-    box-shadow: 0 0 4px rgba(209, 89, 89, 0.7);
-  }
-  
+
+.Button.warning {
+  background-color: var(--warning-color);
+  color: var(--absolute-white);
+  border: 1px solid var(--warning-color);
+}
+
+.Button.warning:hover {
+  background-color: var(--warning-color-hover);
+  border: 1px solid var(--warning-color-hover);
+  box-shadow: 0 0 4px var(--warning-color-hover);
+}
+
+.Button.green {
+  background-color: var(--color-green);
+  color: var(--absolute-white);
+  border: 1px solid var(--color-green);
+  box-shadow: 0 0 2px var(--color-green);
+}
+
+.Button.green:hover {
+  background-color: var(--color-green-hover);
+  border: 1px solid var(--color-green-hover);
+  box-shadow: 0 0 4px var(--color-green-hover);
+  color: var(--absolute-white);
+}

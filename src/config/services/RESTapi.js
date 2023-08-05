@@ -29,7 +29,7 @@ class RESTapi {
       await axios.get(apilink);
       return { isAuthen: true, message: 'Authenticated' };
     } catch (error) {
-      if (Token.getToken()) {
+      if (Token.getRole() === 'user') {
         Token.removeToken();
       }
       if (error.response?.status === 401) {
