@@ -1,5 +1,6 @@
 import Token from './Token';
 import RESTapi from './RESTapi';
+import profileTemp from '../../assets/temp_img/profile_temp.png';
 
 class UserDataStorage {
   static checkTokenAndRun(method) {
@@ -34,6 +35,13 @@ class UserDataStorage {
   static async setUserImage(imageUrl) {
     try {
       const response = await fetch(imageUrl);
+
+      if (!response.ok) {
+        throw new Error(
+          'Failed to fetch image. Response status: ' + response.status
+        );
+      }
+
       const blob = await response.blob();
       const reader = new FileReader();
 
@@ -43,7 +51,17 @@ class UserDataStorage {
 
       reader.readAsDataURL(blob);
     } catch (error) {
-      console.error('Error saving image to localStorage:', error);
+      console.error('Error fetching image:', error);
+      // Use the placeholder image as a fallback
+      const tempResponse = await fetch(profileTemp);
+      const tempBlob = await tempResponse.blob();
+      const tempReader = new FileReader();
+
+      tempReader.onloadend = function () {
+        localStorage.setItem('USER_IMAGE', tempReader.result);
+      };
+
+      tempReader.readAsDataURL(tempBlob);
     }
   }
 
@@ -140,6 +158,7 @@ class UserDataStorage {
       try {
         const response = await RESTapi.getReviewsByUser();
         if (response.isSuccess) {
+          localStorage.removeItem('USER_REVIEWS_LIST');
           localStorage.setItem(
             'USER_REVIEWS_LIST',
             JSON.stringify(response.data)
@@ -161,14 +180,8 @@ class UserDataStorage {
         const response = await RESTapi.removeReview({
           review_id: props.review.review_id,
         });
-        if (response.isSuccess) {
-          const oldList = JSON.parse(localStorage.getItem('USER_REVIEWS_LIST'));
-          const newObj = { ...props, review: {} };
-          const newList = oldList.map((item) =>
-            item._id === newObj._id ? newObj : item
-          );
-          localStorage.setItem('USER_REVIEWS_LIST', JSON.stringify(newList));
-        }
+        this.setUserReviews();
+        return response;
       } catch (error) {
         console.error('Error Removing reviews data :', error);
         throw new Error(
@@ -181,23 +194,8 @@ class UserDataStorage {
   static async createNewReview(props) {
     return this.checkTokenAndRun(async () => {
       try {
-        const response = await RESTapi.createNewReview(props.formData);
-
-        if (response.isSuccess) {
-          const oldList = JSON.parse(localStorage.getItem('USER_REVIEWS_LIST'));
-          const newObj = {
-            ...props.item,
-            review: {
-              review_id: response.data,
-              rating: props.formData.rating,
-              body: props.formData.body,
-            },
-          };
-          const newList = oldList.map((item) =>
-            item._id === newObj._id ? newObj : item
-          );
-          localStorage.setItem('USER_REVIEWS_LIST', JSON.stringify(newList));
-        }
+        const response = await RESTapi.createNewReview(props);
+        this.setUserReviews();
         return response;
       } catch (error) {
         console.error('Error create new review:', error);
@@ -209,22 +207,9 @@ class UserDataStorage {
   static async modifyReview(props) {
     return this.checkTokenAndRun(async () => {
       try {
-        const response = await RESTapi.modifyReview(props.formData);
+        const response = await RESTapi.modifyReview(props);
 
-        if (response.isSuccess) {
-          const oldList = JSON.parse(localStorage.getItem('USER_REVIEWS_LIST'));
-          const newObj = {
-            ...props.item,
-            review: props.formData,
-          };
-          console.log(newObj);
-
-          const newList = oldList.map((item) =>
-            item._id === newObj._id ? newObj : item
-          );
-
-          localStorage.setItem('USER_REVIEWS_LIST', JSON.stringify(newList));
-        }
+        this.setUserReviews();
         return response;
       } catch (error) {
         console.error('Error modify review:', error);
@@ -242,7 +227,9 @@ class UserDataStorage {
   static getUserReview(product_id) {
     return this.checkTokenAndRun(() => {
       const reviews = JSON.parse(localStorage.getItem('USER_REVIEWS_LIST'));
-      const targetReview = reviews.find((review) => review._id === product_id);
+      const targetReview = reviews.find(
+        (review) => review.product_id === product_id
+      );
       return targetReview;
     });
   }

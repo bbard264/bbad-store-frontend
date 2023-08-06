@@ -3,6 +3,7 @@ import axios from '../config/axios';
 import { useNavigate } from 'react-router-dom';
 import checkValue from '../config/services/CheckValueValidated';
 import '../styles/pages/Register.css';
+import Button from '../components/subcomponents/Button';
 
 const initialState = {
   registerInfo: {
@@ -315,17 +316,10 @@ export default function Register() {
             </div>
           </div>
           <div className="buttonLineRegister">
-            <button className="submitBotton reset" type="reset">
-              Reset
-            </button>
-            <button
-              className={`submitBotton register ${
-                state.isPassValidate ? '' : 'disbled-register'
-              }`}
-              type="submit"
-            >
+            <Button type="reset">Reset</Button>
+            <Button isDisabled={!state.isPassValidate} type="submit">
               Register
-            </button>
+            </Button>
           </div>
           <div className="warningMessage-register lastline">
             {state.errorMessage}

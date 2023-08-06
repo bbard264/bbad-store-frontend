@@ -544,7 +544,7 @@ function ReviewCheckOut({ reviewCheck, onCalcelReviewCheckOut, media }) {
           <div className="reviewSummary">
             <form
               className="reviewSummaryLine"
-              id="reviewForm"
+              id="reviewCheckOutForm"
               onSubmit={onSubmitReviewCheck}
             >
               <div className="reviewSummaryPersonalContainer">
@@ -1070,7 +1070,6 @@ export default function Cart(props) {
   };
 
   const onClickCheckOut = () => {
-    console.log(cartState.items);
     if (cartState.items === null) {
       window.alert('No items in cart');
       return;

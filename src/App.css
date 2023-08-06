@@ -1,39 +1,43 @@
 :root {
   transition: all 0.3s ease !important;
-  --bg-color: #fff;
-  --darker-bg-color-lit: #eee;
-  --darker-bg-color: #bbb;
-  --darker2-bg-color: #777;
-  --bg-color-invert: #333;
-  --font-color: #333;
+  --bg-color: #ffffff;
+  --darker-bg-color-lit: #eeeeee;
+  --darker-bg-color: #bbbbbb;
+  --darker2-bg-color: #777777;
+  --bg-color-invert: #333333;
+  --font-color: #333333;
+  --font-color-disabled: #777777;
   --font-color-invert: #f0f0f0;
-  --img-filter-invert: invert(0);
-  --warning-color: rgb(241, 72, 72);
+  --img-filter-invert: invert(0.2);
+  --warning-color: #f14848;
   --warning-color-hover: #e03737;
   --warning-color-font: #e03737;
-  --color-green: rgb(40, 197, 145);
-  --color-green-hover: rgb(16, 212, 104);
-  --absolute-white: #fff;
-  --absolute-black: #333;
+  --color-green: #28c591;
+  --color-green-hover: #10d468;
+  --absolute-white: #ffffff;
+  --absolute-black: #333333;
+  --bg-color-op09: rgba(255, 255, 255, 0.9);
 }
 
 .dark-theme {
   transition: all 0.3s ease !important;
-  --bg-color: #333;
-  --darker-bg-color-lit: #444;
-  --darker-bg-color: #777;
-  --darker2-bg-color: #bbb;
-  --bg-color-invert: #fff;
-  --font-color: #f0f0f0;
-  --font-color-invert: #333;
-  --img-filter-invert: invert(1);
+  --bg-color: #333333;
+  --darker-bg-color-lit: #303030;
+  --darker-bg-color: #292929;
+  --darker2-bg-color: #202020;
+  --bg-color-invert: #cccccc;
+  --font-color: #cccccc;
+  --font-color-disabled: #646464;
+  --font-color-invert: #333333;
+  --img-filter-invert: invert(0.9);
   --warning-color: #8a2626;
   --warning-color-hover: #ad1818;
   --warning-color-font: #e03737;
-  --color-green: rgb(16, 116, 82);
-  --color-green-hover: rgb(7, 146, 70);
-  --absolute-white: #fff;
-  --absolute-black: #333;
+  --color-green: #107454;
+  --color-green-hover: #079246;
+  --absolute-white: #ffffff;
+  --absolute-black: #333333;
+  --bg-color-op09: rgba(51, 51, 51, 0.98);
 }
 
 .changeTheme {

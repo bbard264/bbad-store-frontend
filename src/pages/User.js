@@ -1,15 +1,18 @@
 import React, { useReducer, useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useMediaContext } from '../config/services/MediaContext';
 import axios from '../config/axios';
 import checkValue from '../config/services/CheckValueValidated';
 import Token from '../config/services/Token';
 import '../styles/pages/User.css';
+import Button from '../components/subcomponents/Button';
+import Backdrop from '../components/subcomponents/Backdrop';
+import ReviewingBox from '../components/ReviewingBox';
 
 import Cropping from '../components/Cropping';
 import profileTemp from '../assets/temp_img/profile_temp.png';
 import UserDataStorage from '../config/services/UserDataStorage';
 import RESTapi from '../config/services/RESTapi';
-import ReviewingBox from '../components/ReviewingBox';
 
 import fullStar from '../assets/icon/star2.png';
 
@@ -199,10 +202,26 @@ function UserNavi({ pageNow, pageList }) {
   );
 }
 
+function UserNaviMobile({ pageList }) {
+  const navigate = useNavigate();
+  return (
+    <div className="userNaviBoxMobile">
+      {pageList.map((page, index) => (
+        <div
+          className="userNaviMobile"
+          key={index}
+          onClick={() => navigate(`/user/${page}`)}
+        >
+          {page.charAt(0).toUpperCase() + page.slice(1) + ' ' + 'Settings'}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 const fetchUpdateUser = async (props) => {
   const { userId, newImg, newInfo } = props;
   const apilink = '/api/user/updateUser';
-  console.log('Request API', apilink);
 
   try {
     if (newImg && !newInfo) {
@@ -259,7 +278,7 @@ const fetchUpdateUser = async (props) => {
   }
 };
 
-function UserProfile({ userData }) {
+function UserProfile({ userData, media = 'desktop' }) {
   const originUserProfileInfo = {
     userProfileInfo: {
       displayname: {
@@ -336,7 +355,6 @@ function UserProfile({ userData }) {
       setUploadedPhoto(objectURL);
       setShowCrop(true);
     } else {
-      console.error('No file selected.');
       setUploadedPhoto();
       setCroppedImgage();
     }
@@ -371,7 +389,7 @@ function UserProfile({ userData }) {
     e.preventDefault();
 
     if (!userProInfo.isPassValidate) {
-      console.log("..don't pass validate..");
+      window.alert("..don't pass validate..");
       return;
     }
 
@@ -379,12 +397,11 @@ function UserProfile({ userData }) {
       JSON.stringify(userProInfo) !== JSON.stringify(originUserProfileInfo);
 
     if (!isInfoChanged && !croppedImg) {
-      console.log("..don't pass validate..");
+      window.alert("..don't pass validate..");
       return;
     }
 
-    const confirmed = window.confirm('Confirm your information?');
-    if (!confirmed) {
+    if (!window.confirm('Confirm your information?')) {
       return;
     }
 
@@ -421,7 +438,7 @@ function UserProfile({ userData }) {
   return (
     <div className="userProfileBox">
       <div className="uPPhotoLine">
-        <div className="uHeadLine">photo</div>
+        <div className="uHeadLine">User Profile</div>
         <div className="uPphotoContainer">
           {showCrop ? (
             <Cropping
@@ -436,18 +453,12 @@ function UserProfile({ userData }) {
           <div className="uPphotoBox">
             <img
               className="userPhoto"
-              src={
-                croppedImg
-                  ? croppedImg
-                  : UserDataStorage.getUserImage()
-                  ? UserDataStorage.getUserImage()
-                  : profileTemp
-              }
+              src={croppedImg ? croppedImg : UserDataStorage.getUserImage()}
               alt="user"
             />
           </div>
 
-          <label htmlFor="uploadPhoto" className="uButton upload">
+          <label htmlFor="uploadPhoto" className="uploadButton">
             <div>+</div>
           </label>
           <input
@@ -455,8 +466,16 @@ function UserProfile({ userData }) {
             type="file"
             name="uploadPhoto"
             id="uploadPhoto"
-            onChange={handlePhotoChange}
+            onChange={(event) => {
+              const selectedFile = event.target.files[0];
+              if (selectedFile && selectedFile.type.startsWith('image/')) {
+                handlePhotoChange(event);
+              } else {
+                window.alert('Please select an image file');
+              }
+            }}
             title="Upload a photo"
+            accept="image/*"
             placeholder="Choose a photo to upload"
             onClick={(event) => {
               event.currentTarget.value = null;
@@ -502,6 +521,7 @@ function UserProfile({ userData }) {
                 checked={userProInfo.userProfileInfo.gender.value === 'Male'}
                 onChange={handleValueChange}
               />
+              <div className="customRadio"></div>
               Male
             </label>
             <label className="labelRadioChoiceBox">
@@ -513,6 +533,7 @@ function UserProfile({ userData }) {
                 checked={userProInfo.userProfileInfo.gender.value === 'Female'}
                 onChange={handleValueChange}
               />
+              <div className="customRadio"></div>
               Female
             </label>
             <label className="labelRadioChoiceBox">
@@ -524,6 +545,7 @@ function UserProfile({ userData }) {
                 checked={userProInfo.userProfileInfo.gender.value === 'Others'}
                 onChange={handleValueChange}
               />
+              <div className="customRadio"></div>
               Others
             </label>
           </div>
@@ -563,7 +585,7 @@ function UserProfile({ userData }) {
                 .split('T')[0] || ''
             }
             onChange={handleValueChange}
-            placeholder="YYYY-MM-DD"
+            placeholder="MM-DD-YYYY"
           />
         </div>
         <div className="uPPhoneBox">
@@ -643,12 +665,12 @@ function UserProfile({ userData }) {
         </div>
       </form>
       <div className="uButtonLine">
-        <button className="uButton reset" type="reset" form="personalForm">
+        <Button type="reset" form="personalForm">
           Reset
-        </button>
-        <button className="uButton submit" type="submit" form="personalForm">
+        </Button>
+        <Button type="submit" form="personalForm">
           Submit
-        </button>
+        </Button>
       </div>
     </div>
   );
@@ -656,7 +678,6 @@ function UserProfile({ userData }) {
 
 const fetchChangeUserPassword = async (props) => {
   const apilink = '/api/user/changePassword';
-  console.log('REQUEST API,', apilink);
   try {
     const response = await axios.put(apilink, props);
     return response.data;
@@ -667,7 +688,7 @@ const fetchChangeUserPassword = async (props) => {
   }
 };
 
-function UserAccount({ userData }) {
+function UserAccount({ userData, media = 'desktop' }) {
   const originalUserAccountInfo = {
     userAccountInfo: {
       oldPassword: {
@@ -728,8 +749,8 @@ function UserAccount({ userData }) {
       });
       return;
     }
-    const confirmed = window.confirm('Confirm your infomation?');
-    if (confirmed) {
+
+    if (window.confirm('Confirm your infomation?')) {
       let newInfo = {
         oldPassword: userAccInfo.userAccountInfo.oldPassword.value,
         newPassword: userAccInfo.userAccountInfo.newPassword.value,
@@ -751,7 +772,6 @@ function UserAccount({ userData }) {
       return;
     } else {
       setShowChangingPassword(false);
-      console.log('not confirm');
       return;
     }
   };
@@ -795,35 +815,36 @@ function UserAccount({ userData }) {
       <form className="passwordLine" onSubmit={handleSubmit}>
         <div className="uAPasswordBox">
           <div className="uHeadLine">Password</div>
-          {showChangingPassword ? (
-            <input
-              className="uinput account"
-              type="password"
-              name="oldPassword"
-              value={userAccInfo.userAccountInfo.oldPassword.value}
-              onChange={handleValueChange}
-              placeholder="Enter your old password.."
-              autoComplete="off"
-            />
-          ) : (
-            <input
-              className="uinput account  cusid"
-              type="text"
-              name="FakePassword"
-              value="******************************"
-              disabled
-            />
-          )}
-          <button
-            className="uButton"
-            type="button"
-            onClick={() => {
-              setShowChangingPassword(!showChangingPassword);
-              handleReset();
-            }}
-          >
-            Change
-          </button>
+          <div className="passLineBox">
+            {showChangingPassword ? (
+              <input
+                className="uinput account"
+                type="password"
+                name="oldPassword"
+                value={userAccInfo.userAccountInfo.oldPassword.value}
+                onChange={handleValueChange}
+                placeholder="Enter your old password.."
+                autoComplete="off"
+              />
+            ) : (
+              <input
+                className="uinput account  cusid"
+                type="password"
+                name="FakePassword"
+                value="******************************"
+                disabled
+              />
+            )}
+            <Button
+              className={showChangingPassword ? 'showPassChange' : ''}
+              onClick={() => {
+                setShowChangingPassword((e) => !e);
+                handleReset();
+              }}
+            >
+              Change
+            </Button>
+          </div>
         </div>
         <div
           className={`changingPasswordLine${
@@ -866,19 +887,16 @@ function UserAccount({ userData }) {
                   autoComplete="off"
                   onChange={handleValueChange}
                 />
-                <button className="uButton submit" type="submit">
-                  Submit
-                </button>
-                <button
-                  className="uButton reset"
+                <Button type="submit">Submit</Button>
+                <Button
                   type="reset"
                   onClick={() => {
-                    setShowChangingPassword(!showChangingPassword);
+                    setShowChangingPassword((e) => !e);
                     handleReset();
                   }}
                 >
                   Cancel
-                </button>
+                </Button>
               </div>
             </div>
           )}
@@ -930,11 +948,24 @@ function UserAccount({ userData }) {
 //   );
 // }
 
-function ReviewCard({ item, itemFocus, setItemFocus }) {
+function ReviewCard({
+  item,
+  itemFocus,
+  setItemFocus,
+  media = 'desktop',
+  setshowBackDropReview,
+}) {
   return (
     <div
-      className={`reviewCardBox${itemFocus === item ? ' isFocus' : ''}`}
-      onClick={() => setItemFocus(item)}
+      className={`reviewCardBox${
+        itemFocus === item && media !== 'mobile' ? ' isFocus' : ''
+      }`}
+      onClick={() => {
+        setItemFocus(item);
+        if (media === 'mobile') {
+          setshowBackDropReview(true);
+        }
+      }}
     >
       <div className="productPhotoCol">
         <img src={item.product_photo} alt={item.product_name} />
@@ -953,7 +984,12 @@ function ReviewCard({ item, itemFocus, setItemFocus }) {
             </>
           ) : (
             <div className="reviewProductButton">
-              {itemFocus === item ? '' : 'CLICK TO REVIEW!'}
+              {media === 'mobile'
+                ? 'TOUCH TO REVIEW'
+                : itemFocus === item
+                ? ''
+                : 'CLICK TO REVIEW!'}
+              <div className="backDropClickReview"></div>
             </div>
           )}
         </div>
@@ -962,13 +998,14 @@ function ReviewCard({ item, itemFocus, setItemFocus }) {
   );
 }
 
-function UserReviews() {
+function UserReviews({ media = 'desktop' }) {
   const [userReviewsList, setUserReviewsList] = useState({});
   const [showReviewCard, setShowReviewCard] = useState({
     name: '',
   });
   const [isLoadReviewCard, setIsLoadReviewCard] = useState(false);
   const [itemFocus, setItemFocus] = useState({});
+  const [showBackDropReview, setshowBackDropReview] = useState(false);
 
   useEffect(() => {
     let prepareObj = {};
@@ -1030,11 +1067,30 @@ function UserReviews() {
 
   return (
     <div className="userReviewBox">
-      <div className="currentUserReviewContainer">
-        <div className="ReviewingContainer">
-          <ReviewingBox item={itemFocus} onCancel={() => setItemFocus({})} />
+      {media === 'mobile' ? (
+        showBackDropReview ? (
+          <Backdrop onCancel={() => setshowBackDropReview(false)}>
+            <div className="ReviewingContainerUser">
+              <ReviewingBox
+                item={itemFocus}
+                onCancel={() => {
+                  setshowBackDropReview(false);
+                  setItemFocus({});
+                }}
+              />
+            </div>
+          </Backdrop>
+        ) : (
+          <></>
+        )
+      ) : (
+        <div className="currentUserReviewContainer">
+          <div className="ReviewingContainer">
+            <ReviewingBox item={itemFocus} onCancel={() => setItemFocus({})} />
+          </div>
         </div>
-      </div>
+      )}
+
       <div className="filterUserReview">
         <div
           className={`filterNavi${
@@ -1067,6 +1123,8 @@ function UserReviews() {
                 key={item._id}
                 itemFocus={itemFocus}
                 setItemFocus={setItemFocus}
+                media={media}
+                setshowBackDropReview={setshowBackDropReview}
               />
             ))}
           </div>
@@ -1076,15 +1134,20 @@ function UserReviews() {
   );
 }
 
-function showContent(contentNow, userPageList, userData) {
+function ShowUserContent({
+  contentNow,
+  userPageList,
+  userData,
+  media = 'desktop',
+}) {
   if (contentNow === userPageList[0]) {
-    return <UserProfile userData={userData} />;
+    return <UserProfile userData={userData} media={media} />;
   }
   if (contentNow === userPageList[1]) {
-    return <UserAccount userData={userData} />;
+    return <UserAccount userData={userData} media={media} />;
   }
   if (contentNow === userPageList[2]) {
-    return <UserReviews />;
+    return <UserReviews media={media} />;
   } else {
     return;
   }
@@ -1110,13 +1173,18 @@ export default function User() {
     favorite: [],
     create_date: null,
   };
+  const navigate = useNavigate();
   const [userInfo, dispatch] = useReducer(reducer, emptyUser);
   const [isLoaded, setIsLoaded] = useState(false);
-  let { page } = useParams();
+
+  const { page } = useParams();
+  const mobilePage = page;
+  let desktopPage = page;
   const userPageList = ['profile', 'account', 'review'];
   if (!page) {
-    page = userPageList[0];
+    desktopPage = userPageList[0];
   }
+  const { isDesktop, isTablet, isMobile } = useMediaContext();
 
   useEffect(() => {
     if (!Token.getToken()) {
@@ -1138,23 +1206,59 @@ export default function User() {
       }
     }
   }, []);
-
-  return (
-    <div className="userPage">
-      <div className="userContainer">
-        {isLoaded ? (
-          <>
-            <div className="userNaviContainer">
-              <UserNavi pageNow={page} pageList={userPageList} />
-            </div>
-            <div className="userContentContainer">
-              {showContent(page, userPageList, userInfo)}
-            </div>
-          </>
-        ) : (
-          <p>Loading...</p>
-        )}
+  if (!isLoaded) {
+    return <p>Loading...</p>;
+  } else if (isDesktop || isTablet) {
+    return (
+      <div className="userPage">
+        <div className="userContainer">
+          {isLoaded ? (
+            <>
+              <div className="userNaviContainer">
+                <UserNavi pageNow={desktopPage} pageList={userPageList} />
+              </div>
+              <div className="userContentContainer">
+                <ShowUserContent
+                  contentNow={desktopPage}
+                  userPageList={userPageList}
+                  userData={userInfo}
+                />
+              </div>
+            </>
+          ) : (
+            <p>Loading...</p>
+          )}
+        </div>
       </div>
-    </div>
-  );
+    );
+  } else if (isMobile) {
+    return (
+      <div className="userPageMobile">
+        <div className="userContainerMobile">
+          {mobilePage ? (
+            <>
+              <Button
+                className="backUserButton"
+                onClick={() => navigate('/user')}
+              >
+                Back
+              </Button>
+              <div className="userHeadMobile">{`USER ${mobilePage.toUpperCase()} SETTINGS`}</div>
+              <div className="line"></div>
+              <ShowUserContent
+                contentNow={mobilePage}
+                userPageList={userPageList}
+                userData={userInfo}
+                media={'mobile'}
+              />
+            </>
+          ) : (
+            <UserNaviMobile pageList={userPageList} />
+          )}
+        </div>
+      </div>
+    );
+  } else {
+    return;
+  }
 }

@@ -3,6 +3,7 @@ import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import axios from '../config/axios';
 import Token from '../config/services/Token';
 import '../styles/pages/ProductDetail.css';
+import { useMediaContext } from '../config/services/MediaContext';
 
 import ArrowCorner from '../components/subcomponents/ArrowCorner';
 import StarRating from '../components/subcomponents/StarRating';
@@ -24,15 +25,30 @@ import Button from './../components/subcomponents/Button';
 import Backdrop from '../components/subcomponents/Backdrop';
 import ReviewingBox from '../components/ReviewingBox';
 
-function ReviewSection({ reviews, product_id }) {
+function ProfileImage({ src, alt }) {
+  const [imageError, setImageError] = useState(false);
+
+  const handleImageError = () => {
+    setImageError(true);
+  };
+
+  return (
+    <div>
+      {imageError ? (
+        <img src={profileTemp} alt={alt} />
+      ) : (
+        <img src={src} alt={alt} onError={handleImageError} />
+      )}
+    </div>
+  );
+}
+
+function ReviewSection({ reviews, product_id, media = 'desktop' }) {
   const columnLength = Math.ceil(reviews.length / 2) - 1;
   const [columnNow, setColumnNow] = useState(0);
   const [isReviewing, setIsReviewing] = useState(false);
-  console.log(product_id);
   const checkUserReviewProduct =
     UserDataStorage.checkUserReviewProduct(product_id);
-  console.log(checkUserReviewProduct);
-
   const handleReviewCornerClick = (direction) => {
     if (direction === 'right') {
       if (columnNow === columnLength) {
@@ -49,8 +65,7 @@ function ReviewSection({ reviews, product_id }) {
 
   useEffect(() => {
     const reviewContainers = document.getElementById('reviewContainers');
-    const reviewsLeft = document.getElementById('reviewsLeft');
-    const reviewsRight = document.getElementById('reviewsRight');
+
     const reviewsBox = document.querySelector('.reviewsBox');
     const reviewsBoxStyle = getComputedStyle(reviewsBox);
     const reviewsBoxWidth =
@@ -61,12 +76,17 @@ function ReviewSection({ reviews, product_id }) {
     reviewContainers.style.transform = `translate(-${
       columnNow * reviewsBoxWidth
     }px, 0)`;
-
-    reviewsLeft.style.opacity = columnNow === 0 ? '0' : '';
-    reviewsLeft.style.cursor = columnNow === 0 ? 'auto' : 'pointer';
-
-    reviewsRight.style.opacity = columnNow === columnLength ? '0' : '';
-    reviewsRight.style.cursor = columnNow === columnLength ? 'auto' : 'pointer';
+    if (media === 'mobile') {
+      return;
+    } else {
+      const reviewsLeft = document.getElementById('reviewsLeft');
+      const reviewsRight = document.getElementById('reviewsRight');
+      reviewsLeft.style.opacity = columnNow === 0 ? '0' : '';
+      reviewsLeft.style.cursor = columnNow === 0 ? 'auto' : 'pointer';
+      reviewsRight.style.opacity = columnNow === columnLength ? '0' : '';
+      reviewsRight.style.cursor =
+        columnNow === columnLength ? 'auto' : 'pointer';
+    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [columnNow]);
@@ -117,6 +137,7 @@ function ReviewSection({ reviews, product_id }) {
     let moveto = Math.ceil((index + 1) / 2) - 1;
     setColumnNow(moveto);
   };
+
   return (
     <div className="reviewLine">
       {isReviewing ? (
@@ -133,28 +154,38 @@ function ReviewSection({ reviews, product_id }) {
       ) : (
         <></>
       )}
-      <h1 className="headSection">
-        REVIEWS
-        {checkUserReviewProduct === 'NaverBuy' ? (
-          <></>
-        ) : checkUserReviewProduct === 'HaveReview' ? (
-          <Button onClick={() => setIsReviewing(true)}>EDIT YOUR REVIEW</Button>
-        ) : checkUserReviewProduct === 'HaveBuy' ? (
-          <Button onClick={() => setIsReviewing(true)}>REVIEW PRODUCT</Button>
-        ) : (
-          <></>
-        )}
-      </h1>
-      <ArrowCorner
-        direction="left"
-        onClick={() => handleReviewCornerClick('left')}
-        id={'reviewsLeft'}
-      />
-      <ArrowCorner
-        direction="right"
-        onClick={() => handleReviewCornerClick('right')}
-        id={'reviewsRight'}
-      />
+      {media === 'mobile' ? (
+        <></>
+      ) : (
+        <>
+          <h1 className="headSection">
+            REVIEWS
+            {checkUserReviewProduct === 'NaverBuy' ? (
+              <></>
+            ) : checkUserReviewProduct === 'HaveReview' ? (
+              <Button onClick={() => setIsReviewing(true)}>
+                EDIT YOUR REVIEW
+              </Button>
+            ) : checkUserReviewProduct === 'HaveBuy' ? (
+              <Button onClick={() => setIsReviewing(true)}>
+                REVIEW PRODUCT
+              </Button>
+            ) : (
+              <></>
+            )}
+          </h1>
+          <ArrowCorner
+            direction="left"
+            onClick={() => handleReviewCornerClick('left')}
+            id={'reviewsLeft'}
+          />
+          <ArrowCorner
+            direction="right"
+            onClick={() => handleReviewCornerClick('right')}
+            id={'reviewsRight'}
+          />
+        </>
+      )}
       <div
         className={`reviewContainers${reviews.length === 1 ? ' isOne' : ''}`}
         id="reviewContainers"
@@ -163,15 +194,15 @@ function ReviewSection({ reviews, product_id }) {
           <div
             className="reviewsBox"
             key={index}
-            onClick={() => getColumnNum(index)}
+            onClick={media === 'mobile' ? undefined : () => getColumnNum(index)}
           >
             <div className="reviewsCard">
               <div className="reviewsCardHeader">
                 <div className="userImg">
-                  <img
-                    src={review.user_photo ? review.user_photo : profileTemp}
+                  <ProfileImage
+                    src={review.user_photo}
                     alt={review.user_display_name}
-                  />
+                  ></ProfileImage>
                 </div>
                 <div className="userNameRank">
                   <div className="userName">{review.user_display_name}</div>
@@ -184,7 +215,7 @@ function ReviewSection({ reviews, product_id }) {
               <div className="reviewsDetails">{review.body}</div>
               <div className="postDate">
                 {review.modify
-                  ? `Edited:` + formatDatetoSTR(review.updated_at)
+                  ? `Edited: ` + formatDatetoSTR(review.updated_at)
                   : formatDatetoSTR(review.created_at)}
               </div>
             </div>
@@ -194,7 +225,57 @@ function ReviewSection({ reviews, product_id }) {
     </div>
   );
 }
-function DetailSection({ product, reviews }) {
+function CommonSectionInDetail({ product, reviewScore }) {
+  function renderOption(options) {
+    if (!options || Object.entries(options).length === 0) {
+      return <></>;
+    } else {
+      function renderRadioChoices(options, name) {
+        return (
+          <div className="optionContainerNotLetChoose" key={name}>
+            <h3 className="choiceName">{name}</h3>
+            <div className="choiceNotLetChoose">
+              {options.map((value, index) => (
+                <div key={`${name}-${index}`}>{value}</div>
+              ))}
+            </div>
+          </div>
+        );
+      }
+
+      return (
+        <>
+          <div></div>
+          {Object.entries(options).map(([key, values]) =>
+            renderRadioChoices(values, key)
+          )}
+        </>
+      );
+    }
+  }
+  return (
+    <>
+      <div className="prodcutNameLine">
+        <div>{product.category_id.toUpperCase()}</div>
+        <h1>{product.product_name}</h1>
+      </div>
+      <div className="priceRatingLine">
+        <div className="priceBox">
+          <div>฿ {product.product_price}</div>
+        </div>
+        <div className="rateBox">
+          <StarRating rating={reviewScore.avgRating} />
+          <div className="numReviews">{reviewScore.reviewNum} reviews</div>
+        </div>
+      </div>
+      <div className="shortDetailLine">
+        <div>{product.short_details}</div>
+      </div>
+      <div className="optionsLine">{renderOption(product.option)}</div>
+    </>
+  );
+}
+function DetailSection({ product, reviews, reviewScore, media = 'desktop' }) {
   const listPhoto = product.product_photo;
   const [showIndex, setShowIndex] = useState(0);
   const [widthPhoto, setWidthPhoto] = useState(0);
@@ -202,6 +283,7 @@ function DetailSection({ product, reviews }) {
     product._id
   );
   const [isReviewing, setIsReviewing] = useState(false);
+  const [showReviews, setShowReviews] = useState(false);
 
   const getIndexList = (index) => {
     setShowIndex(index);
@@ -340,12 +422,34 @@ function DetailSection({ product, reviews }) {
           {renderThumPhotoBoxes()}
         </div>
       </div>
+      {media === 'mobile' && (
+        <CommonSectionInDetail product={product} reviewScore={reviewScore} />
+      )}
       <div className="fullDetailLine">
         <h1 className="headSection">DETAIL</h1>
         <div className="fullDetailSection">{product.full_detail}</div>
       </div>
       {reviews.length > 0 ? (
-        <ReviewSection reviews={reviews} product_id={product._id} />
+        media === 'mobile' ? (
+          <>
+            <div className="reviewThisProductButton">
+              <Button onClick={() => setShowReviews((e) => !e)} type="submit">
+                SHOW REVIEWS
+              </Button>
+            </div>
+            {showReviews && (
+              <ReviewSection
+                reviews={reviews}
+                product_id={product._id}
+                media={'mobile'}
+              />
+            )}
+          </>
+        ) : (
+          <ReviewSection reviews={reviews} product_id={product._id} />
+        )
+      ) : media === 'mobile' ? (
+        <></>
       ) : (
         checkUserReviewProduct !== 'NeverBuy' &&
         checkUserReviewProduct !== 'HaveReview' &&
@@ -421,7 +525,13 @@ function reducer(state, action) {
 }
 
 //#region CommonSection
-function CommonSection({ product, shareState, setShareState, reviewScore }) {
+function CommonSection({
+  product,
+  shareState,
+  setShareState,
+  reviewScore,
+  media = 'desktop',
+}) {
   const navigate = useNavigate();
   const location = useLocation();
   const [errorMessage, setErrorMessage] = useState('');
@@ -447,61 +557,6 @@ function CommonSection({ product, shareState, setShareState, reviewScore }) {
       quantity: 1,
     },
   });
-
-  useEffect(() => {
-    const applyStageStyles = (stage) => {
-      const FixedCommonSection = document.getElementById('FixedCommonSection');
-      if (stage === 1) {
-        FixedCommonSection.style.top = '';
-        FixedCommonSection.style.position = '';
-        FixedCommonSection.style.alignItems = '';
-        FixedCommonSection.style.justifyContent = '';
-      } else if (stage === 2) {
-        FixedCommonSection.style.top = '12%';
-        FixedCommonSection.style.position = 'fixed';
-        FixedCommonSection.style.bottom = '';
-      } else if (stage === 3) {
-        FixedCommonSection.style.top = 'auto';
-        FixedCommonSection.style.bottom = '0%';
-        FixedCommonSection.style.position = 'absolute';
-        FixedCommonSection.style.alignItems = 'flex-start';
-        FixedCommonSection.style.justifyContent = 'flex-end';
-      }
-    };
-
-    let stage = 1;
-
-    const handleScroll = () => {
-      const nowPosition = document.documentElement.scrollTop;
-      const nowPositionBot =
-        document.documentElement.scrollHeight -
-        document.documentElement.clientHeight -
-        document.documentElement.scrollTop;
-      let oldStage = stage;
-      if (nowPosition <= 40 && nowPositionBot >= 120) {
-        stage = 1;
-      }
-      if (nowPosition > 40 && nowPositionBot >= 120) {
-        stage = 2;
-      }
-      if (nowPosition >= 40 && nowPositionBot < 120) {
-        stage = 3;
-      }
-      if (oldStage === stage) {
-        return;
-      } else {
-        applyStageStyles(stage);
-      }
-    };
-
-    // Event listener for window scroll
-    window.addEventListener('scroll', handleScroll, { passive: true });
-
-    // Clean up event listener for window scroll
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
 
   function renderOption(options, handleOnRadioChange) {
     if (!options || Object.entries(options).length === 0) {
@@ -531,11 +586,11 @@ function CommonSection({ product, shareState, setShareState, reviewScore }) {
       }
 
       return (
-        <div className="optionsLine">
+        <>
           {Object.entries(options).map(([key, values]) =>
             renderRadioChoices(values, key)
           )}
-        </div>
+        </>
       );
     }
   }
@@ -664,50 +719,58 @@ function CommonSection({ product, shareState, setShareState, reviewScore }) {
       </div>
     );
   }
-
-  return (
-    <div className="commonSection">
-      <div className="FixedCommonSection" id="FixedCommonSection">
-        <div className="nameLine">
-          <h2>{product.category_id.toUpperCase()}</h2>
-          <h1>{product.product_name}</h1>
-        </div>
-        <div className="rateLine">
-          <StarRating rating={reviewScore.avgRating} />
-          <div className="numReviews">{reviewScore.reviewNum} reviews</div>
-        </div>
-        <div className="priceLine">
-          <div>฿ {product.product_price}</div>
-        </div>
-        <div className="shortDetailLine">
-          <div>{product.short_details}</div>
-        </div>
-        {renderOption(product.option, handleOnRadioChange)}
-        <div className="functionLine">
-          <div className="plusMinusButton">
-            <div
-              className="minus"
-              onClick={() => dispatch({ type: 'UPDATE_QUANTITY_DECREMENT' })}
-            >
-              <div>-</div>
-            </div>
-            <div className="numAmount">
-              <div>{cartState.property.quantity}</div>
-            </div>
-            <div
-              className="plus"
-              onClick={() => dispatch({ type: 'UPDATE_QUANTITY_INCREMENT' })}
-            >
-              <div>+</div>
-            </div>
+  if (media === 'desktop') {
+    return (
+      <div className="commonSection">
+        <div className="FixedCommonSection">
+          <div className="nameLine">
+            <h2>{product.category_id.toUpperCase()}</h2>
+            <h1>{product.product_name}</h1>
           </div>
-          {addToCartButton()}
-          <FavoriteButton />
+          <div className="rateLine">
+            <StarRating rating={reviewScore.avgRating} />
+            <div className="numReviews">{reviewScore.reviewNum} reviews</div>
+          </div>
+          <div className="priceLine">
+            <div>฿ {product.product_price}</div>
+          </div>
+          <div className="shortDetailLine">
+            <div>{product.short_details}</div>
+          </div>
+          <div className="optionsLine">
+            {renderOption(product.option, handleOnRadioChange)}
+          </div>
+
+          <div className="functionLine">
+            <div className="plusMinusButton">
+              <div
+                className="minus"
+                onClick={() => dispatch({ type: 'UPDATE_QUANTITY_DECREMENT' })}
+              >
+                <div>-</div>
+              </div>
+              <div className="numAmount">
+                <div>{cartState.property.quantity}</div>
+              </div>
+              <div
+                className="plus"
+                onClick={() => dispatch({ type: 'UPDATE_QUANTITY_INCREMENT' })}
+              >
+                <div>+</div>
+              </div>
+            </div>
+            {addToCartButton()}
+            <FavoriteButton />
+          </div>
+          <div className="warningMessage">{errorMessage}</div>
         </div>
-        <div className="warningMessage">{errorMessage}</div>
       </div>
-    </div>
-  );
+    );
+  } else if (media === 'mobile') {
+    return <div className="commonSectionMobile"></div>;
+  } else {
+    return <></>;
+  }
 }
 
 //#endregion CommonSection
@@ -740,6 +803,7 @@ export default function ProductDetail(props) {
   const location = useLocation();
   const [product, setProduct] = useState(null);
   const [reviews, setReviews] = useState(null);
+  const { isDesktop, isTablet, isMobile } = useMediaContext();
 
   useEffect(() => {
     async function getProduct() {
@@ -773,25 +837,67 @@ export default function ProductDetail(props) {
   if (!product || !reviews) {
     return <p>Loading...</p>;
   }
-
-  return (
-    <div>
-      {product ? (
-        <div className="contentContainer" id="contentContainer">
-          <DetailSection product={product} reviews={reviews} />
-          <CommonSection
-            product={product}
-            shareState={props.shareState}
-            setShareState={props.setShareState}
-            reviewScore={{
-              reviewNum: reviews ? reviews.length : 0,
-              avgRating: calculateAverageRating(reviews),
-            }}
-          />
-        </div>
-      ) : (
-        <p>Loading...</p>
-      )}
-    </div>
-  );
+  if (isDesktop || isTablet) {
+    return (
+      <div className="productDetailPage">
+        {product ? (
+          <div className="contentContainer" id="contentContainer">
+            <DetailSection
+              product={product}
+              reviews={reviews}
+              reviewScore={{
+                reviewNum: reviews?.length || 0,
+                avgRating: calculateAverageRating(reviews),
+              }}
+              media={'desktop'}
+            />
+            <CommonSection
+              product={product}
+              shareState={props.shareState}
+              setShareState={props.setShareState}
+              reviewScore={{
+                reviewNum: reviews?.length || 0,
+                avgRating: calculateAverageRating(reviews),
+              }}
+              media={'desktop'}
+            />
+          </div>
+        ) : (
+          <p>Loading...</p>
+        )}
+      </div>
+    );
+  } else if (isMobile) {
+    return (
+      <div className="productDetailPage">
+        {product ? (
+          <div className="contentContainer" id="contentContainer">
+            <DetailSection
+              product={product}
+              reviews={reviews}
+              reviewScore={{
+                reviewNum: reviews?.length || 0,
+                avgRating: calculateAverageRating(reviews),
+              }}
+              media={'mobile'}
+            />
+            <CommonSection
+              product={product}
+              shareState={props.shareState}
+              setShareState={props.setShareState}
+              reviewScore={{
+                reviewNum: reviews?.length || 0,
+                avgRating: calculateAverageRating(reviews),
+              }}
+              media={'mobile'}
+            />
+          </div>
+        ) : (
+          <p>Loading...</p>
+        )}
+      </div>
+    );
+  } else {
+    return;
+  }
 }

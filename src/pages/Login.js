@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import '../styles/pages/Login.css';
+import Button from '../components/subcomponents/Button';
 
 import Token from '../config/services/Token';
 import RESTapi from '../config/services/RESTapi';
@@ -91,7 +92,6 @@ export default function Login(porps) {
     e.preventDefault();
 
     if (!state.status.isAllFill) {
-      console.log('please fill');
       return;
     }
 
@@ -193,26 +193,25 @@ export default function Login(porps) {
         </form>
 
         <div className="forgetPassLine">
-          <div
-            className="loginLink"
-            onClick={() => navigate('/login/forget-password')}
-          >
-            Forget Password
+          <div className="loginLink" onClick={null}>
+            Forget Password?
           </div>
         </div>
         <div className="submitLogin">
-          <button
-            className={`submitBotton ${
-              state.status.isAllFill && state.status.canLogin
-                ? ''
-                : 'disbled-login'
-            }`}
+          <Button
+            isDisabled={!(state.status.isAllFill && state.status.canLogin)}
             type="submit"
             form="loginForm"
           >
             Sign In
-          </button>
-          <div className="warningMessage-login">{state.errorMessage}</div>
+          </Button>
+          <div
+            className={`warningMessage-login${
+              state.errorMessage === '' ? ' hide' : ''
+            }`}
+          >
+            {state.errorMessage === '' ? 'HELLO' : state.errorMessage}
+          </div>
         </div>
         <div className="registerLinkLine">
           <div className="loginLink" onClick={() => navigate('/register')}>

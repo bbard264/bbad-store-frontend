@@ -1,7 +1,7 @@
 .userContainer {
   display: flex;
   flex-direction: row;
-  height: 80vh;
+  min-height: 80vh;
   width: 100%;
 }
 
@@ -12,7 +12,7 @@
   justify-content: center;
   align-items: flex-end;
   padding-right: 2em;
-  background-color: #ddd;
+  background-color: var(--darker-bg-color-lit);
   border-radius: 20px;
 }
 
@@ -33,16 +33,16 @@
 
 .userNaviBox div:hover {
   padding: 0.5em 1.5em;
-  background-color: black;
-  color: white;
+  background-color: var(--bg-color-invert);
+  color: var(--font-color-invert);
   transform: scale(1.15);
   cursor: pointer;
 }
 
 .userCurrent {
   padding: 0.5em 1.5em;
-  background-color: black;
-  color: white;
+  background-color: var(--bg-color-invert);
+  color: var(--font-color-invert);
   transform: scale(1.15);
   cursor: pointer;
 }
@@ -69,10 +69,11 @@
   margin-top: 1em;
   margin-bottom: 0.5em;
   transition: all 0.3s ease;
+  font-weight: 600;
 }
 
 .uWarningMessage {
-  color: red;
+  color: var(--warning-color-font);
   font-size: 0.75em;
   position: absolute;
   top: 2.75em;
@@ -84,8 +85,9 @@
   border-radius: 20px;
   padding: 0.5em 1.5em;
   margin: 0.5em 1em;
-  background-color: #ffffff;
-  border: 1px #111111 solid;
+  background-color: var(--bg-color);
+  border: 1px var(--font-color) solid;
+  color: var(--font-color);
   outline: none;
   width: 70%;
   transition: all 0.3s ease;
@@ -125,16 +127,50 @@
 }
 
 .radioChoice {
-  margin: 0 0.5em 0 0;
-  transition: all 0.3s ease;
-  transform: scale(1.25);
+  display: none;
 }
 
-.radioChoice:hover,
-.radioChoice:focus {
+.customRadio:hover,
+.customRadio:focus {
   box-shadow: none;
   cursor: pointer;
-  transform: scale(1.5);
+  transform: scale(1.2);
+}
+
+/* Hide the default radio input */
+
+/* Create a custom radio appearance using a pseudo-element */
+.customRadio {
+  display: inline-block;
+  position: relative;
+  width: 1em;
+  height: 1em;
+  border: 2px solid var(--font-color); /* Border color for the unselected radio */
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  margin-right: 0.25em;
+}
+
+/* Add a dot in the center for the selected radio */
+.customRadio::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  background-color: var(--font-color); /* Color of the selected radio dot */
+  border-radius: 50%;
+  display: none; /* Hide the dot by default */
+}
+
+/* Show the dot for the selected radio */
+.radioChoice:checked + .customRadio::after {
+  display: block;
+}
+.uinput::-webkit-calendar-picker-indicator {
+  filter: var(--img-filter-invert);
 }
 
 .labelRadioChoiceBox {
@@ -179,6 +215,7 @@
   flex-direction: row;
   align-items: center;
   padding: 0 1em;
+  margin: 0.5em 0;
 }
 
 .uPphotoBox {
@@ -202,7 +239,7 @@
   justify-content: center;
 }
 .uPAddressContainer {
-  border: 1px #111111 solid;
+  border: 1px var(--font-color) solid;
   overflow: hidden;
   border-radius: 20px;
   transition: all 0.3s ease;
@@ -225,9 +262,9 @@
 }
 
 .cusid {
-  color: #777;
-  background-color: #eee;
-  border: #777 1px solid;
+  color: var(--font-color-disabled);
+  background-color: var(--darker-bg-color-lit);
+  border: 1px solid var(--font-color-disabled);
 }
 .changingPasswordLine {
   height: auto;
@@ -235,6 +272,23 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
+}
+.passLineBox {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+.passLineBox button {
+  height: 3em;
+}
+.uAConfirmNewPasswordBox button {
+  height: 3em;
+}
+.showPassChange {
+  color: var(--font-color-invert);
+  background-color: var(--bg-color-invert);
+  border: 1px solid var(--bg-color-invert);
 }
 
 .uAChangingPasswordBox,
@@ -262,11 +316,13 @@
   display: none;
 }
 
-.uButton.upload {
+.uploadButton {
   font-weight: 400;
   border-radius: 50%;
-  height: 3em;
-  width: 3em;
+  min-height: 2em;
+  min-width: 2em;
+  max-height: 2em;
+  max-width: 2em;
   padding: 0;
   transform: none;
   font-family: 'Prompt', sans-serif;
@@ -275,12 +331,18 @@
   align-items: center;
   overflow: hidden;
   position: relative;
+  transition: all 0.3s ease;
+  background-color: var(--bg-color);
+  color: var(--font-color);
+  border: 1px solid var(--font-color);
 }
 
-.uButton.upload div {
+.uploadButton div {
   position: absolute;
-  height: 100%;
-  width: 100%;
+  min-height: 3em;
+  min-width: 3em;
+  max-height: 3em;
+  max-width: 3em;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -288,7 +350,13 @@
   margin: auto;
   justify-content: center;
   align-items: center;
-  font-size: 4em;
+  font-size: 3em;
+}
+.uploadButton:hover {
+  background-color: var(--bg-color-invert);
+  color: var(--font-color-invert);
+  border: 1px solid var(--font-color-disabled);
+  cursor: pointer;
 }
 
 .file-name {
@@ -307,7 +375,10 @@
 
 .currentUserReviewContainer {
   width: 100%;
-  height: 40%;
+  flex: 1;
+}
+.ReviewingContainer {
+  height: 100%;
   display: flex;
   justify-content: center;
 }
@@ -387,7 +458,7 @@
 }
 
 .reviewProductButton {
-  color: red;
+  color: var(--warning-color-font);
   position: absolute;
   top: 70%;
   left: 50%;
@@ -397,16 +468,24 @@
 
 .reviewCardBox:hover {
   cursor: pointer;
-  box-shadow: 0px 0px 2px #000000;
+  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.8);
 }
 
 .reviewCardBox:hover .reviewProductButton {
   top: 50%;
   left: 50%;
-  padding: 35% 50%;
-  background-color: rgba(0, 0, 0, 0.8);
-  color: white;
+}
+.reviewCardBox:hover .backDropClickReview {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  padding: 2em 8em;
+  background-color: var(--bg-color-invert);
+  opacity: 0.8;
   transform: translate(-50%, -50%);
+  z-index: -1;
 }
 
 .ratingLine {
@@ -453,7 +532,7 @@
   height: 2.25em;
   top: 50%;
   transform: translate(-50%, -50%);
-  border: 1px solid black;
+  border: 1px solid var(--font-color);
   border-radius: 20px;
   transition: all 0.3s ease;
 }
@@ -467,3 +546,115 @@
   left: 75%;
   width: 8.5em;
 }
+
+@media screen and (max-width: 1280px) {
+  .userNaviContainer {
+    width: 20%;
+    padding-right: 1em;
+  }
+}
+
+/* #region moblie zone --------------------------------------------------------------  */
+@media screen and (max-width: 768px) {
+  .uPPersonalLine {
+    flex-direction: column;
+    width: 100%;
+  }
+  .userProfileBox {
+    width: 75%;
+  }
+  .uPNameBox,
+  .uPGenderBox,
+  .uPEmailBox,
+  .uPDoBBox,
+  .uPPhoneBox,
+  .uPAddressBox {
+    width: 100%;
+  }
+  .uinput {
+    width: auto;
+  }
+  .listUserReviewBox {
+    grid-template-columns: 1fr;
+    padding-left: 1em;
+  }
+  .filterUserReview {
+    margin: 1em 0;
+  }
+  .listUserReviewContainer {
+    height: auto;
+    flex: 1;
+  }
+  .reviewCardBox:hover {
+    cursor: default;
+    box-shadow: unset;
+  }
+  .reviewCardBox:hover .backDropClickReview {
+    display: none;
+  }
+  .reviewCardBox:hover .reviewProductButton {
+    top: 70%;
+    left: 50%;
+  }
+  .ReviewingContainerUser {
+    width: 90%;
+    height: 50%;
+    display: flex;
+  }
+}
+
+.userPageMobile {
+  width: 100%;
+  min-height: 75vh;
+  display: flex;
+  position: relative;
+}
+
+.userContainerMobile {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.userNaviBoxMobile {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.userNaviBoxMobile > .userNaviMobile:nth-child(2) {
+  background-color: var(--darker-bg-color-lit);
+}
+
+.userNaviMobile {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.backUserButton {
+  align-self: flex-start;
+  margin-left: 2em;
+  position: fixed;
+  height: 2.5em;
+  z-index: 100;
+  background-color: var(--bg-color-invert);
+  color: var(--font-color-invert);
+}
+.userHeadMobile {
+  height: 2.5em;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  align-self: flex-start;
+  margin-left: 9em;
+  margin-bottom: 1em;
+}
+.line {
+  height: 0;
+  border-top: 1px solid var(--font-color);
+  width: 100vw;
+}
+/* #endregion */

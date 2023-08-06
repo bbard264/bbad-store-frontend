@@ -31,7 +31,6 @@ axios.interceptors.response.use(
   (err) => {
     if (err.response?.status === 401) {
       Token.removeToken();
-      window.location.href = '/login';
       return Promise.reject(err);
     }
     return Promise.reject(err);

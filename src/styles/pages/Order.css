@@ -30,7 +30,7 @@
   padding: 0.5em 1em;
   border-radius: 20px;
   background-color: var(--darker-bg-color);
-  color: var(--darker2-bg-color);
+  color: var(--font-color-disbled);
   border: 1px solid var(--darker-bg-color);
   overflow: hidden;
   cursor: pointer;
@@ -116,6 +116,9 @@
   margin: 0 0.5em 0 0;
   font-size: 1em;
   color: var(--font-color);
+}
+.orderIDCol {
+  margin-bottom: 1em;
 }
 .orderIDCol,
 .dateCol {
@@ -307,7 +310,7 @@
 
 .emptyOrder {
   background-color: var(--darker-bg-color-lit);
-  color: var(--darker-bg-color);
+  color: var(--font-color-disabled);
   height: 20vh;
   width: 100%;
   border-radius: 20px;

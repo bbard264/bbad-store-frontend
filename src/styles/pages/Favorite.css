@@ -26,18 +26,28 @@
 
 .emptyFavorite {
   background-color: var(--darker-bg-color-lit);
-  color: var(--darker-bg-color);
+  color: var(--font-color-disabled);
   height: 20vh;
-  width: 100%;
+  width: 60vw;
   border-radius: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.mainContent.favoritePage {
+  width: 90%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
 }
 
 @media screen and (max-width: 768px) {
   .favoriteHeader {
     width: 100%;
     justify-content: space-around;
+  }
+  .mainContent.favoritePage {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
   }
 }

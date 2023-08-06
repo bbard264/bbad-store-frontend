@@ -1,13 +1,13 @@
 import './App.css';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { useMediaQuery } from 'react-responsive';
 import CreateRoutes from './config/CreateRoutes';
-import CartStorage from './config/services/CartStorage';
 import Token from './config/services/Token';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import MediaContext from './config/services/MediaContext';
+import RESTapi from './config/services/RESTapi';
 
 function App() {
   const isDesktop = useMediaQuery({ query: '(min-width: 1280px)' });
@@ -30,6 +30,14 @@ function App() {
       root.classList.add('dark-theme');
     }
   };
+
+  useEffect(() => {
+    if (role === 'guest') {
+      return;
+    } else {
+      RESTapi.fetchCheckAuthen();
+    }
+  }, []);
 
   return (
     <BrowserRouter>

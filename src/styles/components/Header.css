@@ -186,7 +186,7 @@
 }
 
 .haveProfile img {
-  border: 1px solid var(--bg-color-invert);
+  border: 1px solid var(--darker-bg-color);
   filter: invert(0) !important;
 }
 /* #region Tablet Res.  */

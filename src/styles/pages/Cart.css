@@ -48,7 +48,7 @@
 
 .cartSumBodyLine {
   padding-top: 0.5em;
-  border-top: var(--darker2-bg-color) solid 1px;
+  border-top: var(--font-color) solid 1px;
   display: flex;
   flex-direction: column;
 }
@@ -58,7 +58,7 @@
   flex-direction: row;
   justify-content: space-between;
   margin: 0 1em 0.5em 1em;
-  color: var(--darker2-bg-color);
+  color: var(--font-color);
 }
 
 .cartSumNetTotalLine {
@@ -118,8 +118,8 @@
   grid-template-columns: auto repeat(3, 6em) 2em;
   align-items: end;
   margin-bottom: 1em;
-  border-bottom: var(--darker2-bg-color) 1px solid;
-  color: var(--darker2-bg-color);
+  border-bottom: var(--font-color) 1px solid;
+  color: var(--font-color);
 }
 
 .cartListHeadLine div {
@@ -193,7 +193,7 @@
   padding: 0 0.5em;
   margin-right: 0.25em;
   border-radius: 20px;
-  border: 1px var(--darker2-bg-color) solid;
+  border: 1px var(--font-color-disabled) solid;
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -407,7 +407,7 @@
   display: grid;
   grid-template-columns: auto repeat(3, 6em);
   align-items: end;
-  color: var(--darker2-bg-color);
+  color: var(--font-color-disabled);
 }
 
 .reviewProductHeadLine > div:nth-child(n + 2) {
@@ -480,14 +480,15 @@
   border-radius: 20px;
   padding: 0.5em;
   background-color: var(--bg-color);
-  border: 1px var(--darker-bg-color) solid;
+  border: 1px var(--font-color) solid;
+  color: var(--font-color);
   outline: none;
   width: 80%;
   transition: all 0.3s ease;
 }
 
 .reviewAddressInputContainer {
-  border: 1px var(--darker-bg-color) solid;
+  border: 1px var(--font-color) solid;
   overflow: hidden;
   border-radius: 20px;
   transition: all 0.3s ease;
@@ -604,7 +605,7 @@
 
 .emptyCart {
   background-color: var(--darker-bg-color-lit);
-  color: var(--darker-bg-color);
+  color: var(--font-color-disabled);
   height: 20vh;
   width: 100%;
   border-radius: 20px;
@@ -658,7 +659,7 @@
     display: flex;
     justify-content: center;
   }
-  .plusMinusButton {
+  .quantityCol .plusMinusButton {
     margin: 0 0 1em 0;
     transform: scale(1.25);
   }

@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import '../styles/components/Cropping.css';
 import Cropper from 'react-easy-crop';
+import Button from './subcomponents/Button';
 
 const createImage = (url) =>
   new Promise((resolve, reject) => {
@@ -115,9 +116,7 @@ export default function Cropping({
               }}
               className="zoom-range"
             />
-            <button className="uButton cropping" type="submit">
-              Submit
-            </button>
+            <Button type="submit">Submit</Button>
           </form>
         </div>
         <div className="backDrop"></div>

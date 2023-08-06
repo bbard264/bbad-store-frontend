@@ -11,6 +11,7 @@
 .star img {
   height: var(--image-height);
   width: auto;
+  filter: var(--img-filter-invert);
 }
 
 .star .nowRating img {

@@ -1,21 +1,30 @@
 /* #region cover card*/
-.cardBox.cover {
-  width: 66.66%;
-  display: flex;
-  align-content: center;
-  justify-content: center;
-}
-
-.cardBox.cover div {
-  margin: 0.5em;
-  padding: 0.5em;
+.cardBox {
+  position: relative;
   overflow: hidden;
-  display: flex;
-  justify-content: center;
 }
 
-.cardBox.cover img {
+.cardBox.cover {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  grid-column: span 2;
   width: 100%;
+  height: 100%;
+}
+
+.coverContainer {
+  width: 100%;
+  padding-top: 75%;
+  position: relative;
+}
+
+.coverContainer img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   border-radius: 20px;
   object-fit: cover;
 }
@@ -36,38 +45,37 @@
   padding: 0.5em 0.5em;
   margin: 0 1em;
   font-size: 1em;
-  color: #333;
-  transition: color 0.3s;
-  transition: background-color 0.3s;
+  color: var(--font-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
   border-radius: 20px;
 }
 
 .pageNavi button.active {
-  color: #fff;
-  background-color: #333;
+  color: var(--font-color-invert);
+  background-color: var(--bg-color-invert);
   cursor: default;
 }
 
 .pageNavi button:disabled {
-  color: #999;
+  color: var(--font-color-disabled);
   visibility: hidden;
   cursor: default;
 }
 
 .pageNavi button:disabled:hover {
-  color: #999 !important;
+  color: var(--font-color-disabled) !important;
   background-color: transparent !important;
   cursor: default !important;
 }
 
 .pageNavi button:disabled .triangle {
-  border-left-color: #999 !important;
-  border-right-color: #999 !important;
+  border-left-color: var(--font-color-disabled) !important;
+  border-right-color: var(--font-color-disabled) !important;
 }
 
 .pageNavi button:hover:not(.active) {
-  color: #fff;
-  background-color: #333;
+  color: var(--font-color-invert);
+  background-color: var(--bg-color-invert);
 }
 
 .pageNavi button:hover:not(.active) .triangle {
@@ -93,13 +101,13 @@
 .triangle.left {
   border-top: 5px solid transparent;
   border-bottom: 5px solid transparent;
-  border-right: 10px solid black;
+  border-right: 10px solid var(--font-color);
 }
 
 .triangle.right {
   border-top: 5px solid transparent;
   border-bottom: 5px solid transparent;
-  border-left: 10px solid black;
+  border-left: 10px solid var(--font-color);
 }
 /* #endregion */
 .ProductsPage {
@@ -110,40 +118,34 @@
 }
 .mainContent.productsPage {
   width: 90%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
 }
-.isDisbled {
+.isDisabled {
   display: none;
 }
 
 @media screen and (max-width: 768px) {
-  .cardBox.cover {
-    width: 100%;
-  }
-  .cardBox {
-    width: 50%;
-  }
   .mainContent.productsPage {
     width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
   }
+
   .pageNavi button {
-    color: #000000 !important;
-    background-color: #ffffff !important;
+    color: var(--font-color) !important;
+    background-color: var(--bg-color) !important;
   }
   .triangle {
-    border-left-color: #000 !important;
-    border-right-color: #000 !important;
+    border-left-color: var(--font-color) !important;
+    border-right-color: var(--font-color) !important;
   }
-  .cardBox.cover div {
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
+  .pageNavi button.active {
+    color: var(--font-color-invert) !important;
+    background-color: var(--bg-color-invert) !important;
   }
 
   .cardBox.cover img {
-    width: 100%;
     border-radius: 0;
-    object-fit: cover;
   }
 }

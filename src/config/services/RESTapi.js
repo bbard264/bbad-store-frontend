@@ -2,7 +2,6 @@ import axios from 'axios';
 import UserDataStorage from './UserDataStorage';
 import Token from './Token';
 import CartStorage from './CartStorage';
-import profileTemp from '../../assets/temp_img/profile_temp.png';
 
 class RESTapi {
   static async fetchUserInfo() {
@@ -11,9 +10,7 @@ class RESTapi {
     try {
       const response = await axios.get(apilink);
       await UserDataStorage.setUserData(response.data.userInfo);
-      await UserDataStorage.setUserImage(
-        response.data.userInfo.photo ?? profileTemp
-      );
+      await UserDataStorage.setUserImage(response.data.userInfo.photo);
       await UserDataStorage.setUserFavorite();
       await UserDataStorage.setUserReviews();
       await CartStorage.setCartStorage();
@@ -24,14 +21,14 @@ class RESTapi {
 
   static async fetchCheckAuthen() {
     const apilink = '/api/user/checkAuthentication';
-
+    if (Token.getRole() === 'guest') {
+      return;
+    }
     try {
-      await axios.get(apilink);
-      return { isAuthen: true, message: 'Authenticated' };
+      const response = await axios.get(apilink);
+      return response.data;
     } catch (error) {
-      if (Token.getRole() === 'user') {
-        Token.removeToken();
-      }
+      Token.removeToken();
       if (error.response?.status === 401) {
         return { isAuthen: false, message: 'Unauthenticated' };
       } else {
@@ -203,11 +200,7 @@ class RESTapi {
     const apilink = '/api/review/createNewReview';
 
     try {
-      const response = await axios.post(apilink, {
-        product_id: props._id,
-        rating: props.rating,
-        body: props.body,
-      });
+      const response = await axios.post(apilink, props);
       return response.data;
     } catch (error) {
       console.error('Failed to create new review:', error);
@@ -275,11 +268,7 @@ class RESTapi {
     const apilink = '/api/review/modifyReview';
 
     try {
-      const response = await axios.put(apilink, {
-        _id: props._id,
-        rating: props.rating,
-        body: props.body,
-      });
+      const response = await axios.put(apilink, props);
       return response.data;
     } catch (error) {
       console.error('Failed to modify review:', error);

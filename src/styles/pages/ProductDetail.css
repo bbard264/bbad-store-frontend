@@ -1,13 +1,19 @@
+.productDetailPage {
+  display: flex;
+  justify-content: center;
+}
 .contentContainer {
   display: flex;
   justify-content: center;
-  width: 100%;
+  width: 75vw;
   position: relative;
+  justify-self: center;
 }
 
 /*#region detailSection*/
 .detailSection {
-  width: 70%;
+  flex: 1;
+  width: 75%;
   height: auto;
   display: flex;
   flex-direction: column;
@@ -81,11 +87,9 @@
   flex-direction: row;
   justify-content: flex-start;
   width: auto;
-  height: 100%;
   position: absolute;
   top: 50%;
-  left: calc(50% - 4em);
-  transform: translate(0, -50%);
+  left: 30%;
   transition: all 0.5s ease-in-out;
   height: 6em;
 }
@@ -126,7 +130,7 @@
 
 .headSection {
   font-size: 1.5em;
-  color: rgb(60, 60, 60);
+  color: var(--font-color);
   display: flex;
   align-items: center;
 }
@@ -219,15 +223,12 @@
   flex-direction: row;
   align-items: center;
   justify-self: flex-end;
-  /* Styles for the reviewsRate div inside .reviewsCard */
-  /* Add your desired styles here */
 }
 .reviewsRate img {
   width: auto;
   height: 1.5em;
   margin-right: 0.5em;
-  /* Styles for the reviewsRate div inside .reviewsCard */
-  /* Add your desired styles here */
+  filter: var(--img-filter-invert);
 }
 
 .reviewsCard .reviewsDetails {
@@ -265,12 +266,8 @@
 /*#region commonSection*/
 
 .commonSection {
-  width: 30%;
-  padding: 2em 1em;
-  display: flex;
-  flex-direction: column;
-  border-radius: 20px;
   position: relative;
+  width: 25%;
 }
 
 .FixedCommonSection {
@@ -278,13 +275,17 @@
   display: flex;
   flex-direction: column;
   border-radius: 20px;
-  border: 1px solid #aeaeae;
-  background-color: rgba(255, 255, 255, 0.9);
-  width: 20em;
-  height: auto;
-  position: absolute;
+  border: 1px solid var(--darker-bg-color);
+  background-color: var(--bg-color-op09);
+  position: fixed;
   transition: all 0.3s ease;
   z-index: 3;
+  width: 20vw;
+  height: 62vh;
+  top: 47%;
+  transform: translate(0, -50%);
+  right: 0;
+  margin-right: 10vw;
 }
 
 .FixedCommonSection:hover {
@@ -299,11 +300,13 @@
 }
 .nameLine h1 {
   margin: 0;
+  white-space: normal;
+  color: var(--font-color);
 }
 .nameLine h2 {
   margin: 0;
   font-size: 1em;
-  color: #777777;
+  color: var(--font-color);
 }
 .rateLine {
   display: flex;
@@ -330,8 +333,7 @@
 .optionsLine {
   display: flex;
   flex-direction: column;
-  width: 100%;
-  height: 10.5em;
+  flex: 1;
   margin-bottom: 0.5em;
   overflow: auto;
 }
@@ -367,7 +369,7 @@
 }
 
 .optionContainer .choice {
-  display: inline-flex;
+  display: flex;
   flex-direction: row;
   margin-bottom: 0.5em;
 }
@@ -394,16 +396,18 @@ input[type='radio'].radioProduct:checked + .radioName {
   margin: 0.5em;
   height: 2em;
   padding: 1em;
-  display: inline-flex;
+  display: flex;
+  flex-direction: row;
   align-items: center;
-  border-top: #777777 1px solid;
+  border-top: var(--font-color-disabled) 1px solid;
+  justify-content: center;
 }
 .plusMinusButton {
   height: 1.5em;
   border-radius: 20px;
   display: inline-flex;
   overflow: hidden;
-  border: 1px solid #999;
+  border: 1px solid var(--font-color-disabled);
   transition: box-shadow 0.3s ease;
   margin-right: 1em;
 }
@@ -433,12 +437,12 @@ input[type='radio'].radioProduct:checked + .radioName {
 }
 
 .plusMinusButton .minus:hover {
-  background-color: black;
+  background-color: var(--bg-color-invert);
   transition: background-color 0.3s ease;
 }
 
 .plusMinusButton .plus:hover {
-  background-color: black;
+  background-color: var(--bg-color-invert);
   transition: background-color 0.3s ease;
 }
 
@@ -465,11 +469,11 @@ input[type='radio'].radioProduct:checked + .radioName {
 }
 
 .plusMinusButton .minus:hover div {
-  color: white;
+  color: var(--font-color-invert);
 }
 
 .plusMinusButton .plus:hover div {
-  color: white;
+  color: var(--font-color-invert);
 }
 
 .addToCartButton {
@@ -492,7 +496,7 @@ input[type='radio'].radioProduct:checked + .radioName {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid #999;
+  border: 1px solid var(--font-color);
   border-radius: 20px;
   transition: box-shadow 0.3s ease, background-color 0.3s ease, filter 0.3s ease,
     border 0.3s ease, height 0.2s ease, width 0.7s ease;
@@ -502,9 +506,8 @@ input[type='radio'].radioProduct:checked + .radioName {
   height: 3em;
   width: 7em;
   box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.7);
-  border: 1px #777777 solid;
-  background-color: white;
-  border: 1px solid #ffffff;
+  background-color: var(--bg-color);
+  border: 1px solid var(--bg-color);
   transition: box-shadow 0.3s ease, background-color 0.3s ease, filter 0.3s ease,
     border 0.3s ease, height 0.2s ease, width 0.7s ease;
 }
@@ -512,10 +515,12 @@ input[type='radio'].radioProduct:checked + .radioName {
   width: 1.5em;
   user-select: none;
   transition: height 0.2s ease, width 0.7s ease;
+  filter: var(--img-filter-invert);
 }
 .addToCartButton:hover .atcContainer img {
   height: 2em;
   width: 2em;
+  filter: var(--img-filter-invert);
   transition: height 0.2s ease, width 0.7s ease;
 }
 
@@ -534,11 +539,12 @@ input[type='radio'].radioProduct:checked + .radioName {
   width: 1.5em;
   height: auto;
   transition: filter 0.3s ease, width 0.3s ease, height 0.3s ease;
+  filter: var(--img-filter-invert);
 }
 .favoriteButton:hover img {
   width: 2em;
   height: auto;
-  filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.5));
+  filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.5)) var(--img-filter-invert);
   transition: filter 0.3s ease, width 0.3s ease, height 0.3s ease;
 }
 
@@ -566,6 +572,95 @@ input[type='radio'].radioProduct:checked + .radioName {
 }
 
 .ReviewingContainerProductDetail {
-  width: 50%;
+  width: 40%;
   height: 50%;
+  display: flex;
+  justify-content: center;
+}
+@media screen and (max-width: 1280px) {
+  .ReviewingContainerProductDetail {
+    width: 50%;
+  }
+  .contentContainer {
+    width: 90vw;
+  }
+  .FixedCommonSection {
+    margin-right: 0;
+    padding-right: 0;
+    padding-left: 2em;
+    border-radius: 20px 0 0 20px;
+    width: 28vw;
+    top: 40%;
+  }
+  .thumPhotoContainers {
+    left: 25%;
+  }
+  .detailSection {
+    width: 60%;
+    flex: 1;
+  }
+  .commonSection {
+    width: 35%;
+  }
+}
+@media screen and (max-width: 768px) {
+  .ReviewingContainerProductDetail {
+    width: 80%;
+  }
+  .optionContainerNotLetChoose {
+    display: flex;
+    flex-direction: row;
+  }
+  .optionContainerNotLetChoose .choiceName {
+    margin: 0;
+    min-width: 3em;
+  }
+  .choiceNotLetChoose {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 0.5em;
+  }
+  .choiceNotLetChoose div {
+    margin-left: 0.5em;
+    padding: 0.1em 0.5em;
+    border-radius: 20px;
+    border: 1px solid var(--bg-color-invert);
+    transition: background-color 0.3s ease, color 0.3s ease,
+      box-shadow 0.3s ease;
+  }
+  .prodcutNameLine h1 {
+    margin: 0;
+  }
+  .priceRatingLine {
+    display: flex;
+    flex-direction: row;
+    font-size: 16px;
+    border-top: 1px solid var(--font-color);
+    border-bottom: 1px solid var(--font-color);
+  }
+  .shortDetailLine {
+    font-size: 14px;
+  }
+  .optionsLine {
+    font-size: 14px;
+  }
+  .rateBox {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .numReviews {
+    margin: 0;
+    align-self: flex-start;
+  }
+  .priceBox {
+    display: flex;
+    align-items: center;
+    margin: 1em;
+  }
+  .priceBox div {
+    font-size: 1.5em;
+    font-weight: 300;
+    font-style: italic;
+  }
 }

@@ -128,7 +128,6 @@ export default function Card(props) {
         }
       >
         <img
-          className="photo"
           src={props.product.product_photo[0]}
           alt={props.product.product_name}
         />

@@ -22,7 +22,9 @@ function OrderList({
       className={`orderList${isSelected ? ' isSelected' : ''}`}
       onClick={() => {
         setOrderDetail(orderData);
-        setShowOrderList((e) => !e);
+        if (media === 'mobile') {
+          setShowOrderList((e) => !e);
+        }
       }}
     >
       <div className="dateHCol">

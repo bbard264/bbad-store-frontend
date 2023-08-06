@@ -9,12 +9,15 @@
   font-weight: 500;
   border: 1px solid var(--darker-bg-color);
   margin: 0 0.5em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .Button.disabled {
-  background-color: var(--darker-bg-color-lit) !important;
-  color: var(--darker-bg-color) !important;
-  border: 1px solid var(--darker-bg-color-lit) !important;
+  background-color: var(--darker-bg-color) !important;
+  color: var(--font-color-disabled) !important;
+  border: 1px solid var(--darker-bg-color) !important;
   box-shadow: none !important;
   cursor: default !important;
 }

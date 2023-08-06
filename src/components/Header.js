@@ -11,13 +11,13 @@ import CartStorage from '../config/services/CartStorage';
 import hamburgerMenuIcon from '../assets/icon/menus.png';
 import Token from '../config/services/Token';
 import { useMediaContext } from '../config/services/MediaContext';
-import RESTapi from '../config/services/RESTapi';
 
 export default function Header(props) {
   const navigate = useNavigate();
   const location = useLocation();
+  const userProfileImg = UserDataStorage.getUserImage();
   const [state, setState] = useState({
-    userImg: UserDataStorage.getUserImage() ? userIcon : undefined,
+    userImg: userProfileImg ? userIcon : undefined,
     countItemsInCart: 0,
     countFavorite: 0,
   });
@@ -27,12 +27,12 @@ export default function Header(props) {
   useEffect(() => {
     if (props.role === 'user') {
       setState({
-        userImg: UserDataStorage.getUserImage(),
+        userImg: userProfileImg,
         countItemsInCart: CartStorage.getCountItemsInCart(),
         countFavorite: UserDataStorage.getCountUserFavorite(),
       });
     }
-    if (!UserDataStorage.getUserImage()) {
+    if (!userProfileImg) {
       Token.removeToken();
       setState({
         userImg: userIcon,
@@ -42,9 +42,6 @@ export default function Header(props) {
     }
   }, [location, props.shareState, props.role]);
   useEffect(() => {
-    if (!location.pathname === '/login' || !location.pathname === '/register') {
-      RESTapi.fetchCheckAuthen();
-    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [location]);
 
@@ -112,13 +109,9 @@ export default function Header(props) {
               </div>
             </div>
             <div className="iconLink" onClick={() => navigate('/user')}>
-              <div
-                className={`iconBox${
-                  state.userImg === userIcon ? '' : ' haveProfile'
-                }`}
-              >
+              <div className={`iconBox${userProfileImg ? ' haveProfile' : ''}`}>
                 <img
-                  src={state.userImg}
+                  src={userProfileImg ? state.userImg : userIcon}
                   alt="userProfile"
                   className={`userProfile`}
                 />
@@ -170,13 +163,9 @@ export default function Header(props) {
               </div>
             </div>
             <div className="iconLink" onClick={() => navigate('/user')}>
-              <div
-                className={`iconBox${
-                  state.userImg === userIcon ? '' : ' haveProfile'
-                }`}
-              >
+              <div className={`iconBox${userProfileImg ? ' haveProfile' : ''}`}>
                 <img
-                  src={state.userImg}
+                  src={userProfileImg ? state.userImg : userIcon}
                   alt="userProfile"
                   className={`userProfile`}
                 />
@@ -197,11 +186,11 @@ export default function Header(props) {
           <div className="iconLink moblie">
             <div
               className={`iconBox mobile${
-                state.userImg === userIcon ? '' : ' haveProfile'
+                userProfileImg ? ' haveProfile' : ''
               }`}
             >
               <img
-                src={state.userImg}
+                src={userProfileImg ? state.userImg : userIcon}
                 alt="userProfile"
                 className={`userProfile`}
                 onClick={() => navigate('/user')}

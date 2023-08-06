@@ -1,3 +1,7 @@
+.registerPage {
+  width: 100%;
+}
+
 .registerContainer {
   width: 100%;
   display: flex;
@@ -56,7 +60,8 @@ label {
   border-radius: 20px;
   padding: 0.5em 1.5em;
   border: none;
-  background-color: #f0f0f0;
+  background-color: var(--darker-bg-color-lit);
+  color: var(--font-color);
   outline: none;
   transition: all 0.3s ease;
 }
@@ -64,20 +69,21 @@ label {
 .registerInput:hover,
 .registerInput:focus {
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.7);
+  background-color: var(--bg-color);
   transform: scale(1.05);
 }
 
 .registerInput:focus-visible {
-  outline: solid 1px #777;
-  background-color: #fff;
+  outline: solid 1px var(--font-color-disabled);
+  background-color: var(--bg-color);
 }
 
 .registerInput.isError {
-  outline: solid 1px red;
+  outline: solid 1px var(--warning-color-font);
 }
 
 .warningMessage-register {
-  color: red;
+  color: var(--warning-color-font);
   position: absolute;
   padding-left: 1em;
   top: 100%;
@@ -111,24 +117,6 @@ label {
   transition: all 0.3s ease;
 }
 
-.register,
-.reset {
-  width: auto;
-  margin: 0 1em;
-}
-
-.reset {
-  background-color: #fff;
-  border: #777 1px solid;
-  color: black;
-}
-
-.register:hover,
-.reset:hover {
-  transform: none;
-  font-weight: normal;
-}
-
 .height2 {
   height: 3em !important;
 }
@@ -136,13 +124,6 @@ label {
 .address {
   height: 6em;
   transition: none;
-}
-
-.disbled-register {
-  background-color: #d6d6d6 !important;
-  color: #aaa !important;
-  box-shadow: none !important;
-  cursor: default !important;
 }
 
 .warningMessage-register.lastline {
@@ -159,4 +140,18 @@ label {
   justify-content: center;
   height: 2em;
   margin-bottom: 1em;
+}
+
+@media screen and (max-width: 768px) {
+  .headRegisterColumn {
+    width: 40%;
+    display: flex;
+  }
+  .inputRegisterColumn {
+    width: 50%;
+    display: flex;
+  }
+  .registerPage {
+    height: 50vh;
+  }
 }

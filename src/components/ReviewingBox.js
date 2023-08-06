@@ -58,31 +58,31 @@ function ReviewingBox({
       }
     }
 
-    if (!window.confirm('COMMIT CHANGING??')) {
-      return;
-    }
-
     try {
       if (isEdit) {
+        if (!window.confirm('COMMIT CHANGING??')) {
+          return;
+        }
         const formData = {
-          _id: item.review.review_id,
+          _id: item.review._id,
           rating: rating,
           body: e.target.elements.reviewTextArea.value,
         };
-        const response = await UserDataStorage.modifyReview({ item, formData });
+
+        const response = await UserDataStorage.modifyReview(formData);
         window.alert(`Editting Review is success? ` + response.isSuccess);
 
         window.location.reload();
       } else {
+        if (!window.confirm('COMMIT REVIEW??')) {
+          return;
+        }
         const formData = {
-          _id: item._id,
+          product_id: item.product_id,
           rating: rating,
           body: e.target.elements.reviewTextArea.value,
         };
-        const response = await UserDataStorage.createNewReview({
-          item,
-          formData,
-        });
+        const response = await UserDataStorage.createNewReview(formData);
         window.alert(`Create New Review is success? ` + response.isSuccess);
 
         window.location.reload();
@@ -117,6 +117,11 @@ function ReviewingBox({
       }
     }
   }
+  function onClickNavigate() {
+    if (letNavigate) {
+      navigate(`/product-detail/${'id=' + item?.product_id}`);
+    }
+  }
   return (
     <div className="reviewingBox">
       <div className="reviewingHeadLine">
@@ -124,11 +129,7 @@ function ReviewingBox({
           className={`reviewingHeadLinePhotoCol${
             letNavigate ? ' letNavigate' : ''
           }`}
-          onClick={
-            letNavigate
-              ? () => navigate(`/product-detail/${'id=' + item?._id}`)
-              : undefined
-          }
+          onClick={onClickNavigate}
         >
           <img src={item?.product_photo} alt={item?.product_name} />
         </div>
@@ -136,11 +137,7 @@ function ReviewingBox({
           className={`reviewingHeadLineNameCol${
             letNavigate ? ' letNavigate' : ''
           }`}
-          onClick={
-            letNavigate
-              ? () => navigate(`/product-detail/${'id=' + item?._id}`)
-              : undefined
-          }
+          onClick={onClickNavigate}
         >
           {item?.product_name}
         </div>

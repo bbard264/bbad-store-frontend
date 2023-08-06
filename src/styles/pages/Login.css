@@ -28,7 +28,8 @@
   border-radius: 20px;
   padding: 0.5em 1.5em;
   border: none;
-  background-color: #f0f0f0;
+  background-color: var(--darker-bg-color-lit);
+  color: var(--font-color);
   outline: none;
   transition: all 0.3s ease;
 }
@@ -38,12 +39,14 @@
 .inputEmail:focus,
 .inputPassword:focus {
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.7);
+  background-color: var(--bg-colo);
   transform: scale(1.05);
 }
 
 .inputEmail:focus-visible,
 .inputPassword:focus-visible {
-  outline: solid 1px #777;
+  background-color: var(--bg-colo);
+  outline: solid 1px var(--darker2-bg-colo);
 }
 
 .forgetPassLine {
@@ -61,46 +64,27 @@
   align-items: center;
 }
 
-.submitBotton {
-  width: 10em;
-  height: 3em;
-  border-radius: 20px;
-  padding: 0.5em 1.5em;
-  border: none;
-  background-color: #111111;
-  outline: none;
-  transition: all 0.3s ease;
-  color: white;
-  font-weight: 500;
-  margin-bottom: 1em;
-}
-
-.submitBotton:hover {
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.7);
-  transform: scale(1.05);
-  background-color: #ffffff;
-  color: #111111;
-  cursor: pointer;
-  font-weight: 900;
-}
-
 .registerLinkLine {
   margin-bottom: 1em;
 }
 
-.disbled-login {
-  background-color: #d6d6d6 !important;
-  color: #aaa !important;
-  box-shadow: none !important;
-  cursor: default !important;
-  transform: none !important;
-  font-weight: 500 !important;
-}
-
 .warningMessage-login {
-  color: red;
+  color: var(--warning-color-font);
   font-size: 1em;
   width: 100%;
   display: flex;
   justify-content: center;
+  margin-top: 1em;
+  opacity: 1;
+}
+.warningMessage-login.hide {
+  opacity: 0;
+}
+
+@media screen and (max-width: 768px) {
+  .width60 {
+    width: 100%;
+    height: 50vh;
+    margin: auto;
+  }
 }

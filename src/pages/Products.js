@@ -16,7 +16,7 @@ export function mainContent(listofProducts, numPage, props) {
     function coverCardBox() {
       return (
         <div className="cardBox cover" key="cover">
-          <div>
+          <div className="coverContainer">
             <img src={coverpic} alt="coverpicforproducts"></img>
           </div>
         </div>
@@ -79,14 +79,14 @@ function pageNavi(numPage, lastNumPage, handlePageChange) {
   return (
     <div className="pageNavi">
       <button
-        className={numPage === 1 ? `isDisbled` : ``}
+        className={numPage === 1 ? `isDisabled` : ``}
         onClick={() => handlePageOnClick(numPage - 1)}
       >
         <div className="triangle left"></div>
       </button>
       {renderPageNumbers()}
       <button
-        className={numPage === lastNumPage ? `isDisbled` : ``}
+        className={numPage === lastNumPage ? `isDisabled` : ``}
         onClick={() => handlePageOnClick(numPage + 1)}
       >
         <div className="triangle right"></div>
