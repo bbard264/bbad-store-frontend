@@ -1,13 +1,19 @@
 import React from 'react';
 import '../../styles/components/subcomponents/ArrowCorner.css';
 
-export default function ArrowCorner({ direction, onClick, id }) {
+export default function ArrowCorner({ direction, onClick, id, children }) {
   return (
     <div className={`${direction}Corner`} onClick={onClick} id={id}>
       {direction === 'left' ? (
-        <div className="arrow-left"></div>
+        <>
+          <div className="arrow-left"></div>
+          {children}
+        </>
       ) : (
-        <div className="arrow-right"></div>
+        <>
+          <div className="arrow-right"></div>
+          {children}
+        </>
       )}
     </div>
   );

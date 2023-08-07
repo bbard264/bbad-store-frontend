@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useReducer } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useReducer,
+  useRef,
+  useCallback,
+} from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import axios from '../config/axios';
 import Token from '../config/services/Token';
@@ -7,6 +13,7 @@ import { useMediaContext } from '../config/services/MediaContext';
 
 import ArrowCorner from '../components/subcomponents/ArrowCorner';
 import StarRating from '../components/subcomponents/StarRating';
+import { SlideTouchHorizontal } from '../components/subcomponents/SlideTouch';
 
 // import RecommendationsContainter from '../components/RecommendationsContainter';
 import emptyHeartIcon from '../assets/icon/heart.png';
@@ -43,6 +50,18 @@ function ProfileImage({ src, alt }) {
   );
 }
 
+function Fade({ direction, width, id }) {
+  if (direction === 'left') {
+    direction = 'Left';
+  }
+  if (direction === 'right') {
+    direction = 'Right';
+  }
+  const style = width ? { width } : null;
+
+  return <div className={`fade${direction}`} style={style} id={id}></div>;
+}
+
 function ReviewSection({ reviews, product_id, media = 'desktop' }) {
   const columnLength = Math.ceil(reviews.length / 2) - 1;
   const [columnNow, setColumnNow] = useState(0);
@@ -65,7 +84,6 @@ function ReviewSection({ reviews, product_id, media = 'desktop' }) {
 
   useEffect(() => {
     const reviewContainers = document.getElementById('reviewContainers');
-
     const reviewsBox = document.querySelector('.reviewsBox');
     const reviewsBoxStyle = getComputedStyle(reviewsBox);
     const reviewsBoxWidth =
@@ -76,6 +94,10 @@ function ReviewSection({ reviews, product_id, media = 'desktop' }) {
     reviewContainers.style.transform = `translate(-${
       columnNow * reviewsBoxWidth
     }px, 0)`;
+    const fadeLeftR = document.getElementById('fadeLeftR');
+    const fadeRightR = document.getElementById('fadeRightR');
+    fadeLeftR.style.opacity = columnNow === 0 ? '0' : '';
+    fadeRightR.style.opacity = columnNow === columnLength ? '1' : '';
     if (media === 'mobile') {
       return;
     } else {
@@ -91,47 +113,47 @@ function ReviewSection({ reviews, product_id, media = 'desktop' }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [columnNow]);
 
-  useEffect(() => {
-    const adjustReviewLineHeight = () => {
-      const reviewLine = document.querySelector('.reviewLine');
-      const reviewContainers = document.getElementById('reviewContainers');
-      const headSection = document.querySelector('.headSection');
+  // useEffect(() => {
+  //   const adjustReviewLineHeight = () => {
+  //     const reviewLine = document.querySelector('.reviewLine');
+  //     const reviewContainers = document.getElementById('reviewContainers');
+  //     const headSection = document.querySelector('.headSection');
 
-      if (reviewLine && reviewContainers && headSection) {
-        const reviewContainersStyles = getComputedStyle(reviewContainers);
-        const headSectionStyles = getComputedStyle(headSection);
-        const reviewContainersMarginTop = parseInt(
-          reviewContainersStyles.marginTop
-        );
-        const reviewContainersMarginBottom = parseInt(
-          reviewContainersStyles.marginBottom
-        );
-        const headSectionMarginTop = parseInt(headSectionStyles.marginTop);
-        const headSectionMarginBottom = parseInt(
-          headSectionStyles.marginBottom
-        );
+  //     if (reviewLine && reviewContainers && headSection) {
+  //       const reviewContainersStyles = getComputedStyle(reviewContainers);
+  //       const headSectionStyles = getComputedStyle(headSection);
+  //       const reviewContainersMarginTop = parseInt(
+  //         reviewContainersStyles.marginTop
+  //       );
+  //       const reviewContainersMarginBottom = parseInt(
+  //         reviewContainersStyles.marginBottom
+  //       );
+  //       const headSectionMarginTop = parseInt(headSectionStyles.marginTop);
+  //       const headSectionMarginBottom = parseInt(
+  //         headSectionStyles.marginBottom
+  //       );
 
-        const combinedHeight =
-          reviewContainers.offsetHeight +
-          reviewContainersMarginTop +
-          reviewContainersMarginBottom +
-          headSection.offsetHeight +
-          headSectionMarginTop +
-          headSectionMarginBottom;
+  //       const combinedHeight =
+  //         reviewContainers.offsetHeight +
+  //         reviewContainersMarginTop +
+  //         reviewContainersMarginBottom +
+  //         headSection.offsetHeight +
+  //         headSectionMarginTop +
+  //         headSectionMarginBottom;
 
-        reviewLine.style.height = `${combinedHeight}px`;
-      }
-    };
+  //       reviewLine.style.height = `${combinedHeight}px`;
+  //     }
+  //   };
 
-    // Call the function initially and on window resize
-    adjustReviewLineHeight();
-    window.addEventListener('resize', adjustReviewLineHeight);
+  //   // Call the function initially and on window resize
+  //   adjustReviewLineHeight();
+  //   window.addEventListener('resize', adjustReviewLineHeight);
 
-    // Clean up event listener on component unmount
-    return () => {
-      window.removeEventListener('resize', adjustReviewLineHeight);
-    };
-  }, [reviews]);
+  //   // Clean up event listener on component unmount
+  //   return () => {
+  //     window.removeEventListener('resize', adjustReviewLineHeight);
+  //   };
+  // }, [reviews]);
 
   const getColumnNum = (index) => {
     let moveto = Math.ceil((index + 1) / 2) - 1;
@@ -155,7 +177,10 @@ function ReviewSection({ reviews, product_id, media = 'desktop' }) {
         <></>
       )}
       {media === 'mobile' ? (
-        <></>
+        <>
+          <Fade direction={'left'} id="fadeLeftR" />
+          <Fade direction={'right'} id="fadeRightR" />
+        </>
       ) : (
         <>
           <h1 className="headSection">
@@ -174,57 +199,71 @@ function ReviewSection({ reviews, product_id, media = 'desktop' }) {
               <></>
             )}
           </h1>
-          <ArrowCorner
-            direction="left"
-            onClick={() => handleReviewCornerClick('left')}
-            id={'reviewsLeft'}
-          />
-          <ArrowCorner
-            direction="right"
-            onClick={() => handleReviewCornerClick('right')}
-            id={'reviewsRight'}
-          />
         </>
       )}
-      <div
-        className={`reviewContainers${reviews.length === 1 ? ' isOne' : ''}`}
-        id="reviewContainers"
-      >
-        {reviews.map((review, index) => (
-          <div
-            className="reviewsBox"
-            key={index}
-            onClick={media === 'mobile' ? undefined : () => getColumnNum(index)}
-          >
-            <div className="reviewsCard">
-              <div className="reviewsCardHeader">
-                <div className="userImg">
-                  <ProfileImage
-                    src={review.user_photo}
-                    alt={review.user_display_name}
-                  ></ProfileImage>
+      <div className="reviewsSection">
+        {media === 'mobile' ? (
+          <></>
+        ) : (
+          <>
+            <ArrowCorner
+              direction="left"
+              onClick={() => handleReviewCornerClick('left')}
+              id={'reviewsLeft'}
+            ></ArrowCorner>
+            <ArrowCorner
+              direction="right"
+              onClick={() => handleReviewCornerClick('right')}
+              id={'reviewsRight'}
+            ></ArrowCorner>
+            <Fade direction={'left'} id="fadeLeftR" />
+            <Fade direction={'right'} id="fadeRightR" />
+          </>
+        )}
+
+        <div
+          className={`reviewContainers${reviews.length === 1 ? ' isOne' : ''}`}
+          id="reviewContainers"
+        >
+          {reviews.map((review, index) => (
+            <div
+              className="reviewsBox"
+              key={index}
+              onClick={
+                media === 'mobile' ? undefined : () => getColumnNum(index)
+              }
+            >
+              <div className="reviewsCard">
+                <div className="reviewsCardHeader">
+                  <div className="userImg">
+                    <ProfileImage
+                      src={review.user_photo}
+                      alt={review.user_display_name}
+                    ></ProfileImage>
+                  </div>
+                  <div className="userNameRank">
+                    <div className="userName">{review.user_display_name}</div>
+                  </div>
+                  <div className="reviewsRate">
+                    <img src={fullStarIcon} alt="fullStarIcon" />
+                    <div>{review.rating}/5</div>
+                  </div>
                 </div>
-                <div className="userNameRank">
-                  <div className="userName">{review.user_display_name}</div>
+                <div className="reviewsDetails">{review.body}</div>
+                <div className="postDate">
+                  {review.modify
+                    ? `Edited: ` + formatDatetoSTR(review.updated_at)
+                    : formatDatetoSTR(review.created_at)}
                 </div>
-                <div className="reviewsRate">
-                  <img src={fullStarIcon} alt="fullStarIcon" />
-                  <div>{review.rating}/5</div>
-                </div>
-              </div>
-              <div className="reviewsDetails">{review.body}</div>
-              <div className="postDate">
-                {review.modify
-                  ? `Edited: ` + formatDatetoSTR(review.updated_at)
-                  : formatDatetoSTR(review.created_at)}
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );
 }
+
 function CommonSectionInDetail({ product, reviewScore }) {
   function renderOption(options) {
     if (!options || Object.entries(options).length === 0) {
@@ -236,7 +275,9 @@ function CommonSectionInDetail({ product, reviewScore }) {
             <h3 className="choiceName">{name}</h3>
             <div className="choiceNotLetChoose">
               {options.map((value, index) => (
-                <div key={`${name}-${index}`}>{value}</div>
+                <div key={`${name}-${index}`}>
+                  {index !== options.length - 1 ? `${value},` : value}
+                </div>
               ))}
             </div>
           </div>
@@ -245,7 +286,6 @@ function CommonSectionInDetail({ product, reviewScore }) {
 
       return (
         <>
-          <div></div>
           {Object.entries(options).map(([key, values]) =>
             renderRadioChoices(values, key)
           )}
@@ -260,34 +300,114 @@ function CommonSectionInDetail({ product, reviewScore }) {
         <h1>{product.product_name}</h1>
       </div>
       <div className="priceRatingLine">
-        <div className="priceBox">
-          <div>฿ {product.product_price}</div>
-        </div>
         <div className="rateBox">
+          <div className="priceBox">
+            <div>฿ {product.product_price}</div>
+          </div>
           <StarRating rating={reviewScore.avgRating} />
           <div className="numReviews">{reviewScore.reviewNum} reviews</div>
         </div>
+        <div className="shortDetailLine">
+          <div>{product.short_details}</div>
+          <div className="optionsLine">{renderOption(product.option)}</div>
+        </div>
       </div>
-      <div className="shortDetailLine">
-        <div>{product.short_details}</div>
-      </div>
-      <div className="optionsLine">{renderOption(product.option)}</div>
     </>
   );
 }
+
+function PhotoBox({ listPhoto }) {
+  if (listPhoto === undefined) {
+    return;
+  } else {
+    return (
+      <div className="photoBoxes">
+        {listPhoto.map((photo, index) => (
+          <div className="photoBox" key={index}>
+            <img src={photo} alt={photo} />
+          </div>
+        ))}
+      </div>
+    );
+  }
+}
+
+const PhotoSlider = ({ listPhoto, showIndex, setShowIndex }) => {
+  const boxesRef = useRef(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const boxes = boxesRef.current;
+      const boxWidth = boxes.clientWidth;
+      const scrollLeft = boxes.scrollLeft;
+      const activeBoxIndex = Math.round(scrollLeft / boxWidth);
+      setShowIndex(activeBoxIndex);
+    };
+
+    const boxes = boxesRef.current;
+    boxes.addEventListener('scroll', handleScroll);
+
+    return () => {
+      boxes.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    const boxes = boxesRef.current;
+    const boxWidth = boxes.clientWidth;
+    const targetScrollLeft = boxWidth * showIndex;
+    boxes.scrollTo({ left: targetScrollLeft, behavior: 'smooth' });
+  }, [showIndex]);
+
+  if (!listPhoto || listPhoto.length === 0) {
+    return null;
+  }
+
+  return (
+    <div className="photoBoxesMobile" ref={boxesRef}>
+      {listPhoto.map((photo, index) => (
+        <div className="photoBoxMobile" key={index}>
+          <img src={photo} alt={photo} />
+        </div>
+      ))}
+    </div>
+  );
+};
+
+function ThumPhotoBox({
+  listPhoto,
+  showIndex,
+  setShowIndex,
+  media = 'desktop',
+}) {
+  if (listPhoto === undefined) {
+    return;
+  }
+  return (
+    <div className="thumPhotoBoxes">
+      {listPhoto.map((photo, index) => (
+        <div
+          className={`thumPhotoBox ${showIndex === index ? 'isShow' : ''}`}
+          key={index}
+          onClick={() => setShowIndex(index)}
+        >
+          <img src={photo} alt={photo} />
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function DetailSection({ product, reviews, reviewScore, media = 'desktop' }) {
   const listPhoto = product.product_photo;
   const [showIndex, setShowIndex] = useState(0);
+  const [showIndexMobile, setShowIndexMobile] = useState(0);
   const [widthPhoto, setWidthPhoto] = useState(0);
   const checkUserReviewProduct = UserDataStorage.checkUserReviewProduct(
     product._id
   );
   const [isReviewing, setIsReviewing] = useState(false);
   const [showReviews, setShowReviews] = useState(false);
-
-  const getIndexList = (index) => {
-    setShowIndex(index);
-  };
 
   const handleCornerClick = (direction) => {
     if (direction === 'right') {
@@ -304,6 +424,9 @@ function DetailSection({ product, reviews, reviewScore, media = 'desktop' }) {
   };
 
   useEffect(() => {
+    if (media === 'mobile') {
+      return;
+    }
     const ratio = 4 / 3;
     const heightPhoto = 600;
     const widthPhoto = heightPhoto * ratio;
@@ -345,17 +468,19 @@ function DetailSection({ product, reviews, reviewScore, media = 'desktop' }) {
     return () => {
       window.removeEventListener('resize', updateWidth);
     };
-  }, [product]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [media, product]);
 
   useEffect(() => {
+    if (media === 'mobile') {
+      return;
+    }
     const photoContainers = document.getElementById('photoContainers');
     const leftCorner = document.getElementById('leftMainPhoto');
     const rightCorner = document.getElementById('rightMainPhoto');
     const thumPhotoContainers = document.getElementById('thumPhotoContainers');
 
-    thumPhotoContainers.style.transform = `translate(-${
-      showIndex * 8
-    }em, -50%)`;
+    thumPhotoContainers.style.transform = `translate(-${showIndex * 8}em, 0)`;
     photoContainers.style.transform = `translate(-${
       showIndex * widthPhoto
     }px, 0)`;
@@ -366,71 +491,108 @@ function DetailSection({ product, reviews, reviewScore, media = 'desktop' }) {
     rightCorner.style.cursor =
       showIndex === listPhoto.length - 1 ? 'auto' : 'pointer';
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showIndex]);
+  }, [media, showIndex]);
 
-  function renderPhotoBoxes() {
-    if (listPhoto === undefined) {
-      return;
-    }
-    return listPhoto.map((photo, index) => (
-      <div className="photoBox" key={index}>
-        <img src={photo} alt={photo} />
-      </div>
-    ));
-  }
-
-  function renderThumPhotoBoxes() {
-    if (listPhoto === undefined) {
-      return;
-    }
-    return listPhoto.map((photo, index) => (
-      <div
-        className={`thumPhotoBox ${showIndex === index ? 'isShow' : ''}`}
-        key={index}
-        onClick={() => getIndexList(index)}
-      >
-        <img src={photo} alt={photo} />
-      </div>
-    ));
-  }
   //#endregion HANDLE ALL IMG PRODUCT
-
-  return (
-    <div className="detailSection">
-      <div className="photoLine" id="photoLine">
-        <ArrowCorner
-          direction="left"
-          onClick={() => handleCornerClick('left')}
-          id={'leftMainPhoto'}
-        />
-        <ArrowCorner
-          direction="right"
-          onClick={() => handleCornerClick('right')}
-          id={'rightMainPhoto'}
-        />
-        <div
-          className="photoFilter"
-          id="photoFilter"
-          onClick={() => handleCornerClick('right')}
-        ></div>
-        <div className="photoContainers" id="photoContainers">
-          {renderPhotoBoxes()}
+  if (media === 'desktop') {
+    return (
+      <div className="detailSection">
+        <div className="photoLine" id="photoLine">
+          <ArrowCorner
+            direction="left"
+            onClick={() => handleCornerClick('left')}
+            id={'leftMainPhoto'}
+          />
+          <ArrowCorner
+            direction="right"
+            onClick={() => handleCornerClick('right')}
+            id={'rightMainPhoto'}
+          />
+          <div
+            className="photoFilter"
+            id="photoFilter"
+            onClick={() => handleCornerClick('right')}
+          ></div>
+          <SlideTouchHorizontal onSlide={handleCornerClick}>
+            <div className="photoContainers" id="photoContainers">
+              <PhotoBox listPhoto={listPhoto} />
+            </div>
+          </SlideTouchHorizontal>
         </div>
-      </div>
-      <div className="thumPhotoLine">
-        <div className="thumPhotoContainers" id="thumPhotoContainers">
-          {renderThumPhotoBoxes()}
+        <div className="thumPhotoLine">
+          <Fade direction={'left'} id="fadeLeft" width="5%" />
+          <Fade direction={'right'} id="fadeRight" width="5%" />
+          <div className="thumPhotoContainers" id="thumPhotoContainers">
+            <ThumPhotoBox
+              listPhoto={listPhoto}
+              showIndex={showIndex}
+              setShowIndex={setShowIndex}
+            />
+          </div>
         </div>
+        <div className="fullDetailLine">
+          <h1 className="headSection">DETAIL</h1>
+          <div className="fullDetailSection">{product.full_detail}</div>
+        </div>
+        {reviews.length > 0 ? (
+          <ReviewSection reviews={reviews} product_id={product._id} />
+        ) : (
+          checkUserReviewProduct !== 'NeverBuy' &&
+          checkUserReviewProduct !== 'HaveReview' &&
+          checkUserReviewProduct === 'HaveBuy' && (
+            <>
+              {isReviewing && (
+                <Backdrop onCancel={() => setIsReviewing(false)}>
+                  <div className="ReviewingContainerProductDetail">
+                    <ReviewingBox
+                      item={UserDataStorage.getUserReview(product._id)}
+                      wantReset={false}
+                      letNavigate={false}
+                      onCancel={() => setIsReviewing(false)}
+                    />
+                  </div>
+                </Backdrop>
+              )}
+              <div className="reviewThisProductButton">
+                <Button onClick={() => setIsReviewing(true)} type="submit">
+                  REVIEW THIS PRODUCT
+                </Button>
+              </div>
+            </>
+          )
+        )}
       </div>
-      {media === 'mobile' && (
+    );
+  } else if (media === 'mobile') {
+    return (
+      <div className="detailSection">
+        <div className="photoLineMobile">
+          <div className="photoContainerMobile">
+            <PhotoSlider
+              listPhoto={listPhoto}
+              showIndex={showIndexMobile}
+              setShowIndex={setShowIndex}
+            />
+          </div>
+        </div>
+        <div className="thumPhotoLine">
+          <Fade direction={'left'} id="fadeLeft" width="5%" />
+          <Fade direction={'right'} id="fadeRight" width="5%" />
+          <div className="thumPhotoContainers" id="thumPhotoContainers">
+            <ThumPhotoBox
+              listPhoto={listPhoto}
+              showIndex={showIndex}
+              setShowIndex={setShowIndexMobile}
+              media={'mobile'}
+            />
+          </div>
+        </div>
         <CommonSectionInDetail product={product} reviewScore={reviewScore} />
-      )}
-      <div className="fullDetailLine">
-        <h1 className="headSection">DETAIL</h1>
-        <div className="fullDetailSection">{product.full_detail}</div>
-      </div>
-      {reviews.length > 0 ? (
-        media === 'mobile' ? (
+        <div className="fullDetailLine">
+          <h1 className="headSection">DETAIL</h1>
+          <div className="fullDetailSection">{product.full_detail}</div>
+        </div>
+        {reviews.length > 0 ? (
           <>
             <div className="reviewThisProductButton">
               <Button onClick={() => setShowReviews((e) => !e)} type="submit">
@@ -446,42 +608,13 @@ function DetailSection({ product, reviews, reviewScore, media = 'desktop' }) {
             )}
           </>
         ) : (
-          <ReviewSection reviews={reviews} product_id={product._id} />
-        )
-      ) : media === 'mobile' ? (
-        <></>
-      ) : (
-        checkUserReviewProduct !== 'NeverBuy' &&
-        checkUserReviewProduct !== 'HaveReview' &&
-        checkUserReviewProduct === 'HaveBuy' && (
-          <>
-            {isReviewing && (
-              <Backdrop onCancel={() => setIsReviewing(false)}>
-                <div className="ReviewingContainerProductDetail">
-                  <ReviewingBox
-                    item={UserDataStorage.getUserReview(product._id)}
-                    wantReset={false}
-                    letNavigate={false}
-                    onCancel={() => setIsReviewing(false)}
-                  />
-                </div>
-              </Backdrop>
-            )}
-            <div className="reviewThisProductButton">
-              <Button onClick={() => setIsReviewing(true)} type="submit">
-                REVIEW THIS PRODUCT
-              </Button>
-            </div>
-          </>
-        )
-      )}
-
-      {/* <div className="recommendationsLine">
-        <h1 className="headSection">Recommendations</h1>
-        <RecommendationsContainter />
-      </div> */}
-    </div>
-  );
+          <></>
+        )}
+      </div>
+    );
+  } else {
+    return <></>;
+  }
 }
 
 // const emptyProductToCart = {
@@ -740,7 +873,6 @@ function CommonSection({
           <div className="optionsLine">
             {renderOption(product.option, handleOnRadioChange)}
           </div>
-
           <div className="functionLine">
             <div className="plusMinusButton">
               <div
@@ -767,7 +899,11 @@ function CommonSection({
       </div>
     );
   } else if (media === 'mobile') {
-    return <div className="commonSectionMobile"></div>;
+    return (
+      <div className="commonSectionMobile">
+        <div className="Fixtab"></div>
+      </div>
+    );
   } else {
     return <></>;
   }

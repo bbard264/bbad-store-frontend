@@ -3,7 +3,6 @@
   z-index: 4;
   top: 50%;
   left: 0;
-  padding: 10px;
   transform: translateY(-50%);
   height: 100%;
   width: 10%;
@@ -21,7 +20,6 @@
   z-index: 4;
   top: 50%;
   right: 0;
-  padding: 10px;
   transform: translateY(-50%);
   height: 100%;
   width: 10%;

@@ -111,7 +111,8 @@ function CoverContent({ isMobile = false, isTablet = false }) {
       handleCornerClick('right');
     }
   };
-  if (isMobile || isTablet) {
+
+  if (isMobile) {
     return (
       <div className="cover-container">
         <div className="cover-img-container">
@@ -139,7 +140,13 @@ function CoverContent({ isMobile = false, isTablet = false }) {
             direction="right"
             onClick={() => handleCornerClick('right')}
           />
-          {renderImgCover(imgCoverList, topImg, lastImg)}
+          <div
+            className="imgCoverContainer"
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+          >
+            {renderImgCover(imgCoverList, topImg, lastImg)}
+          </div>
         </div>
       </div>
     );

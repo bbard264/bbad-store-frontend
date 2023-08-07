@@ -1,6 +1,7 @@
 :root {
   transition: all 0.3s ease !important;
   --bg-color: #ffffff;
+  --bg-color-op0: #ffffff00;
   --darker-bg-color-lit: #eeeeee;
   --darker-bg-color: #bbbbbb;
   --darker2-bg-color: #777777;
@@ -22,6 +23,7 @@
 .dark-theme {
   transition: all 0.3s ease !important;
   --bg-color: #333333;
+  --bg-color-op0: #33333300;
   --darker-bg-color-lit: #303030;
   --darker-bg-color: #292929;
   --darker2-bg-color: #202020;

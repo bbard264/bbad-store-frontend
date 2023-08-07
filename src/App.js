@@ -35,8 +35,22 @@ function App() {
     if (role === 'guest') {
       return;
     } else {
-      RESTapi.fetchCheckAuthen();
+      async function handleAuthentication() {
+        try {
+          const authData = await RESTapi.fetchCheckAuthen();
+
+          if (authData && authData.isAuthen === false) {
+            setShareState((prevState) => prevState + 1);
+          }
+        } catch (error) {
+          console.error('Error occurred while checking authentication:', error);
+        }
+      }
+
+      // Call the function to handle authentication
+      handleAuthentication();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

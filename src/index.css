@@ -19,7 +19,7 @@ html {
 }
 
 ::-webkit-scrollbar-track {
-  visibility: hidden;
+  display: none;
 }
 
 body {
@@ -60,10 +60,10 @@ a {
     font-size: 14px;
   }
   ::-webkit-scrollbar {
-    visibility: hidden;
+    display: none;
   }
   ::-webkit-scrollbar-thumb {
-    visibility: hidden;
+    display: none;
   }
 }
 
