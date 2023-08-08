@@ -1,17 +1,20 @@
 .star {
   --image-height: 1.5em;
+  --padding-right: 0.25em;
   position: relative;
   height: var(--image-height);
-  width: calc(
-    5 * var(--image-height)
-  ); /* Set width to 5 times the height of the image */
+  width: calc(5 * var(--image-height) + 4 * var(--padding-right));
   transition: all 0.3s ease;
 }
 
 .star img {
   height: var(--image-height);
   width: auto;
+  padding-right: var(--padding-right);
   filter: var(--img-filter-invert);
+}
+.star img:last-child {
+  padding-right: 0;
 }
 
 .star .nowRating img {

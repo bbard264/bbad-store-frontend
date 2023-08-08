@@ -10,6 +10,7 @@
   --font-color-disabled: #777777;
   --font-color-invert: #f0f0f0;
   --img-filter-invert: invert(0.2);
+  --img-filter-invert-invert: invert(0.9);
   --warning-color: #f14848;
   --warning-color-hover: #e03737;
   --warning-color-font: #e03737;
@@ -32,6 +33,7 @@
   --font-color-disabled: #646464;
   --font-color-invert: #333333;
   --img-filter-invert: invert(0.9);
+  --img-filter-invert-invert: invert(0.2);
   --warning-color: #8a2626;
   --warning-color-hover: #ad1818;
   --warning-color-font: #e03737;

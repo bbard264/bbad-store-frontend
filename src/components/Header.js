@@ -20,9 +20,12 @@ export default function Header(props) {
     userImg: userProfileImg ? userIcon : undefined,
     countItemsInCart: 0,
     countFavorite: 0,
+    showUserMenu: false,
   });
   const [showMenu, setShowMenu] = useState(false);
   const { isDesktop, isTablet, isMobile } = useMediaContext();
+  const [showUserMenu, setShowUserMenu] = useState(false);
+  const [hamburgerHeight, setHamburgerHeight] = useState(0);
 
   useEffect(() => {
     if (props.role === 'user') {
@@ -30,14 +33,15 @@ export default function Header(props) {
         userImg: userProfileImg,
         countItemsInCart: CartStorage.getCountItemsInCart(),
         countFavorite: UserDataStorage.getCountUserFavorite(),
+        showUserMenu: true,
       });
-    }
-    if (!userProfileImg) {
+    } else if (!userProfileImg || props.role === 'guest') {
       Token.removeToken();
       setState({
         userImg: userIcon,
         countItemsInCart: 0,
         countFavorite: 0,
+        showUserMenu: false,
       });
     }
   }, [location, props.shareState, props.role]);
@@ -46,6 +50,11 @@ export default function Header(props) {
   }, [location]);
 
   useEffect(() => {
+    const hamburgerDiv = document.getElementById('hambergurToggle');
+    if (hamburgerDiv) {
+      const height = hamburgerDiv.clientHeight;
+      setHamburgerHeight(height);
+    }
     const handleClickOutside = (event) => {
       if (showMenu) {
         setShowMenu(false);
@@ -183,6 +192,16 @@ export default function Header(props) {
             <img src={bbadlogo} alt="bbadlogo"></img>
             <div className="brandname">.bbad-shop</div>
           </div>
+          {props.role === 'user' ? (
+            <div
+              className={`naviLink hambergur user${showMenu ? ' show' : ''}`}
+              onClick={() => navigate('/user')}
+            >
+              <div>User Setting</div>
+            </div>
+          ) : (
+            <></>
+          )}
           <div className="iconLink moblie">
             <div
               className={`iconBox mobile${
@@ -197,6 +216,13 @@ export default function Header(props) {
               />
             </div>
             <div className={`iconBox mobile hamburgerIcon`}>
+              {state.countItemsInCart === 0 ||
+              !CartStorage.getCountItemsInCart() ||
+              showMenu ? (
+                <div></div>
+              ) : (
+                <div className="countItemsInCart">{state.countItemsInCart}</div>
+              )}
               <img
                 src={showMenu ? xIcon : hamburgerMenuIcon}
                 alt={'hamburgerMenuIcon'}
@@ -208,48 +234,82 @@ export default function Header(props) {
             </div>
           </div>
         </div>
-        <div className={`hambergurToggle${showMenu ? '' : ' hide'}`}>
-          <div
-            className="naviLink hambergur"
-            onClick={() => navigate('/products')}
-          >
-            <div>Products</div>
-          </div>
-          <div
-            className="naviLink hambergur"
-            onClick={() => navigate('/favorite')}
-          >
-            <div>Favorite</div>
-          </div>
-          <div className="naviLink hambergur" onClick={() => navigate('/cart')}>
-            <div>Cart</div>
-          </div>
-          <div
-            className="naviLink hambergur"
-            onClick={() => navigate('/order')}
-          >
-            <div>Order</div>
-          </div>
-          {props.role === 'user' ? (
+        <div
+          className={`hambergurToggleContainer${showMenu ? '' : ' hide'}`}
+          style={{ height: hamburgerHeight }}
+        >
+          <div className={`hambergurToggle`} id="hambergurToggle">
             <div
-              className="naviLink hambergur logout"
-              onClick={() => {
-                Token.removeToken();
-                window.location.reload();
-              }}
+              className="naviLink hambergur"
+              onClick={() => navigate('/products')}
             >
-              <div>Log Out</div>
+              <div>Products</div>
             </div>
-          ) : (
-            <div
-              className="naviLink hambergur login"
-              onClick={() => {
-                navigate('/login');
-              }}
-            >
-              <div>Log In</div>
-            </div>
-          )}
+            {state.showUserMenu ? (
+              <>
+                <div
+                  className="naviLink hambergur"
+                  onClick={() => navigate('/favorite')}
+                >
+                  <div className="iconBoxMobile">
+                    {state.countFavorite === 0 ||
+                    !UserDataStorage.getCountUserFavorite() ? (
+                      <></>
+                    ) : (
+                      <div className="countFavoriteMobile">
+                        {state.countFavorite}
+                      </div>
+                    )}
+                    <img src={heartFillIcon} alt="favorite" />
+                  </div>
+                  <div>Favorite</div>
+                </div>
+                <div
+                  className="naviLink hambergur"
+                  onClick={() => navigate('/cart')}
+                >
+                  {state.countItemsInCart === 0 ||
+                  !CartStorage.getCountItemsInCart() ? (
+                    <div></div>
+                  ) : (
+                    <div className="countItemsInCartMobile">
+                      {state.countItemsInCart}
+                    </div>
+                  )}
+                  <div>Cart</div>
+                </div>
+                <div
+                  className="naviLink hambergur"
+                  onClick={() => navigate('/order')}
+                >
+                  <div>Order</div>
+                </div>
+              </>
+            ) : (
+              <></>
+            )}
+
+            {props.role === 'user' ? (
+              <div
+                className="naviLink hambergur logout"
+                onClick={() => {
+                  Token.removeToken();
+                  window.location.reload();
+                }}
+              >
+                <div>Log Out</div>
+              </div>
+            ) : (
+              <div
+                className="naviLink hambergur login"
+                onClick={() => {
+                  navigate('/login');
+                }}
+              >
+                <div>Log In</div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     );

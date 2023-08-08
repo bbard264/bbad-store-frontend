@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  useReducer,
-  useRef,
-  useCallback,
-} from 'react';
+import React, { useState, useEffect, useReducer, useRef } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import axios from '../config/axios';
 import Token from '../config/services/Token';
@@ -14,6 +8,7 @@ import { useMediaContext } from '../config/services/MediaContext';
 import ArrowCorner from '../components/subcomponents/ArrowCorner';
 import StarRating from '../components/subcomponents/StarRating';
 import { SlideTouchHorizontal } from '../components/subcomponents/SlideTouch';
+import TriangleToggle from '../components/subcomponents/TriangleToggle';
 
 // import RecommendationsContainter from '../components/RecommendationsContainter';
 import emptyHeartIcon from '../assets/icon/heart.png';
@@ -94,13 +89,14 @@ function ReviewSection({ reviews, product_id, media = 'desktop' }) {
     reviewContainers.style.transform = `translate(-${
       columnNow * reviewsBoxWidth
     }px, 0)`;
-    const fadeLeftR = document.getElementById('fadeLeftR');
-    const fadeRightR = document.getElementById('fadeRightR');
-    fadeLeftR.style.opacity = columnNow === 0 ? '0' : '';
-    fadeRightR.style.opacity = columnNow === columnLength ? '1' : '';
+
     if (media === 'mobile') {
       return;
     } else {
+      const fadeLeftR = document.getElementById('fadeLeftR');
+      const fadeRightR = document.getElementById('fadeRightR');
+      fadeLeftR.style.opacity = columnNow === 0 ? '0' : '';
+      fadeRightR.style.opacity = columnNow === columnLength ? '1' : '';
       const reviewsLeft = document.getElementById('reviewsLeft');
       const reviewsRight = document.getElementById('reviewsRight');
       reviewsLeft.style.opacity = columnNow === 0 ? '0' : '';
@@ -177,10 +173,17 @@ function ReviewSection({ reviews, product_id, media = 'desktop' }) {
         <></>
       )}
       {media === 'mobile' ? (
-        <>
-          <Fade direction={'left'} id="fadeLeftR" />
-          <Fade direction={'right'} id="fadeRightR" />
-        </>
+        checkUserReviewProduct === 'NaverBuy' ? (
+          <></>
+        ) : checkUserReviewProduct === 'HaveReview' ? (
+          <Button onClick={() => setIsReviewing(true)}>EDIT YOUR REVIEW</Button>
+        ) : checkUserReviewProduct === 'HaveBuy' ? (
+          <Button onClick={() => setIsReviewing(true)} type={'submit'}>
+            REVIEW PRODUCT
+          </Button>
+        ) : (
+          <></>
+        )
       ) : (
         <>
           <h1 className="headSection">
@@ -192,7 +195,7 @@ function ReviewSection({ reviews, product_id, media = 'desktop' }) {
                 EDIT YOUR REVIEW
               </Button>
             ) : checkUserReviewProduct === 'HaveBuy' ? (
-              <Button onClick={() => setIsReviewing(true)}>
+              <Button onClick={() => setIsReviewing(true)} type={'submit'}>
                 REVIEW PRODUCT
               </Button>
             ) : (
@@ -265,7 +268,7 @@ function ReviewSection({ reviews, product_id, media = 'desktop' }) {
 }
 
 function CommonSectionInDetail({ product, reviewScore }) {
-  function renderOption(options) {
+  function renderOptionNotLetChoose(options) {
     if (!options || Object.entries(options).length === 0) {
       return <></>;
     } else {
@@ -275,9 +278,7 @@ function CommonSectionInDetail({ product, reviewScore }) {
             <h3 className="choiceName">{name}</h3>
             <div className="choiceNotLetChoose">
               {options.map((value, index) => (
-                <div key={`${name}-${index}`}>
-                  {index !== options.length - 1 ? `${value},` : value}
-                </div>
+                <div key={`${name}-${index}`}>{value}</div>
               ))}
             </div>
           </div>
@@ -296,21 +297,21 @@ function CommonSectionInDetail({ product, reviewScore }) {
   return (
     <>
       <div className="prodcutNameLine">
-        <div>{product.category_id.toUpperCase()}</div>
-        <h1>{product.product_name}</h1>
+        <div className="nameBox">
+          <div>{product.category_id.toUpperCase()}</div>
+          <h1>{product.product_name}</h1>
+        </div>
+        <div className="priceBox">
+          <div className="price">฿ {product.product_price}</div>
+        </div>
       </div>
-      <div className="priceRatingLine">
-        <div className="rateBox">
-          <div className="priceBox">
-            <div>฿ {product.product_price}</div>
-          </div>
-          <StarRating rating={reviewScore.avgRating} />
-          <div className="numReviews">{reviewScore.reviewNum} reviews</div>
-        </div>
-        <div className="shortDetailLine">
-          <div>{product.short_details}</div>
-          <div className="optionsLine">{renderOption(product.option)}</div>
-        </div>
+      <div className="shortDetailsBox">{product.short_details}</div>
+      <div className="rateBox">
+        <StarRating rating={reviewScore.avgRating} />
+        <div className="numReviews">{reviewScore.reviewNum} reviews</div>
+      </div>
+      <div className="optionsBox">
+        {renderOptionNotLetChoose(product.option)}
       </div>
     </>
   );
@@ -408,6 +409,7 @@ function DetailSection({ product, reviews, reviewScore, media = 'desktop' }) {
   );
   const [isReviewing, setIsReviewing] = useState(false);
   const [showReviews, setShowReviews] = useState(false);
+  const [showDetailMobile, setShowDetailMobile] = useState(false);
 
   const handleCornerClick = (direction) => {
     if (direction === 'right') {
@@ -587,29 +589,91 @@ function DetailSection({ product, reviews, reviewScore, media = 'desktop' }) {
             />
           </div>
         </div>
-        <CommonSectionInDetail product={product} reviewScore={reviewScore} />
-        <div className="fullDetailLine">
-          <h1 className="headSection">DETAIL</h1>
-          <div className="fullDetailSection">{product.full_detail}</div>
-        </div>
-        {reviews.length > 0 ? (
-          <>
-            <div className="reviewThisProductButton">
-              <Button onClick={() => setShowReviews((e) => !e)} type="submit">
-                SHOW REVIEWS
-              </Button>
+        <div className="CommonSectionInDetail">
+          <CommonSectionInDetail product={product} reviewScore={reviewScore} />
+          <div className="detailLineMobile">
+            <div
+              className="detailHeadMobile"
+              onClick={() => setShowDetailMobile((e) => !e)}
+            >
+              <h1>DETAIL</h1>
+              <div className="triangleContainer">
+                <TriangleToggle
+                  direction={showDetailMobile ? 'bottom' : `left`}
+                />
+              </div>
             </div>
-            {showReviews && (
-              <ReviewSection
-                reviews={reviews}
-                product_id={product._id}
-                media={'mobile'}
-              />
-            )}
-          </>
-        ) : (
-          <></>
-        )}
+            <div className="detailContainerMobile">
+              {showDetailMobile ? product.full_detail : <></>}
+              {showDetailMobile ? (
+                <div className="triangleContainer closed">
+                  <TriangleToggle
+                    direction={'top'}
+                    onClick={() => setShowDetailMobile(false)}
+                  />
+                </div>
+              ) : (
+                <></>
+              )}
+            </div>
+          </div>
+          {reviews.length > 0 ? (
+            <div className="detailLineMobile">
+              <div
+                className="detailHeadMobile"
+                onClick={() => setShowReviews((e) => !e)}
+              >
+                <h1>REVIEWS</h1>
+                <div className="triangleContainer">
+                  <TriangleToggle direction={showReviews ? 'bottom' : `left`} />
+                </div>
+              </div>
+              <div className="detailContainerMobile">
+                {showReviews && (
+                  <ReviewSection
+                    reviews={reviews}
+                    product_id={product._id}
+                    media={'mobile'}
+                  />
+                )}
+                {showReviews ? (
+                  <div className="triangleContainer closed">
+                    <TriangleToggle
+                      direction={'top'}
+                      onClick={() => setShowReviews(false)}
+                    />
+                  </div>
+                ) : (
+                  <></>
+                )}
+              </div>
+            </div>
+          ) : (
+            checkUserReviewProduct !== 'NeverBuy' &&
+            checkUserReviewProduct !== 'HaveReview' &&
+            checkUserReviewProduct === 'HaveBuy' && (
+              <>
+                {isReviewing && (
+                  <Backdrop onCancel={() => setIsReviewing(false)}>
+                    <div className="ReviewingContainerProductDetail">
+                      <ReviewingBox
+                        item={UserDataStorage.getUserReview(product._id)}
+                        wantReset={false}
+                        letNavigate={false}
+                        onCancel={() => setIsReviewing(false)}
+                      />
+                    </div>
+                  </Backdrop>
+                )}
+                <div className="reviewThisProductButton">
+                  <Button onClick={() => setIsReviewing(true)} type="submit">
+                    REVIEW THIS PRODUCT
+                  </Button>
+                </div>
+              </>
+            )
+          )}
+        </div>
       </div>
     );
   } else {
@@ -690,6 +754,8 @@ function CommonSection({
       quantity: 1,
     },
   });
+  const [showOption, setShowOption] = useState(false);
+  const [optionFixtabHeight, setOptionFixtabHeight] = useState(0);
 
   function renderOption(options, handleOnRadioChange) {
     if (!options || Object.entries(options).length === 0) {
@@ -757,6 +823,7 @@ function CommonSection({
             option.hasOwnProperty(key) &&
             (option[key] === undefined || option[key] === null)
           ) {
+            setShowOption(true);
             return false;
           }
         }
@@ -845,6 +912,7 @@ function CommonSection({
     return (
       <div className="favoriteButton">
         <img
+          className={isFavorite ? `truefavorite` : `falsefavorite`}
           src={isFavorite ? fullHeartIcon : emptyHeartIcon}
           alt={isFavorite ? `truefavorite` : `falsefavorite`}
           onClick={onClickFavorite}
@@ -852,6 +920,16 @@ function CommonSection({
       </div>
     );
   }
+
+  useEffect(() => {
+    // Get the height of the div with id "optionConFixtab"
+    const optionConFixtab = document.getElementById('optionConFixtab');
+    if (optionConFixtab) {
+      const height = optionConFixtab.clientHeight;
+      setOptionFixtabHeight(height);
+    }
+  }, []);
+
   if (media === 'desktop') {
     return (
       <div className="commonSection">
@@ -901,7 +979,58 @@ function CommonSection({
   } else if (media === 'mobile') {
     return (
       <div className="commonSectionMobile">
-        <div className="Fixtab"></div>
+        <div className="Fixtab">
+          <div className="functionLineFixTab">
+            <div className="plusMinusButton">
+              <div
+                className="minus"
+                onClick={() => dispatch({ type: 'UPDATE_QUANTITY_DECREMENT' })}
+              >
+                <div>-</div>
+              </div>
+              <div className="numAmount">
+                <div>{cartState.property.quantity}</div>
+              </div>
+              <div
+                className="plus"
+                onClick={() => dispatch({ type: 'UPDATE_QUANTITY_INCREMENT' })}
+              >
+                <div>+</div>
+              </div>
+            </div>
+            {addToCartButton()}
+            <FavoriteButton />
+          </div>
+          {product.option ? (
+            <div
+              className={`optionsFixtab${showOption ? '' : ' hide'}`}
+              style={{ height: optionFixtabHeight }}
+            >
+              <div className="optionsLine">
+                <div
+                  className="triOptions"
+                  onClick={() => setShowOption((e) => !e)}
+                >
+                  {showOption ? (
+                    <></>
+                  ) : (
+                    <div className="triOptionsText">...select option</div>
+                  )}
+
+                  <TriangleToggle direction={showOption ? 'bottom' : 'top'} />
+                </div>
+                <div
+                  className={`optionContainers${showOption ? '' : ' hide'}`}
+                  id="optionConFixtab"
+                >
+                  {renderOption(product.option, handleOnRadioChange)}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <></>
+          )}
+        </div>
       </div>
     );
   } else {

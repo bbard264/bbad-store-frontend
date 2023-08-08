@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import bbadlogo from '../assets/ex_products/bbadlogo.png';
 import '../styles/components/Footer.css';
 import facebookIcon from '../assets/icon/facebook.png';
 import instagramIcon from '../assets/icon/instagram.png';
 import twitterIcon from '../assets/icon/twitter.png';
 import { useMediaContext } from '../config/services/MediaContext';
+import ThemeToggle from './subcomponents/ThemeToggle';
 
 // import CatgoryLastpage from '../config/services/CatagoryLastpage';
 
@@ -109,6 +110,9 @@ function ContactFooter({ isMobile = false }) {
   if (isMobile === true) {
     return (
       <div className="contactFooter">
+        <div className="ThemeToggleContainer">
+          <ThemeToggle />
+        </div>
         <div className="socialList">
           <div className="logo" onClick={() => navigate('/home')}>
             <img src={bbadlogo} alt="bbadlogo"></img>
@@ -132,6 +136,9 @@ function ContactFooter({ isMobile = false }) {
   } else {
     return (
       <div className="contactFooter">
+        <div className="ThemeToggleContainer">
+          <ThemeToggle />
+        </div>
         <div className="socialList">{socialIconLink(mySocial)}</div>
         <div className="textContact">
           <div className="contactLink" onClick={() => navigate('/contact')}>
@@ -271,7 +278,8 @@ function OneColumnFooter() {
   );
 }
 
-export default function Footer() {
+export default function Footer({ role }) {
+  const location = useLocation();
   const { isDesktop, isTablet, isMobile } = useMediaContext();
   if (isDesktop) {
     return (
@@ -299,13 +307,13 @@ export default function Footer() {
         </div>
       </div>
     );
+  } else if (location.pathname.includes('/product-detail/')) {
+    return <></>;
   } else if (isMobile) {
     return (
       <div className="footer moblie">
         <OneColumnFooter />
       </div>
     );
-  } else {
-    return <></>;
   }
 }

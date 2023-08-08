@@ -8,6 +8,7 @@
   display: flex;
   align-items: center;
   cursor: pointer;
+  flex: 1;
 }
 
 .logo img {
@@ -151,8 +152,8 @@
 }
 
 .countItemsInCart {
-  background-color: rgb(231, 46, 46);
-  color: white;
+  background-color: var(--warning-color);
+  color: var(--absolute-white);
   font-weight: 500;
   position: absolute;
   height: 1.5em;
@@ -235,23 +236,27 @@
   box-shadow: none;
   transform: none;
   position: relative;
-  height: 1.5em;
-  width: 1.5em;
+  height: 2em;
+  width: 2em;
   top: 0;
   left: 0;
   border-radius: 0;
-  margin-left: 1em;
 }
+
 .iconBox.mobile img {
   box-shadow: none;
+  height: 2em;
+  width: 2em;
 }
 
 .iconBox.mobile.haveProfile {
   border-radius: 50%;
 }
-
+.iconBox.mobile.hamburgerIcon {
+  margin-left: 1em;
+}
 .hambergurToggle {
-  height: 8em;
+  height: auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -261,33 +266,92 @@
   transition: all 0.3s ease;
 }
 .hambergurToggle.hide {
-  height: 0em;
+  height: 0em !important;
   opacity: 0;
   border: none;
 }
 
 .naviLink.hambergur {
-  padding: 0 1em;
+  padding: 1em 1em;
   margin: 0;
   flex: 1;
   border-radius: 20px;
+  flex-direction: row-reverse;
+  font-size: 16px;
 }
 .naviLink.hambergur div {
   white-space: nowrap;
   user-select: none;
 }
+.naviLink.hambergur img {
+  filter: var(--img-filter-invert);
+}
 .naviLink.hambergur.logout {
-  background-color: var(--warning-color);
-  color: var(--absolute-white);
+  background-color: var(--warning-color) !important;
+  color: var(--absolute-white) !important;
   border-bottom: none;
+  padding: 0.25em 1em;
 }
 
 .naviLink.hambergur.login {
+  padding: 0.25em 1em;
   border-bottom: none;
-  background-color: var(--bg-color-invert);
-  color: var(--font-color-invert);
+  background-color: var(--bg-color-invert) !important;
+  color: var(--font-color-invert) !important;
 }
 .naviLink.hambergur:hover {
   box-shadow: none;
+  color: var(--font-color);
+  background-color: var(--bg-color);
+}
+.countItemsInCartMobile {
+  background-color: var(--warning-color);
+  color: var(--absolute-white);
+  font-weight: 500;
+  position: relative;
+  height: 1.5em;
+  width: 1.5em;
+  font-size: smaller;
+  display: flex;
+  justify-content: center;
+  border-radius: 50%;
+  z-index: 1;
+  margin-right: 0.5em;
+}
+.iconBoxMobile {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 1em;
+}
+.iconBoxMobile img {
+  position: absolute;
+  height: 1.5em;
+  width: 1.5em;
+}
+.countFavoriteMobile {
+  color: var(--font-color-invert);
+  font-size: 14px;
+}
+.naviLink.hambergur.user {
+  padding: 0.25em 0.25em 0.25em 1em;
+  flex: 0;
+  transform: translateX(30%);
+  opacity: 0;
+}
+.naviLink.hambergur.user.show {
+  transform: translateX(0);
+  opacity: 1;
+}
+.hambergurToggleContainer {
+  opacity: 1;
+  height: 10em;
+  transform: translateY(0);
+  transition: all 0.3s ease;
+}
+.hambergurToggleContainer.hide {
+  height: 0 !important;
+  opacity: 0;
 }
 /* #endregion */

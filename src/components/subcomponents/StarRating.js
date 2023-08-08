@@ -25,16 +25,10 @@ function StarRating({ rating, isLetChange, setRating }) {
         src={emptyStarIcon}
         alt=""
         onClick={onClickStar}
-      ></img>
+      />
     );
     fullStars.push(
-      <img
-        key={i}
-        id={i + 1}
-        src={fullStarIcon}
-        alt=""
-        onClick={onClickStar}
-      ></img>
+      <img key={i} id={i + 1} src={fullStarIcon} alt="" onClick={onClickStar} />
     );
   }
 

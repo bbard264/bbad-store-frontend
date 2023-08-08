@@ -1,0 +1,53 @@
+.triangleBox {
+  --size-tri: 1em;
+  width: var(--size-tri);
+  height: var(--size-tri);
+  position: relative;
+}
+.triangleToggleleft {
+  width: 0;
+  height: 0;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translate(0, -50%);
+  border-top: calc(var(--size-tri) * 0.5) solid transparent;
+  border-bottom: calc(var(--size-tri) * 0.5) solid transparent;
+  border-right: calc(var(--size-tri) * 0.866) solid var(--font-color-disabled);
+}
+
+.triangleToggletop {
+  width: 0;
+  height: 0;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: calc(var(--size-tri) * 0.5) solid transparent;
+  border-right: calc(var(--size-tri) * 0.5) solid transparent;
+  border-bottom: calc(var(--size-tri) * 0.866) solid var(--font-color-disabled);
+}
+
+.triangleTogglebottom {
+  width: 0;
+  height: 0;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: calc(var(--size-tri) * 0.5) solid transparent;
+  border-right: calc(var(--size-tri) * 0.5) solid transparent;
+  border-top: calc(var(--size-tri) * 0.866) solid var(--font-color-disabled);
+}
+
+.triangleToggleright {
+  width: 0;
+  height: 0;
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  border-top: calc(var(--size-tri) * 0.5) solid transparent;
+  border-bottom: calc(var(--size-tri) * 0.5) solid transparent;
+  border-left: calc(var(--size-tri) * 0.866) solid var(---font-color-disabled);
+}
