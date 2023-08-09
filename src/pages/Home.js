@@ -2,14 +2,17 @@ import React, { useState } from 'react';
 import CategoryNavi from '../components/CategoryNavi';
 import '../styles/pages/Home.css';
 import ArrowCorner from '../components/subcomponents/ArrowCorner.js';
-import coverpic from '../assets/ex_products/cover_ex.jpg';
-import not169 from '../assets/ex_products/OC_vince.jpg';
-import testimg1691 from '../assets/ex_products/16-9test2.jpg';
-import testimg1692 from '../assets/ex_products/16-9test3.jpg';
-import testimg1693 from '../assets/ex_products/16-9test5.jpg';
+import { SlideTouchHorizontal } from '../components/subcomponents/SlideTouch';
+
+import cover1 from '../assets/cover/homepageCover/cover1.jpg';
+import cover2 from '../assets/cover/homepageCover/cover2.jpg';
+import cover3 from '../assets/cover/homepageCover/cover3.jpg';
+import cover4 from '../assets/cover/homepageCover/cover4.jpg';
+import cover5 from '../assets/cover/homepageCover/cover5.jpg';
+
 import { useMediaContext } from '../config/services/MediaContext';
 
-function centerPoint(imgChoosingIndex, numCircle, onClick) {
+function CenterPoint({ imgChoosingIndex, numCircle, onClick }) {
   return (
     <div className="centerPoint">
       {(() => {
@@ -31,11 +34,7 @@ function centerPoint(imgChoosingIndex, numCircle, onClick) {
   );
 }
 
-function getImgCover() {
-  return [coverpic, testimg1691, testimg1692, testimg1693, not169];
-}
-
-const imgCoverList = getImgCover();
+const imgCoverList = [cover1, cover2, cover3, cover4, cover5];
 
 function renderImgCover(imgList, topImg, lastImg) {
   return imgList.map((img, index) => {
@@ -94,36 +93,21 @@ function CoverContent({ isMobile = false, isTablet = false }) {
       return index;
     });
   }
-  let startX = 0;
-
-  const handleTouchStart = (e) => {
-    startX = e.touches[0].clientX;
-  };
-
-  const handleTouchEnd = (e) => {
-    const endX = e.changedTouches[0].clientX;
-
-    const diff = endX - startX;
-
-    if (diff > 50) {
-      handleCornerClick('left');
-    } else if (diff < -50) {
-      handleCornerClick('right');
-    }
-  };
 
   if (isMobile) {
     return (
       <div className="cover-container">
         <div className="cover-img-container">
-          {centerPoint(topImg, imgCoverList.length, onCircleClick)}
-          <div
-            className="imgCoverContainer"
-            onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
-          >
-            {renderImgCover(imgCoverList, topImg, lastImg)}
-          </div>
+          <CenterPoint
+            imgChoosingIndex={topImg}
+            numCircle={imgCoverList.length}
+            onClick={onCircleClick}
+          />
+          <SlideTouchHorizontal onSlide={handleCornerClick}>
+            <div className="imgCoverContainer">
+              {renderImgCover(imgCoverList, topImg, lastImg)}
+            </div>
+          </SlideTouchHorizontal>
         </div>
       </div>
     );
@@ -135,18 +119,20 @@ function CoverContent({ isMobile = false, isTablet = false }) {
             direction="left"
             onClick={() => handleCornerClick('left')}
           />
-          {centerPoint(topImg, imgCoverList.length, onCircleClick)}
+          <CenterPoint
+            imgChoosingIndex={topImg}
+            numCircle={imgCoverList.length}
+            onClick={onCircleClick}
+          />
           <ArrowCorner
             direction="right"
             onClick={() => handleCornerClick('right')}
           />
-          <div
-            className="imgCoverContainer"
-            onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
-          >
-            {renderImgCover(imgCoverList, topImg, lastImg)}
-          </div>
+          <SlideTouchHorizontal onSlide={handleCornerClick}>
+            <div className="imgCoverContainer">
+              {renderImgCover(imgCoverList, topImg, lastImg)}
+            </div>
+          </SlideTouchHorizontal>
         </div>
       </div>
     );

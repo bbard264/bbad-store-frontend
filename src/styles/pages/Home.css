@@ -53,7 +53,7 @@
 
 .centerPoint {
   position: absolute;
-  z-index: 3;
+  z-index: 5;
   left: 50%;
   bottom: 0;
   transform: translateX(-50%);
@@ -72,7 +72,7 @@
 }
 
 .circle-choosing {
-  background-color: var(--bg-color);
+  background-color: var(--absolute-white);
   cursor: default;
 }
 /* #endregion coverContent*/

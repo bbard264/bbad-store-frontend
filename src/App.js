@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { useMediaQuery } from 'react-responsive';
 import CreateRoutes from './config/CreateRoutes';
@@ -40,13 +40,6 @@ function App() {
   }, [isDarkMode]);
 
   useEffect(() => {
-    const root = document.documentElement;
-    if (isDarkMode) {
-      root.classList.remove('dark-theme');
-    } else {
-      root.classList.add('dark-theme');
-    }
-
     if (role === 'guest') {
       return;
     } else {

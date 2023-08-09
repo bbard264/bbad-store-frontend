@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import bbadlogo from '../assets/ex_products/bbadlogo.png';
+import bbadlogo from '../assets/bbadlogo.png';
 import '../styles/components/Footer.css';
 import facebookIcon from '../assets/icon/facebook.png';
 import instagramIcon from '../assets/icon/instagram.png';

@@ -6,7 +6,9 @@ import moonIcon from '../../assets/icon/moon.png';
 
 export default function ThemeToggle() {
   const { toggleTheme } = useTheme();
-  const [isChecked, setIsChecked] = useState(false);
+  const [isChecked, setIsChecked] = useState(
+    localStorage.getItem('isDarkMode') === 'true'
+  );
 
   useEffect(() => {
     const isDarkMode = localStorage.getItem('isDarkMode') === 'true';

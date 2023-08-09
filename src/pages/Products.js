@@ -6,7 +6,7 @@ import CatgoryLastpage from '../config/services/CatagoryLastpage';
 import CategoryNavi from '../components/CategoryNavi';
 // import RecommendationsContainter from '../components/RecommendationsContainter';
 import Card from '../components/Card.js';
-import coverpic from '../assets/ex_products/cover_ex.jpg';
+import coverpic from '../assets/cover/categoryCover/all.jpg';
 
 export function mainContent(listofProducts, numPage, props) {
   if (!listofProducts) {

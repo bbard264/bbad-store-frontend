@@ -978,7 +978,7 @@ function ReviewCard({
               {Array.from(
                 { length: Math.floor(item.review.rating) },
                 (_, index) => (
-                  <img key={index} src={fullStar} alt="Full Star" />
+                  <img key={'star' + index} src={fullStar} alt="Full Star" />
                 )
               )}
             </>
