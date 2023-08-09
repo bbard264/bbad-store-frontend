@@ -131,7 +131,7 @@ function ReviewingBox({
           }`}
           onClick={onClickNavigate}
         >
-          <img src={item?.product_photo} alt={item?.product_name} />
+          <img src={item?.thumb_photo} alt={item?.product_name} />
         </div>
         <div
           className={`reviewingHeadLineNameCol${

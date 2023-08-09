@@ -534,7 +534,10 @@ function DetailSection({ product, reviews, reviewScore, media = 'desktop' }) {
         </div>
         <div className="fullDetailLine">
           <h1 className="headSection">DETAIL</h1>
-          <div className="fullDetailSection">{product.full_detail}</div>
+          <div
+            className="fullDetailSection"
+            dangerouslySetInnerHTML={{ __html: product.full_detail }}
+          ></div>
         </div>
         {reviews.length > 0 ? (
           <ReviewSection reviews={reviews} product_id={product._id} />
@@ -604,7 +607,14 @@ function DetailSection({ product, reviews, reviewScore, media = 'desktop' }) {
               </div>
             </div>
             <div className="detailContainerMobile">
-              {showDetailMobile ? product.full_detail : <></>}
+              {showDetailMobile ? (
+                <div
+                  className="fullDetailSection"
+                  dangerouslySetInnerHTML={{ __html: product.full_detail }}
+                ></div>
+              ) : (
+                <></>
+              )}
               {showDetailMobile ? (
                 <div className="triangleContainer closed">
                   <TriangleToggle
@@ -736,20 +746,21 @@ function CommonSection({
     product_id: product._id,
     property: {
       product_name: product.product_name,
-      product_photo: [product.product_photo[0]],
+      thumb_photo: product.thumb_photo,
       product_url_name: product.product_url_name,
-      option: product.option
-        ? {
-            isSelect: false,
-            choice: {
-              ...Object.fromEntries(
-                Object.entries(product.option).map(([key, value]) =>
-                  value.length === 1 ? [key, value] : [key, undefined]
-                )
-              ),
-            },
-          }
-        : {},
+      option:
+        product.option && Object.keys(product.option).length > 0
+          ? {
+              isSelect: false,
+              choice: {
+                ...Object.fromEntries(
+                  Object.entries(product.option).map(([key, value]) =>
+                    value.length === 1 ? [key, value] : [key, undefined]
+                  )
+                ),
+              },
+            }
+          : { isSelect: true, choice: {} },
       product_price: product.product_price,
       quantity: 1,
     },
@@ -813,17 +824,25 @@ function CommonSection({
           return;
         }
       }
-      const isOptionAllSelected = (option) => {
-        if (!option || Object.keys(option).length === 0) {
+      const isOptionValid = (option) => {
+        // Check if 'isSelect' is true
+        if (!option.isSelect) {
+          return false;
+        }
+
+        // Check if 'choice' is not undefined
+        if (typeof option.choice === 'undefined') {
+          return false;
+        }
+
+        // Check if 'choice' is an empty object
+        if (Object.keys(option.choice).length === 0) {
           return true;
         }
 
-        for (const key in option) {
-          if (
-            option.hasOwnProperty(key) &&
-            (option[key] === undefined || option[key] === null)
-          ) {
-            setShowOption(true);
+        // Check if all properties in 'choice' are arrays
+        for (const property in option.choice) {
+          if (!Array.isArray(option.choice[property])) {
             return false;
           }
         }
@@ -831,15 +850,14 @@ function CommonSection({
         return true;
       };
 
-      if (isOptionAllSelected(cartState.property.option.choice)) {
+      if (isOptionValid(cartState.property.option)) {
         if (window.confirm('Add to Cart?')) {
-          console.log(cartState.property.product_photo);
           try {
             const newProductInCartToSave = {
               product_id: cartState.product_id,
               property: {
                 product_name: cartState.property.product_name,
-                product_photo: cartState.property.product_photo[0],
+                thumb_photo: cartState.property.thumb_photo,
                 product_url_name: cartState.property.product_url_name,
                 option: cartState.property.option,
                 product_price: cartState.property.product_price,
@@ -929,7 +947,7 @@ function CommonSection({
       setOptionFixtabHeight(height);
     }
   }, []);
-
+  console.log(product.option);
   if (media === 'desktop') {
     return (
       <div className="commonSection">
@@ -1001,7 +1019,8 @@ function CommonSection({
             {addToCartButton()}
             <FavoriteButton />
           </div>
-          {product.option ? (
+          {product.option !== undefined &&
+          Object.keys(product.option).length > 0 ? (
             <div
               className={`optionsFixtab${showOption ? '' : ' hide'}`}
               style={{ height: optionFixtabHeight }}

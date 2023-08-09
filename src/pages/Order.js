@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useMediaContext } from '../config/services/MediaContext';
 import CartOrderHeader from '../components/CartOrderHead.js';
-import copyIcon from '../assets/icon/copy.png';
 import hamburgerMenuIcon from '../assets/icon/menus.png';
 import '../styles/pages/Order.css';
 import RESTapi from './../config/services/RESTapi';
@@ -93,7 +92,7 @@ function OrderDetail({
         <div className="productCol">
           <div className="productPhotoBox inReview">
             <img
-              src={item.property.product_photo}
+              src={item.property.thumb_photo}
               alt={item.property.product_name}
             />
           </div>

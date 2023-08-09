@@ -349,9 +349,12 @@
   height: 10em;
   transform: translateY(0);
   transition: all 0.3s ease;
+  visibility: visible;
 }
 .hambergurToggleContainer.hide {
   height: 0 !important;
+  visibility: hidden !important;
+  display: none;
   opacity: 0;
 }
 /* #endregion */

@@ -312,7 +312,7 @@
   background-color: var(--darker-bg-color-lit);
   color: var(--font-color-disabled);
   height: 20vh;
-  width: 100%;
+  width: 90vw;
   border-radius: 20px;
   display: flex;
   justify-content: center;
@@ -549,6 +549,9 @@
   }
   .statusHCol {
     justify-content: unset;
+  }
+  .emptyOrder {
+    width: 100vw;
   }
 }
 /* #endregion */

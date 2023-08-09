@@ -244,7 +244,7 @@ function RenderModifyOption({
       <div className="modifyOptionBox">
         <div className="productCol modifyOption">
           <div className="productPhotoBox modifyOption">
-            <img src={product.product_photo} alt={'none'} />
+            <img src={product.thumb_photo} alt={'none'} />
           </div>
           <div className="nameOptionBox modifyOption">
             <div className="textHeader modifyOption">Select Options for:</div>
@@ -273,17 +273,18 @@ function RenderModifyOption({
   }
 }
 
-function ReviewCheckOut({ reviewCheck, onCalcelReviewCheckOut, media }) {
+function ReviewCheckOut({ cartState, onCalcelReviewCheckOut, media }) {
   const navigate = useNavigate();
   const userInfo = UserDataStorage.getUserData();
-
+  console.log(cartState.items[0].property.totalPrice);
+  console.log(cartState);
   function renderReviewProductList(items) {
     return items.map((item, index) => (
       <div className="reviewProductRow" key={index}>
         <div className="productCol">
           <div className="productPhotoBox inReview">
             <img
-              src={item.property.product_photo}
+              src={item.property.thumb_photo}
               alt={item.property.product_name}
             />
           </div>
@@ -331,14 +332,13 @@ function ReviewCheckOut({ reviewCheck, onCalcelReviewCheckOut, media }) {
       window.alert('Please Fill All Information');
       return;
     } else if (window.confirm('Confirm your information?')) {
-      console.log(reviewCheck.cart);
       const newOrder = {
         user_id: '',
-        items: reviewCheck.cart.items.map((item) => ({
+        items: cartState.items.map((item) => ({
           product_id: item.product_id,
           property: {
             product_name: item.property.product_name,
-            product_photo: item.property.product_photo,
+            thumb_photo: item.property.thumb_photo,
             option: item.property.option.choice,
             product_price: item.property.product_price,
             quantity: item.property.quantity,
@@ -347,7 +347,7 @@ function ReviewCheckOut({ reviewCheck, onCalcelReviewCheckOut, media }) {
           },
           note: item.note,
         })),
-        summary: reviewCheck.cart.summary,
+        summary: cartState.summary,
         status_id: 'stage1',
         contact_info: {
           real_name: formDataObj.realname,
@@ -362,9 +362,8 @@ function ReviewCheckOut({ reviewCheck, onCalcelReviewCheckOut, media }) {
         },
         shipping_Info: { shipping_company: '', shipping_track: '' },
         payment_info: { payment_id: '', payment_status: '' },
-        order_note: reviewCheck.cart.note,
+        order_note: cartState.note,
       };
-      console.log(newOrder);
       const response = await RESTapi.createOrder(newOrder);
       if (response.createOrder) {
         await CartStorage.removeFromCart({ all: true });
@@ -399,7 +398,7 @@ function ReviewCheckOut({ reviewCheck, onCalcelReviewCheckOut, media }) {
         </div>
         <div className="reviewProductList">
           <div className="reviewProductListContent">
-            {renderReviewProductList(reviewCheck.cart.items)}
+            {renderReviewProductList(cartState.items)}
           </div>
         </div>
         {media === 'mobile' ? (
@@ -411,10 +410,10 @@ function ReviewCheckOut({ reviewCheck, onCalcelReviewCheckOut, media }) {
                   <div className="cartDetailLine">
                     <div className="cartDetailName">subtotal</div>
                     <div className="cartDetailValue">
-                      ฿{reviewCheck.cart.summary.subtotal}
+                      ฿{cartState.summary.subtotal}
                     </div>
                   </div>
-                  {Object.entries(reviewCheck.cart.summary.priceChange).map(
+                  {Object.entries(cartState.summary.priceChange).map(
                     ([key, value]) =>
                       value !== 0 ? (
                         <div key={key} className="cartDetailLine">
@@ -427,7 +426,7 @@ function ReviewCheckOut({ reviewCheck, onCalcelReviewCheckOut, media }) {
               </div>
               <div className="cartSumNetTotalLine reviewCheckSection">
                 <div>NET</div>
-                <div>฿{reviewCheck.cart.summary.net}</div>
+                <div>฿{cartState.summary.net}</div>
               </div>
             </div>
             <form
@@ -645,10 +644,10 @@ function ReviewCheckOut({ reviewCheck, onCalcelReviewCheckOut, media }) {
                     <div className="cartDetailLine">
                       <div className="cartDetailName">subtotal</div>
                       <div className="cartDetailValue">
-                        ฿{reviewCheck.cart.summary.subtotal}
+                        ฿{cartState.summary.subtotal}
                       </div>
                     </div>
-                    {Object.entries(reviewCheck.cart.summary.priceChange).map(
+                    {Object.entries(cartState.summary.priceChange).map(
                       ([key, value]) =>
                         value !== 0 ? (
                           <div key={key} className="cartDetailLine">
@@ -665,7 +664,7 @@ function ReviewCheckOut({ reviewCheck, onCalcelReviewCheckOut, media }) {
                 </div>
                 <div className="cartSumNetTotalLine reviewCheckSection">
                   <div>NET</div>
-                  <div>฿{reviewCheck.cart.summary.net}</div>
+                  <div>฿{cartState.summary.net}</div>
                 </div>
                 <Button
                   className="cartSumCheckOutLine checkOut reviewCheckSection"
@@ -769,7 +768,7 @@ function CartContent({
               }
             >
               <img
-                src={item.property.product_photo}
+                src={item.property.thumb_photo}
                 alt={item.property.product_name}
               />
             </div>
@@ -956,12 +955,13 @@ export default function Cart(props) {
     productToModify: {},
     state: false,
   });
-  const [reviewCheck, setReviewCheck] = useState({ cart: {}, state: false });
+  const [reviewCheck, setReviewCheck] = useState(false);
   const [rerender, setRerender] = useState(0);
   const { isDesktop, isTablet, isMobile } = useMediaContext();
 
   useEffect(() => {
     cartState.items = CartStorage.getCart();
+
     if (!cartState.items) {
       return;
     }
@@ -1001,7 +1001,7 @@ export default function Cart(props) {
   }, [rerender]);
   useEffect(() => {
     if (location.pathname === '/cart') {
-      setReviewCheck({ cart: {}, state: false });
+      setReviewCheck(false);
     }
     setRerender((e) => e + 1);
   }, [location]);
@@ -1066,7 +1066,7 @@ export default function Cart(props) {
 
   const onCalcelReviewCheckOut = () => {
     navigate('/cart');
-    setReviewCheck({ cart: {}, state: false });
+    setReviewCheck(false);
   };
 
   const onClickCheckOut = () => {
@@ -1083,12 +1083,13 @@ export default function Cart(props) {
     if (cartState.IsPassValidate) {
       if (window.confirm('PLEASE REVIEW YOUR ORDER BEFORE CHECKOUT')) {
         navigate('/cart/reviewCheckOut');
-        setReviewCheck({ cart: cartState, state: true });
+        setReviewCheck(true);
       }
     } else {
       window.alert('Please select option');
     }
   };
+
   if (isMobile || isTablet) {
     return (
       <div className="cart">
@@ -1128,10 +1129,10 @@ export default function Cart(props) {
             onClickCheckOut={onClickCheckOut}
             media={'mobile'}
           />
-          {reviewCheck.state ? (
+          {reviewCheck ? (
             <Backdrop onCancel={onCalcelReviewCheckOut}>
               <ReviewCheckOut
-                reviewCheck={reviewCheck}
+                cartState={cartState}
                 onCalcelReviewCheckOut={onCalcelReviewCheckOut}
                 media={'mobile'}
               />
@@ -1182,10 +1183,10 @@ export default function Cart(props) {
               onClickCheckOut={onClickCheckOut}
               media={'desktop'}
             />
-            {reviewCheck.state ? (
+            {reviewCheck ? (
               <Backdrop onCancel={onCalcelReviewCheckOut}>
                 <ReviewCheckOut
-                  reviewCheck={reviewCheck}
+                  cartState={cartState}
                   onCalcelReviewCheckOut={onCalcelReviewCheckOut}
                   media={'desktop'}
                 />

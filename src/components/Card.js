@@ -36,8 +36,11 @@ export default function Card(props) {
     let option;
     let isOption = false;
 
-    if (props.product.option === null) {
-      option = {};
+    if (
+      !props.product.option ||
+      Object.keys(props.product.option).length === 0
+    ) {
+      option = { isSelect: true, choice: {} };
       isOption = true;
     } else {
       option = { isSelect: false, choice: props.product.option };
@@ -47,7 +50,7 @@ export default function Card(props) {
       product_id: props.product._id,
       property: {
         product_name: props.product.product_name,
-        product_photo: props.product.product_photo[0],
+        thumb_photo: props.product.thumb_photo,
         product_url_name: props.product.product_url_name,
         option: option,
         product_price: props.product.product_price,
@@ -127,10 +130,7 @@ export default function Card(props) {
           })
         }
       >
-        <img
-          src={props.product.product_photo[0]}
-          alt={props.product.product_name}
-        />
+        <img src={props.product.card_photo} alt={props.product.product_name} />
       </div>
       <div
         className="cardInfo"

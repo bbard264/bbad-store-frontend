@@ -968,7 +968,7 @@ function ReviewCard({
       }}
     >
       <div className="productPhotoCol">
-        <img src={item.product_photo} alt={item.product_name} />
+        <img src={item.thumb_photo} alt={item.product_name} />
       </div>
       <div className="nameRatingCol">
         <div className="productNameLine">{item.product_name}</div>

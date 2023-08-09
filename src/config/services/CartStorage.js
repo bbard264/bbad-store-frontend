@@ -13,7 +13,7 @@ export default class CartStorage {
           product_id: '',
           property: {
             product_name: '',
-            product_photo: '',
+            thumb_photo: '',
             product_url_name: '',
             option: {},
             product_price: 0,
@@ -30,11 +30,12 @@ export default class CartStorage {
 
           // Copy the properties from the original object to the newItem
           newItem.product_name = obj.product_name;
-          newItem.product_photo = obj.product_photo[0];
+          newItem.thumb_photo = obj.thumb_photo;
           newItem.product_url_name = obj.product_url_name;
-          newItem.option = obj.option
-            ? { isSelect: false, choice: obj.option }
-            : {}; // Use an empty object if option is null
+          newItem.option =
+            obj.option && Object.keys(obj.option).length > 0
+              ? { isSelect: false, choice: obj.option }
+              : { isSelect: true, choice: {} };
           newItem.product_price = obj.product_price;
 
           return {

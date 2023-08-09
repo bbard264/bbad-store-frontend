@@ -45,6 +45,9 @@
     width: 100%;
     justify-content: space-around;
   }
+  .favoriteHeader h1 {
+    font-size: 16px;
+  }
   .mainContent.favoritePage {
     width: 100%;
     display: grid;
