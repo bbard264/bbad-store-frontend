@@ -16,6 +16,11 @@ import RESTapi from '../config/services/RESTapi';
 
 import fullStar from '../assets/icon/star2.png';
 
+import profileSettingIcon from '../assets/icon/user.png';
+import accountSettingIcon from '../assets/icon/settings.png';
+import reviewSettingIcon from '../assets/icon/satisfaction.png';
+import IconContainer from '../components/subcomponents/IconContainer';
+
 function reducer(state, action) {
   switch (action.type) {
     case 'SET_USER':
@@ -204,6 +209,11 @@ function UserNavi({ pageNow, pageList }) {
 
 function UserNaviMobile({ pageList }) {
   const navigate = useNavigate();
+  const listOfIcon = [
+    profileSettingIcon,
+    accountSettingIcon,
+    reviewSettingIcon,
+  ];
   return (
     <div className="userNaviBoxMobile">
       {pageList.map((page, index) => (
@@ -212,6 +222,11 @@ function UserNaviMobile({ pageList }) {
           key={index}
           onClick={() => navigate(`/user/${page}`)}
         >
+          <IconContainer
+            className={'userMobileIcon'}
+            src={listOfIcon[index]}
+            alt={`icon_${page}`}
+          />
           {page.charAt(0).toUpperCase() + page.slice(1) + ' Settings'}
         </div>
       ))}

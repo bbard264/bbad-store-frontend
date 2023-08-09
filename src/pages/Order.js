@@ -5,6 +5,10 @@ import hamburgerMenuIcon from '../assets/icon/menus.png';
 import '../styles/pages/Order.css';
 import RESTapi from './../config/services/RESTapi';
 import xIcon from '../assets/icon/x-mark.png';
+import Button from '../components/subcomponents/Button';
+import backTopIcon from '../assets/icon/up-arrow.png';
+import IconContainer from '../components/subcomponents/IconContainer';
+import listIcon from '../assets/icon/list.png';
 
 function OrderList({
   orderData,
@@ -26,17 +30,20 @@ function OrderList({
         }
       }}
     >
-      <div className="dateHCol">
-        <div className="create_date">
-          {new Date(orderData.created_at).toLocaleDateString('en-GB')}
+      <IconContainer className="listIcon" src={listIcon} alt={'checkOutIcon'} />
+      <div className="listDetail">
+        <div className="dateHCol">
+          <div className="create_date">
+            {new Date(orderData.created_at).toLocaleDateString('en-GB')}
+          </div>
+          <div className="order_id">{orderData._id}</div>
         </div>
-        <div className="order_id">{orderData._id}</div>
-      </div>
-      <div className="statusHCol">
-        <div className="statusHHead">STATUS:</div>
-        <div className="statusHValue">
-          {orderStatus.find((stage) => stage._id === orderData.status_id)
-            ?.stage_name || 'Stage Not Found'}
+        <div className="statusHCol">
+          <div className="statusHHead">STATUS:</div>
+          <div className="statusHValue">
+            {orderStatus.find((stage) => stage._id === orderData.status_id)
+              ?.stage_name || 'Stage Not Found'}
+          </div>
         </div>
       </div>
     </div>
@@ -46,6 +53,7 @@ function OrderList({
 function OrderDetail({
   orderDetail,
   orderStatus,
+  showOrderList,
   onClickShowOrderList,
   media = 'desktop',
 }) {
@@ -223,13 +231,12 @@ function OrderDetail({
   } else if (media === 'mobile') {
     return (
       <div className="orderDetailBox">
-        <div className="orderIDCol">
-          <div className="hamburgerOrderBox">
+        <div className={`orderIDCol${showOrderList ? ' show' : ''}`}>
+          <div className="hamburgerOrderBox" onClick={onClickShowOrderList}>
             <img
               className="hamburgerOrderIcon"
               src={hamburgerMenuIcon}
               alt={'hamburgerMenuIcon'}
-              onClick={onClickShowOrderList}
             />
           </div>
           <h2 className="orderIDHead">ID</h2>
@@ -460,12 +467,20 @@ export default function Order() {
               <OrderDetail
                 orderDetail={orderDetail}
                 orderStatus={orderData.orderStatus}
+                showOrderList={showOrderList}
                 onClickShowOrderList={() => setShowOrderList((e) => !e)}
                 media={'mobile'}
               />
             )}
           </div>
         </div>
+        <Button
+          className="backTop"
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        >
+          <IconContainer src={backTopIcon} alt={'back to top'} />
+          Back To Top
+        </Button>
       </div>
     );
   } else if (isTablet) {

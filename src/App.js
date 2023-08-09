@@ -22,6 +22,7 @@ function App() {
   const [isDarkMode, setIsDarkMode] = useState(
     localStorage.getItem('isDarkMode') === 'true'
   );
+  const [isLoaded, setIsLoaded] = useState(false);
 
   const toggleTheme = () => {
     setIsDarkMode((prevIsDarkMode) => {
@@ -41,24 +42,30 @@ function App() {
 
   useEffect(() => {
     if (role === 'guest') {
+      setIsLoaded(true);
       return;
     } else {
       async function handleAuthentication() {
         try {
           const authData = await RESTapi.fetchCheckAuthen();
-
+          setIsLoaded(true);
           if (authData && authData.isAuthen === false) {
             setShareState((prevState) => prevState + 1);
           }
         } catch (error) {
+          setRole('guest');
           console.error('Error occurred while checking authentication:', error);
         }
       }
       handleAuthentication();
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  if (!isLoaded) {
+    return <></>;
+  }
   return (
     <BrowserRouter>
       <MediaContext.Provider value={{ isDesktop, isTablet, isMobile }}>

@@ -38,6 +38,12 @@
   transition: all 0.3s ease;
   cursor: pointer;
 }
+.cartOrderIcon {
+  margin-right: 0.5em;
+}
+.cartOrderIcon.notActive img {
+  filter: var(--img-filter-invert-invert);
+}
 
 @media screen and (max-width: 768px) {
   .cartOrderNaviContainer {

@@ -9,6 +9,8 @@ import UserDataStorage from './../config/services/UserDataStorage';
 import RESTapi from './../config/services/RESTapi';
 import Button from '../components/subcomponents/Button.js';
 import ProductImage from '../components/subcomponents/ProductImage';
+import IconContainer from '../components/subcomponents/IconContainer';
+import checkOutIcon from '../assets/icon/check-it-out.png';
 
 function reducer(state, action) {
   switch (action.type) {
@@ -541,6 +543,11 @@ function ReviewCheckOut({ cartState, onCalcelReviewCheckOut, media }) {
                 type="submit&green"
                 form="reviewCheckOutForm"
               >
+                <IconContainer
+                  className="checkOutIcon"
+                  src={checkOutIcon}
+                  alt={'checkOutIcon'}
+                />
                 PLACE ORDER
               </Button>
             </div>
@@ -925,6 +932,11 @@ function CartSummaryBox({ cartState, onClickCheckOut, media }) {
               className="cartSumCheckOutLine"
               isDisabled={true}
             >
+              <IconContainer
+                className="checkOutIcon"
+                src={checkOutIcon}
+                alt={'checkOutIcon'}
+              />
               CHECK OUT
             </Button>
           ) : (
@@ -933,6 +945,11 @@ function CartSummaryBox({ cartState, onClickCheckOut, media }) {
               className="cartSumCheckOutLine"
               onClick={onClickCheckOut}
             >
+              <IconContainer
+                className="checkOutIcon"
+                src={checkOutIcon}
+                alt={'checkOutIcon'}
+              />
               CHECK OUT
             </Button>
           )}

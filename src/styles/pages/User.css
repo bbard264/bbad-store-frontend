@@ -634,6 +634,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 1.25em;
 }
 .backUserButton {
   align-self: flex-start;
@@ -657,5 +658,8 @@
   height: 0;
   border-top: 1px solid var(--font-color);
   width: 100vw;
+}
+.userMobileIcon {
+  margin-right: 1em;
 }
 /* #endregion */

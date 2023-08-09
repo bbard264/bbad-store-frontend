@@ -601,7 +601,7 @@ function DetailSection({ product, reviews, reviewScore, media = 'desktop' }) {
                 />
               </div>
             </div>
-            <div className="detailContainerMobile">
+            <div className={`detailContainerMobile`}>
               {showDetailMobile ? (
                 <div
                   className="fullDetailSection"

@@ -7,6 +7,7 @@ import instagramIcon from '../assets/icon/instagram.png';
 import twitterIcon from '../assets/icon/twitter.png';
 import { useMediaContext } from '../config/services/MediaContext';
 import ThemeToggle from './subcomponents/ThemeToggle';
+import TriangleToggle from './subcomponents/TriangleToggle';
 
 // import CatgoryLastpage from '../config/services/CatagoryLastpage';
 
@@ -244,10 +245,10 @@ function OneColumnFooter() {
         key={'product_line'}
         onClick={(e) => {
           e.stopPropagation();
-          setIsShowCate(!isShowCate);
+          setIsShowCate((e) => !e);
         }}
       >
-        PRODUCTS
+        PRODUCTS <TriangleToggle direction={isShowCate ? 'bottom' : `left`} />
       </div>
       <div className="cateFooterToogle">
         <div className={`cateFooterContainer${isShowCate ? ' show' : ''}`}>

@@ -227,12 +227,15 @@
   opacity: 1;
   transform: none;
 }
-
+.naviLinkFooterMobile .triangleBox {
+  margin-left: 0.25em;
+}
 .naviLinkFooterMobile,
 .naviProdFooterMobile {
   width: 100%;
   display: flex;
   justify-content: center;
+  align-items: center;
   padding: 0.5em 0;
   font-size: 1.15em;
   border-top: 1px solid var(--font-color-disabled);
