@@ -91,4 +91,7 @@
   .activeCategory div {
     border-bottom: 1px solid var(--darker2-bg-color);
   }
+  .categoryLink .home {
+    border: none !important;
+  }
 }

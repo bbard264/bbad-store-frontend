@@ -4,7 +4,7 @@ import axios from 'axios';
 import '../styles/components/CategoryNavi.css';
 import CatgoryLastpage from '../config/services/CatagoryLastpage';
 
-function renderNavi(naviObj, currentCategory, navigate) {
+function renderNavi(naviObj, currentCategory, navigate, currentPage) {
   const naviList = Object.values(naviObj);
   naviList.pop();
   return naviList.map((category) => (
@@ -15,7 +15,7 @@ function renderNavi(naviObj, currentCategory, navigate) {
       key={category.value._id}
       onClick={() => navigate(`/products/${category.value._id}`)}
     >
-      <div>{category.value.category_name}</div>
+      <div className={currentPage}>{category.value.category_name}</div>
     </div>
   ));
 }
@@ -52,9 +52,9 @@ export default function CategoryNavi({ currentCategory, currentPage }) {
             key={`all`}
             onClick={() => navigate('/products')}
           >
-            <div>All</div>
+            <div className={currentPage}>All</div>
           </div>
-          {renderNavi(categoryMap, currentCategory, navigate)}
+          {renderNavi(categoryMap, currentCategory, navigate, currentPage)}
         </>
       )}
     </div>
