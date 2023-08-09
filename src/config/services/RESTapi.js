@@ -278,6 +278,21 @@ class RESTapi {
       };
     }
   }
+
+  static async getRecommendProduct() {
+    const apilink = '/api/product/getRecommendProduct';
+
+    try {
+      const response = await axios.get(apilink);
+      return response.data;
+    } catch (error) {
+      console.error('Failed toget Recommend Product:', error);
+      return {
+        isSuccess: false,
+        message: 'Failed to get Recommend Product',
+      };
+    }
+  }
 }
 
 export default RESTapi;

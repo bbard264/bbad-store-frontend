@@ -3,6 +3,7 @@ import CategoryNavi from '../components/CategoryNavi';
 import '../styles/pages/Home.css';
 import ArrowCorner from '../components/subcomponents/ArrowCorner.js';
 import { SlideTouchHorizontal } from '../components/subcomponents/SlideTouch';
+import RecomendationSection from '../components/RecomendationSection';
 
 import cover1 from '../assets/cover/homepageCover/cover1.jpg';
 import cover2 from '../assets/cover/homepageCover/cover2.jpg';
@@ -145,6 +146,7 @@ export default function Home() {
     <div className="HomeContainer">
       <CoverContent isMobile={isMobile} isTablet={isTablet} />
       <CategoryNavi currentPage={'home'} />
+      <RecomendationSection />
     </div>
   );
 }

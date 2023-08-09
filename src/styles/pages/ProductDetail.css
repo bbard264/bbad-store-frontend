@@ -1,6 +1,7 @@
 .productDetailPage {
   display: flex;
   justify-content: center;
+  flex-direction: column;
 }
 .contentContainer {
   display: flex;
@@ -73,7 +74,7 @@
 }
 
 .thumPhotoLine {
-  height: 6em;
+  min-height: 6em;
   width: 100%;
   margin: 1em 0;
   overflow: hidden;
@@ -307,7 +308,7 @@
   background-color: var(--bg-color-op09);
   position: fixed;
   transition: all 0.3s ease;
-  z-index: 3;
+  z-index: 300;
   width: 20vw;
   height: 62vh;
   top: 47%;
@@ -611,6 +612,23 @@ input[type='radio'].radioProduct:checked + .radioName {
   display: flex;
   justify-content: center;
 }
+.productDetailPage .recContainter {
+  width: 70%;
+}
+.productDetailPage .arrow-left,
+.productDetailPage .arrow-right {
+  transform: translateY(-50%) scale(0.8);
+  opacity: 0.5;
+}
+
+.productDetailPage .leftCorner:hover .arrow-left {
+  transform: scale(1) translateY(-50%);
+  cursor: pointer;
+}
+.productDetailPage .rightCorner:hover .arrow-right {
+  transform: scale(1) translateY(-50%);
+  cursor: pointer;
+}
 
 @media screen and (max-width: 1280px) {
   .ReviewingContainerProductDetail {
@@ -637,12 +655,19 @@ input[type='radio'].radioProduct:checked + .radioName {
   .commonSection {
     width: 35%;
   }
+  .productDetailPage .recContainter {
+    width: 60%;
+    left: 2.5%;
+  }
 }
 @media screen and (max-width: 768px) {
+  .productDetailPage {
+    padding-bottom: 8em;
+  }
   .detailSection {
     width: 100vw;
     align-items: center;
-    margin-bottom: 5em;
+    flex-direction: column;
   }
   .ReviewingContainerProductDetail {
     width: 80%;
@@ -767,7 +792,7 @@ input[type='radio'].radioProduct:checked + .radioName {
     width: 5em;
   }
   .contentContainer {
-    width: 95vw;
+    width: 100vw;
   }
   .photoLineMobile {
     display: flex;
@@ -808,6 +833,19 @@ input[type='radio'].radioProduct:checked + .radioName {
   .favoriteButton img {
     width: 1.5em !important;
     filter: var(--img-filter-invert) !important;
+  }
+  .recHeader {
+    align-self: flex-start;
+    padding: 1em 7.5vw;
+  }
+  .recHeader h1 {
+    left: 5vw;
+    margin: 0;
+    font-size: 16px;
+  }
+  .productDetailPage .recContainter {
+    width: 95vw;
+    left: 0;
   }
 }
 

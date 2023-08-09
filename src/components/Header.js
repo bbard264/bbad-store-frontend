@@ -82,8 +82,8 @@ export default function Header(props) {
         <div className="fixedHeader">
           <div className="leftHeader">
             <div className="logo" onClick={() => navigate('/home')}>
-              <img src={bbadlogo} alt="bbadlogo"></img>
-              <div className="brandname">.bbad-shop</div>
+              <img src={bbadlogo} alt="BBadlogo"></img>
+              <div className="brandname">.BBad-shop</div>
             </div>
           </div>
           <div className="navigation">
@@ -137,7 +137,7 @@ export default function Header(props) {
           <div className="leftHeader">
             <div className="logo" onClick={() => navigate('/home')}>
               <img src={bbadlogo} alt="bbadlogo"></img>
-              <div className="brandname">.bbad-shop</div>
+              <div className="brandname">.BBad-shop</div>
             </div>
           </div>
           <div className="navigation">
@@ -190,7 +190,7 @@ export default function Header(props) {
         <div className="headerStatic">
           <div className="logo" onClick={() => navigate('/home')}>
             <img src={bbadlogo} alt="bbadlogo"></img>
-            <div className="brandname">.bbad-shop</div>
+            <div className="brandname">.BBad-shop</div>
           </div>
           {props.role === 'user' ? (
             <div

@@ -4,7 +4,7 @@ import axios from '../config/axios';
 import '../styles/pages/Products.css';
 import CatgoryLastpage from '../config/services/CatagoryLastpage';
 import CategoryNavi from '../components/CategoryNavi';
-// import RecommendationsContainter from '../components/RecommendationsContainter';
+import RecomendationSection from '../components/RecomendationSection';
 import Card from '../components/Card.js';
 import coverpic from '../assets/cover/categoryCover/all.jpg';
 
@@ -177,7 +177,7 @@ export default function Products(props) {
           {/* {pageNavi(state.numPage, state.category.lastPage, handlePageChange)} */}
           {mainContent(state.productList, state.numPage, props)}
           {pageNavi(state.numPage, state.category.lastPage, handlePageChange)}
-          {/* <RecommendationsContainter /> */}
+          <RecomendationSection />
         </>
       ) : (
         <p>Loading...</p>

@@ -1,9 +1,17 @@
 .cart {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .cartPage {
   width: 100%;
   display: inline-flex;
+}
+.cartOrederContainer {
+  width: 100%;
+  min-height: 50vh;
+  border-bottom: 1px solid var(--font-color-disabled);
 }
 
 .cartSumContainer {
@@ -614,16 +622,24 @@
   align-items: center;
 }
 
-.cartOrderContainerMobile {
+.cart .cartOrderContainerMobile {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
+  min-height: 75vh;
+  padding-bottom: 5em;
+  border-bottom: 1px solid var(--font-color-disabled);
+}
+.cart .recContainter {
+  width: 100%;
 }
 
 @media screen and (max-width: 1280px) {
   .cartListContainer {
     min-width: 100%;
     font-size: 14px;
+    flex: 1;
   }
   .productCol {
     padding-left: 1.5em;
@@ -827,6 +843,9 @@
     display: flex;
     justify-content: space-evenly;
   }
+  .cart .recContainter {
+    width: 80%;
+  }
 }
 @media screen and (max-width: 768px) {
   .reviewCheckContainer {
@@ -843,6 +862,9 @@
   }
   .emptyCart {
     border-radius: 0;
+  }
+  .cart .recContainter {
+    width: 100%;
   }
 }
 

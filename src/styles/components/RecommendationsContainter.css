@@ -1,39 +1,137 @@
-.recomendationsContainter {
-  height: 23.75em;
-  width: 100%;
+.recHomeContainter {
+  display: flex;
+  flex-direction: column;
   position: relative;
-  overflow: hidden;
+  align-items: center;
+  width: 100%;
 }
-.recomendationsContainter .recommendationsBox {
-  position: absolute;
-  transition: all 0.3s ease;
+.recHomeBox {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
 }
 
-.recomendationsContainter .leftCorner,
-.recomendationsContainter .rightCorner {
-  height: 25%;
-  z-index: 2;
+.seeMoreCard {
+  color: var(--font-color);
+  width: 90%;
+  height: 100%;
+  border-radius: 20px;
+  place-self: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease-in-out;
+}
+.recHeader h1 {
+  margin: 1em 0;
+  font-size: 1.5em;
+}
+.recSlider {
+  width: 100%;
+  overflow: hidden;
+}
+.recBox {
+  --width-card: 15em;
+  display: grid;
+  grid-template-columns: repeat(8, var(--width-card));
+  height: 100%;
+  transition: all 0.3s ease-in-out;
+}
+
+.recContainter {
+  display: flex;
+  position: relative;
+  align-items: center;
+  justify-content: flex-start;
+  height: 100%;
+  width: 80%;
+  border-radius: 20px;
+}
+
+.recBox .cardBox {
+  width: 100%;
+  height: 100%;
+}
+.recContainter .rightCorner {
+  opacity: 0;
+  transition: all 0.3s ease;
+  background: none;
+}
+.recContainter .rightCorner.show {
+  right: -12.5%;
+  width: 15%;
+  opacity: 1;
   background: none;
 }
 
-.recomendationsContainter .leftCorner .arrow-left {
-  border-right: 2em solid rgb(0 0 0 / 30%);
-  border-top: 2em solid transparent;
-  border-bottom: 2em solid transparent;
+.recContainter .leftCorner {
+  opacity: 0;
+  transition: all 0.3s ease;
+  background: none;
 }
 
-.recomendationsContainter .rightCorner .arrow-right {
-  border-left: 2em solid rgb(0 0 0 / 30%);
-  border-top: 2em solid transparent;
-  border-bottom: 2em solid transparent;
+.recContainter .leftCorner.show {
+  left: -12.5%;
+  width: 15%;
+  opacity: 1;
+  background: none;
+}
+.recContainter .leftCorner .arrow-left {
+  border-right: 3em solid var(--font-color);
+  transition: all 0.3s ease;
+  opacity: 0.5;
+}
+.recContainter .rightCorner .arrow-right {
+  border-left: 3em solid var(--font-color);
+  transition: all 0.3s ease;
+  opacity: 0.5;
 }
 
-.recommendationsBox {
+.recContainter .leftCorner:hover .arrow-left {
+  transform: scale(1.15) translateY(-50%);
+  cursor: pointer;
+}
+.recContainter .rightCorner:hover .arrow-right {
+  transform: scale(1.15) translateY(-50%);
+  cursor: pointer;
+}
+.seeMoreCardText {
   display: flex;
   flex-direction: row;
-  width: auto;
+  align-items: center;
+  justify-content: center;
 }
-
-.recommendationsBox .cardBox {
-  width: 16em;
+.seeMoreCardText .iconContainer {
+  margin-right: 0.5em;
+}
+@media screen and (min-width: 768px) {
+  .seeMoreCard:hover {
+    height: 70%;
+    width: 70%;
+    transform: scale(1.25);
+    cursor: pointer;
+    color: var(--font-color);
+  }
+}
+@media screen and (max-width: 768px) {
+  .recHomeBox {
+    grid-template-columns: 1fr 1fr;
+  }
+  .seeMoreCard {
+    grid-column: span 2;
+    height: 20vh;
+    color: var(--font-color);
+  }
+  .recBox {
+    grid-template-columns: repeat(8, 40vw);
+    height: 100%;
+    overflow: auto;
+    scroll-snap-type: x mandatory;
+  }
+  .recBox .cardBox {
+    scroll-snap-align: center;
+  }
+  .recContainter {
+    height: 100%;
+    width: 100vw;
+  }
 }

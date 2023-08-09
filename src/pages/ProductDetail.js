@@ -11,7 +11,7 @@ import StarRating from '../components/subcomponents/StarRating';
 import { SlideTouchHorizontal } from '../components/subcomponents/SlideTouch';
 import TriangleToggle from '../components/subcomponents/TriangleToggle';
 
-// import RecommendationsContainter from '../components/RecommendationsContainter';
+import RecomendationSection from '../components/RecomendationSection';
 import emptyHeartIcon from '../assets/icon/heart.png';
 import fullHeartIcon from '../assets/icon/heart2.png';
 import addIcon from '../assets/icon/add.png';
@@ -92,7 +92,6 @@ function ReviewSection({ reviews, product_id, media = 'desktop' }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [columnNow]);
 
-  // useEffect(() => {
   //   const adjustReviewLineHeight = () => {
   //     const reviewLine = document.querySelector('.reviewLine');
   //     const reviewContainers = document.getElementById('reviewContainers');
@@ -679,6 +678,7 @@ function DetailSection({ product, reviews, reviewScore, media = 'desktop' }) {
             )
           )}
         </div>
+        <RecomendationSection />
       </div>
     );
   } else {
@@ -942,7 +942,7 @@ function CommonSection({
       setOptionFixtabHeight(height);
     }
   }, []);
-  console.log(product.option);
+
   if (media === 'desktop') {
     return (
       <div className="commonSection">
@@ -1112,7 +1112,7 @@ export default function ProductDetail(props) {
     getReview();
     getProduct();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [productId]);
   if (!product || !reviews) {
     return <p>Loading...</p>;
   }
@@ -1120,27 +1120,30 @@ export default function ProductDetail(props) {
     return (
       <div className="productDetailPage">
         {product ? (
-          <div className="contentContainer" id="contentContainer">
-            <DetailSection
-              product={product}
-              reviews={reviews}
-              reviewScore={{
-                reviewNum: reviews?.length || 0,
-                avgRating: calculateAverageRating(reviews),
-              }}
-              media={'desktop'}
-            />
-            <CommonSection
-              product={product}
-              shareState={props.shareState}
-              setShareState={props.setShareState}
-              reviewScore={{
-                reviewNum: reviews?.length || 0,
-                avgRating: calculateAverageRating(reviews),
-              }}
-              media={'desktop'}
-            />
-          </div>
+          <>
+            <div className="contentContainer" id="contentContainer">
+              <DetailSection
+                product={product}
+                reviews={reviews}
+                reviewScore={{
+                  reviewNum: reviews?.length || 0,
+                  avgRating: calculateAverageRating(reviews),
+                }}
+                media={'desktop'}
+              />
+              <CommonSection
+                product={product}
+                shareState={props.shareState}
+                setShareState={props.setShareState}
+                reviewScore={{
+                  reviewNum: reviews?.length || 0,
+                  avgRating: calculateAverageRating(reviews),
+                }}
+                media={'desktop'}
+              />
+            </div>
+            <RecomendationSection />
+          </>
         ) : (
           <p>Loading...</p>
         )}
@@ -1150,27 +1153,29 @@ export default function ProductDetail(props) {
     return (
       <div className="productDetailPage">
         {product ? (
-          <div className="contentContainer" id="contentContainer">
-            <DetailSection
-              product={product}
-              reviews={reviews}
-              reviewScore={{
-                reviewNum: reviews?.length || 0,
-                avgRating: calculateAverageRating(reviews),
-              }}
-              media={'mobile'}
-            />
-            <CommonSection
-              product={product}
-              shareState={props.shareState}
-              setShareState={props.setShareState}
-              reviewScore={{
-                reviewNum: reviews?.length || 0,
-                avgRating: calculateAverageRating(reviews),
-              }}
-              media={'mobile'}
-            />
-          </div>
+          <>
+            <div className="contentContainer" id="contentContainer">
+              <DetailSection
+                product={product}
+                reviews={reviews}
+                reviewScore={{
+                  reviewNum: reviews?.length || 0,
+                  avgRating: calculateAverageRating(reviews),
+                }}
+                media={'mobile'}
+              />
+              <CommonSection
+                product={product}
+                shareState={props.shareState}
+                setShareState={props.setShareState}
+                reviewScore={{
+                  reviewNum: reviews?.length || 0,
+                  avgRating: calculateAverageRating(reviews),
+                }}
+                media={'mobile'}
+              />
+            </div>
+          </>
         ) : (
           <p>Loading...</p>
         )}
