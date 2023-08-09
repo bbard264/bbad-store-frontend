@@ -8,6 +8,7 @@ import CartStorage from './../config/services/CartStorage';
 import UserDataStorage from './../config/services/UserDataStorage';
 import RESTapi from './../config/services/RESTapi';
 import Button from '../components/subcomponents/Button.js';
+import ProductImage from '../components/subcomponents/ProductImage';
 
 function reducer(state, action) {
   switch (action.type) {
@@ -244,7 +245,11 @@ function RenderModifyOption({
       <div className="modifyOptionBox">
         <div className="productCol modifyOption">
           <div className="productPhotoBox modifyOption">
-            <img src={product.thumb_photo} alt={'none'} />
+            <ProductImage
+              src={product.thumb_photo}
+              alt={product.product_name}
+              type={'thumb_photo'}
+            />
           </div>
           <div className="nameOptionBox modifyOption">
             <div className="textHeader modifyOption">Select Options for:</div>
@@ -283,9 +288,10 @@ function ReviewCheckOut({ cartState, onCalcelReviewCheckOut, media }) {
       <div className="reviewProductRow" key={index}>
         <div className="productCol">
           <div className="productPhotoBox inReview">
-            <img
+            <ProductImage
               src={item.property.thumb_photo}
               alt={item.property.product_name}
+              type={'thumb_photo'}
             />
           </div>
           <div className="nameOptionBox">
@@ -744,6 +750,7 @@ function CartContent({
   onClickCopyThisProduct,
   media,
 }) {
+  console.log();
   return (
     <>
       {items.map((item, index) => (
@@ -767,9 +774,10 @@ function CartContent({
                 )
               }
             >
-              <img
+              <ProductImage
                 src={item.property.thumb_photo}
                 alt={item.property.product_name}
+                type={'thumb_photo'}
               />
             </div>
             <div className="nameOptionBox">

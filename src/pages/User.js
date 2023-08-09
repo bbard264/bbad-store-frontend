@@ -8,9 +8,9 @@ import '../styles/pages/User.css';
 import Button from '../components/subcomponents/Button';
 import Backdrop from '../components/subcomponents/Backdrop';
 import ReviewingBox from '../components/ReviewingBox';
+import ProductImage from '../components/subcomponents/ProductImage';
 
 import Cropping from '../components/Cropping';
-import profileTemp from '../assets/temp_img/profile_temp.png';
 import UserDataStorage from '../config/services/UserDataStorage';
 import RESTapi from '../config/services/RESTapi';
 
@@ -212,7 +212,7 @@ function UserNaviMobile({ pageList }) {
           key={index}
           onClick={() => navigate(`/user/${page}`)}
         >
-          {page.charAt(0).toUpperCase() + page.slice(1) + ' ' + 'Settings'}
+          {page.charAt(0).toUpperCase() + page.slice(1) + ' Settings'}
         </div>
       ))}
     </div>
@@ -968,7 +968,11 @@ function ReviewCard({
       }}
     >
       <div className="productPhotoCol">
-        <img src={item.thumb_photo} alt={item.product_name} />
+        <ProductImage
+          src={item.thumb_photo}
+          alt={item.product_name}
+          type={'thumb_photo'}
+        />
       </div>
       <div className="nameRatingCol">
         <div className="productNameLine">{item.product_name}</div>

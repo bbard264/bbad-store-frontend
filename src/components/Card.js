@@ -6,6 +6,7 @@ import cartIcon from '../assets/icon/cart.png';
 import heartEmptyIcon from '../assets/icon/heart.png';
 import heartFillIcon from '../assets/icon/heart2.png';
 import CartStorage from '../config/services/CartStorage';
+import ProductImage from './subcomponents/ProductImage';
 
 import '../styles/components/Card.css';
 import UserDataStorage from '../config/services/UserDataStorage';
@@ -130,7 +131,11 @@ export default function Card(props) {
           })
         }
       >
-        <img src={props.product.card_photo} alt={props.product.product_name} />
+        <ProductImage
+          src={props.product.card_photo}
+          alt={props.product.product_name}
+          type={'card_photo'}
+        />
       </div>
       <div
         className="cardInfo"

@@ -4,6 +4,7 @@ import axios from '../config/axios';
 import Token from '../config/services/Token';
 import '../styles/pages/ProductDetail.css';
 import { useMediaContext } from '../config/services/MediaContext';
+import ProductImage from '../components/subcomponents/ProductImage';
 
 import ArrowCorner from '../components/subcomponents/ArrowCorner';
 import StarRating from '../components/subcomponents/StarRating';
@@ -15,7 +16,6 @@ import emptyHeartIcon from '../assets/icon/heart.png';
 import fullHeartIcon from '../assets/icon/heart2.png';
 import addIcon from '../assets/icon/add.png';
 import cartIcon from '../assets/icon/cart.png';
-import profileTemp from '../assets/temp_img/profile_temp.png';
 
 import fullStarIcon from '../assets/icon/star2.png';
 
@@ -26,24 +26,7 @@ import { formatDatetoSTR } from '../config/services/General';
 import Button from './../components/subcomponents/Button';
 import Backdrop from '../components/subcomponents/Backdrop';
 import ReviewingBox from '../components/ReviewingBox';
-
-function ProfileImage({ src, alt }) {
-  const [imageError, setImageError] = useState(false);
-
-  const handleImageError = () => {
-    setImageError(true);
-  };
-
-  return (
-    <div>
-      {imageError ? (
-        <img src={profileTemp} alt={alt} />
-      ) : (
-        <img src={src} alt={alt} onError={handleImageError} />
-      )}
-    </div>
-  );
-}
+import ProfileImage from '../components/subcomponents/ProfileImage';
 
 function Fade({ direction, width, id }) {
   if (direction === 'left') {
@@ -325,7 +308,11 @@ function PhotoBox({ listPhoto }) {
       <div className="photoBoxes">
         {listPhoto.map((photo, index) => (
           <div className="photoBox" key={index}>
-            <img src={photo} alt={photo} />
+            <ProductImage
+              src={photo}
+              alt={'product_photo_' + index}
+              type={'product_photo'}
+            />
           </div>
         ))}
       </div>
@@ -368,7 +355,11 @@ const PhotoSlider = ({ listPhoto, showIndex, setShowIndex }) => {
     <div className="photoBoxesMobile" ref={boxesRef}>
       {listPhoto.map((photo, index) => (
         <div className="photoBoxMobile" key={index}>
-          <img src={photo} alt={photo} />
+          <ProductImage
+            src={photo}
+            alt={'product_photo_' + index}
+            type={'product_photo'}
+          />
         </div>
       ))}
     </div>
@@ -392,7 +383,11 @@ function ThumPhotoBox({
           key={index}
           onClick={() => setShowIndex(index)}
         >
-          <img src={photo} alt={photo} />
+          <ProductImage
+            src={photo}
+            alt={'thumb_photo' + index}
+            type={'thumb_photo'}
+          />
         </div>
       ))}
     </div>

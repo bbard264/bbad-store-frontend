@@ -4,6 +4,7 @@ import StarRating from './subcomponents/StarRating';
 import Button from './subcomponents/Button';
 import UserDataStorage from '../config/services/UserDataStorage';
 import { useNavigate } from 'react-router-dom';
+import ProductImage from './subcomponents/ProductImage';
 
 function ReviewingBox({
   item,
@@ -131,7 +132,11 @@ function ReviewingBox({
           }`}
           onClick={onClickNavigate}
         >
-          <img src={item?.thumb_photo} alt={item?.product_name} />
+          <ProductImage
+            src={item?.thumb_photo}
+            alt={item?.product_name}
+            type={'thumb_photo'}
+          />
         </div>
         <div
           className={`reviewingHeadLineNameCol${
