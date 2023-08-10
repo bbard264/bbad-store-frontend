@@ -3,7 +3,7 @@ import UserDataStorage from '../config/services/UserDataStorage';
 import '../styles/pages/Favorite.css';
 import Card from '../components/Card.js';
 import Button from '../components/subcomponents/Button';
-import RecomendationSection from '../components/RecomendationSection';
+import RecommendationSection from '../components/RecommendationSection';
 
 export default function Favorite(props) {
   const favoriteList = UserDataStorage.getUserFavorite();
@@ -57,7 +57,7 @@ export default function Favorite(props) {
           ))
         )}
       </div>
-      <RecomendationSection />
+      <RecommendationSection />
     </div>
   );
 }

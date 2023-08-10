@@ -11,7 +11,7 @@ import Button from '../components/subcomponents/Button.js';
 import ProductImage from '../components/subcomponents/ProductImage';
 import IconContainer from '../components/subcomponents/IconContainer';
 import checkOutIcon from '../assets/icon/check-it-out.png';
-import RecomendationSection from '../components/RecomendationSection';
+import RecommendationSection from '../components/RecommendationSection';
 
 function reducer(state, action) {
   switch (action.type) {
@@ -1167,7 +1167,7 @@ export default function Cart(props) {
             <></>
           )}
         </div>
-        <RecomendationSection />
+        <RecommendationSection />
       </div>
     );
   } else if (isDesktop || isTablet) {
@@ -1223,7 +1223,7 @@ export default function Cart(props) {
             )}
           </div>
         </div>
-        <RecomendationSection />
+        <RecommendationSection />
       </div>
     );
   } else {

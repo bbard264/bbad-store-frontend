@@ -17,6 +17,7 @@ function CreateRoutes(props) {
           key={route.url}
           element={
             <route.component
+              setRole={props.setRole}
               shareState={props.shareState}
               setShareState={props.setShareState}
             />

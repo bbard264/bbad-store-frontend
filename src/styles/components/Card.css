@@ -80,6 +80,27 @@
 .addCartButton {
   height: 1.5em;
 }
+.addCartButton::after {
+  content: ' ';
+  height: 2em;
+  width: 4em;
+  position: absolute;
+  background-color: var(--bg-color-invert);
+  right: 5%;
+  opacity: 0;
+  border-radius: 20px;
+  transition: none;
+}
+.addCartButton:active.addCartButton::after {
+  content: ' ';
+  background-color: rgba(0, 0, 0, 0);
+  position: absolute;
+  opacity: 1;
+  height: 4em;
+  width: 4em;
+  transform: translate(50%, -150%);
+  transition: all 0.15s ease;
+}
 
 .addCartButton img {
   width: auto;

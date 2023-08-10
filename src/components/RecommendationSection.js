@@ -1,20 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Card from './Card.js';
 import ArrowCorner from './subcomponents/ArrowCorner.js';
 import '../styles/components/RecommendationsContainter.css';
-import RESTapi from '../config/services/RESTapi';
+import RESTapi from '../config/services/RESTapi.js';
 import { useMediaContext } from '../config/services/MediaContext.js';
 import clickIcon from '../assets/icon/clicking.png';
 import IconContainer from './subcomponents/IconContainer.js';
+import { ShareStateContext } from '../App.js';
 
-export default function RecomendationSection({ shareState, setShareState }) {
+export default function RecommendationSection() {
   const location = useLocation();
   const navigate = useNavigate();
   const [isLoaded, setIsLoaded] = useState(false);
   const [recList, setRecList] = useState([]);
   const [showIndex, setShowIndex] = useState(0);
-  const { isMobile, isTablet, isDesktop } = useMediaContext();
+  const { isMobile } = useMediaContext();
+  const { shareState, setShareState } = useContext(ShareStateContext);
   useEffect(() => {
     const fetchRecList = async () => {
       try {
@@ -48,14 +50,11 @@ export default function RecomendationSection({ shareState, setShareState }) {
       setShowIndex((e) => (e = e + 1));
     }
   };
-  if (!isLoaded || recList.length === 0) {
+  if (!isLoaded || !recList || recList.length === 0) {
     return <></>;
   } else if (location.pathname === '/home') {
     return (
       <div className="recHomeContainter">
-        <div className="recHeader">
-          <h1>Recommendations</h1>
-        </div>
         <div className="recHomeBox">
           {recList.map((product, index) => {
             return (

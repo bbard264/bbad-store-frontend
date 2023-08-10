@@ -11,7 +11,7 @@ import StarRating from '../components/subcomponents/StarRating';
 import { SlideTouchHorizontal } from '../components/subcomponents/SlideTouch';
 import TriangleToggle from '../components/subcomponents/TriangleToggle';
 
-import RecomendationSection from '../components/RecomendationSection';
+import RecommendationSection from '../components/RecommendationSection';
 import emptyHeartIcon from '../assets/icon/heart.png';
 import fullHeartIcon from '../assets/icon/heart2.png';
 import addIcon from '../assets/icon/add.png';
@@ -337,6 +337,7 @@ const PhotoSlider = ({ listPhoto, showIndex, setShowIndex }) => {
     return () => {
       boxes.removeEventListener('scroll', handleScroll);
     };
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
@@ -678,7 +679,7 @@ function DetailSection({ product, reviews, reviewScore, media = 'desktop' }) {
             )
           )}
         </div>
-        <RecomendationSection />
+        <RecommendationSection />
       </div>
     );
   } else {
@@ -1142,7 +1143,7 @@ export default function ProductDetail(props) {
                 media={'desktop'}
               />
             </div>
-            <RecomendationSection />
+            <RecommendationSection />
           </>
         ) : (
           <></> //Loading

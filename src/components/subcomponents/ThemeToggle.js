@@ -26,9 +26,9 @@ export default function ThemeToggle() {
       <span className="sliderTheme">
         <i className="sunMoonIcon">
           {isChecked ? (
-            <img src={sunIcon} alr={''} />
+            <img src={sunIcon} alt={''} />
           ) : (
-            <img src={moonIcon} alr={''} />
+            <img src={moonIcon} alt={''} />
           )}
         </i>
       </span>

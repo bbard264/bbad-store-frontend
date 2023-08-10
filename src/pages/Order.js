@@ -96,7 +96,7 @@ function OrderDetail({
     }
 
     return items.map((item, index) => (
-      <div className={`reviewProductRow` + ' ' + media} key={index}>
+      <div className={`reviewProductRow ${media}`} key={index}>
         <div className="productCol">
           <div className="productPhotoBox inReview">
             <img
@@ -213,7 +213,7 @@ function OrderDetail({
         <div className="thisOrderCartLine">
           <h2 className="thisOrderHead">ORDER CART</h2>
           <div className="thisOrderBox">
-            <div className={`reviewProductHeadLine` + ' ' + media}>
+            <div className={`reviewProductHeadLine ${media}`}>
               <div>PRODUCT</div>
               {media === 'tablet' ? <></> : <div>PRICE</div>}
               <div>QUANTITY</div>

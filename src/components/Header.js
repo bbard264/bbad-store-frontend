@@ -24,7 +24,6 @@ export default function Header(props) {
   });
   const [showMenu, setShowMenu] = useState(false);
   const { isDesktop, isTablet, isMobile } = useMediaContext();
-  const [showUserMenu, setShowUserMenu] = useState(false);
   const [hamburgerHeight, setHamburgerHeight] = useState(0);
 
   useEffect(() => {
@@ -44,6 +43,7 @@ export default function Header(props) {
         showUserMenu: false,
       });
     }
+    // eslint-disable-next-line
   }, [location, props.shareState, props.role]);
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });

@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, createContext } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { useMediaQuery } from 'react-responsive';
 import CreateRoutes from './config/CreateRoutes';
@@ -9,6 +9,9 @@ import Footer from './components/Footer';
 import MediaContext from './config/services/MediaContext';
 import ThemeContext from './config/services/ThemeContext';
 import RESTapi from './config/services/RESTapi';
+
+const ShareStateContext = createContext();
+export { ShareStateContext };
 
 function App() {
   const isDesktop = useMediaQuery({ query: '(min-width: 1280px)' });
@@ -71,14 +74,16 @@ function App() {
     <BrowserRouter>
       <MediaContext.Provider value={{ isDesktop, isTablet, isMobile }}>
         <ThemeContext.Provider value={{ toggleTheme }}>
-          <Header role={role} shareState={shareState} />
-          <CreateRoutes
-            role={role}
-            setRole={setRole}
-            shareState={shareState}
-            setShareState={setShareState}
-          />
-          <Footer role={role} />
+          <ShareStateContext.Provider value={{ shareState, setShareState }}>
+            <Header role={role} shareState={shareState} />
+            <CreateRoutes
+              role={role}
+              setRole={setRole}
+              shareState={shareState}
+              setShareState={setShareState}
+            />
+            <Footer role={role} />
+          </ShareStateContext.Provider>
         </ThemeContext.Provider>
       </MediaContext.Provider>
     </BrowserRouter>
