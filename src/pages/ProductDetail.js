@@ -1114,7 +1114,7 @@ export default function ProductDetail(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [productId]);
   if (!product || !reviews) {
-    return <p>Loading...</p>;
+    return <></>;
   }
   if (isDesktop || isTablet) {
     return (
@@ -1145,7 +1145,7 @@ export default function ProductDetail(props) {
             <RecomendationSection />
           </>
         ) : (
-          <p>Loading...</p>
+          <></> //Loading
         )}
       </div>
     );
@@ -1177,7 +1177,7 @@ export default function ProductDetail(props) {
             </div>
           </>
         ) : (
-          <p>Loading...</p>
+          <></> //Loading
         )}
       </div>
     );

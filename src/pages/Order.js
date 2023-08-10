@@ -371,7 +371,7 @@ export default function Order() {
   }, []);
 
   if (orderData === {} || orderDetail === {}) {
-    return <div>loading....</div>;
+    return <></>; //Loading;
   } else if (orderData.orderList === [] || orderDetail === undefined) {
     return (
       <div className="order">
@@ -390,7 +390,7 @@ export default function Order() {
             <div className="orderHeadLine">
               <h1>Order History</h1>
               {orderData === {} || orderData.orderList === undefined ? (
-                <div>loading....</div>
+                <></> //Loading
               ) : (
                 orderData.orderList.map((order) => (
                   <OrderList
@@ -407,7 +407,7 @@ export default function Order() {
           </div>
           <div className="orderDetailContainer">
             {orderDetail === {} || orderData.orderStatus === undefined ? (
-              <div>loading....</div>
+              <></> //Loading
             ) : (
               <OrderDetail
                 orderDetail={orderDetail}
@@ -439,7 +439,7 @@ export default function Order() {
             </div>
             <div className="orderListConentMobile">
               {orderData === {} || orderData.orderList === undefined ? (
-                <div>loading....</div>
+                <></> //Loading
               ) : (
                 orderData.orderList.map((order) => (
                   <OrderList
@@ -462,7 +462,7 @@ export default function Order() {
         <div className="cartOrderContainerMobile">
           <div className="orderDetailContainerMobile">
             {orderDetail === {} || orderData.orderStatus === undefined ? (
-              <div>loading....</div>
+              <></> //Loading
             ) : (
               <OrderDetail
                 orderDetail={orderDetail}
@@ -492,7 +492,7 @@ export default function Order() {
             <div className="orderHeadLine">
               <h1>Order History</h1>
               {orderData === {} || orderData.orderList === undefined ? (
-                <div>loading....</div>
+                <></> //Loading
               ) : (
                 orderData.orderList.map((order) => (
                   <OrderList
@@ -509,7 +509,7 @@ export default function Order() {
           </div>
           <div className="orderDetailContainer">
             {orderDetail === {} || orderData.orderStatus === undefined ? (
-              <div>loading....</div>
+              <></> //Loading
             ) : (
               <OrderDetail
                 orderDetail={orderDetail}

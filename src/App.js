@@ -66,6 +66,7 @@ function App() {
   if (!isLoaded) {
     return <></>;
   }
+
   return (
     <BrowserRouter>
       <MediaContext.Provider value={{ isDesktop, isTablet, isMobile }}>

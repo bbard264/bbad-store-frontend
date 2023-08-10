@@ -1067,7 +1067,7 @@ function UserReviews({ media = 'desktop' }) {
   }, []);
 
   if (Object.keys(userReviewsList).length === 0) {
-    return <>Loading....</>;
+    return <></>; //Loading;
   }
 
   async function onClickChangeShowReviewList(e) {
@@ -1133,7 +1133,7 @@ function UserReviews({ media = 'desktop' }) {
       </div>
       <div className="listUserReviewContainer">
         {isLoadReviewCard ? (
-          <>Loading....</>
+          <></> //Loading
         ) : (
           <div className="listUserReviewBox">
             {filteredItems.map((item) => (
@@ -1226,7 +1226,7 @@ export default function User() {
     }
   }, []);
   if (!isLoaded) {
-    return <p>Loading...</p>;
+    return <></>; //Loading;
   } else if (isDesktop || isTablet) {
     return (
       <div className="userPage">
@@ -1245,7 +1245,7 @@ export default function User() {
               </div>
             </>
           ) : (
-            <p>Loading...</p>
+            <></> //Loading
           )}
         </div>
       </div>

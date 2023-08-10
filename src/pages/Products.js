@@ -180,7 +180,7 @@ export default function Products(props) {
           <RecomendationSection />
         </>
       ) : (
-        <p>Loading...</p>
+        <></> //Loading
       )}
     </div>
   );

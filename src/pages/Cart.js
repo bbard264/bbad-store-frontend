@@ -708,7 +708,7 @@ function CartList({
   return (
     <div className="cartListContainer">
       {Object.keys(cartState).length === 0 ? (
-        <p>loading....</p>
+        <></>
       ) : (
         <div className="cartListBox">
           <div className="cartListHeadLine">
@@ -892,7 +892,7 @@ function CartSummaryBox({ cartState, onClickCheckOut, media }) {
   return (
     <div className="cartSumContainer">
       {Object.keys(cartState).length === 0 ? (
-        <p>loading....</p>
+        <></> //Loading
       ) : (
         <div className="cartSumBox">
           <div className="cartSumLine">
