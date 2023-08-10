@@ -6,18 +6,32 @@ import CatgoryLastpage from '../config/services/CatagoryLastpage';
 import CategoryNavi from '../components/CategoryNavi';
 import RecommendationSection from '../components/RecommendationSection';
 import Card from '../components/Card.js';
-import coverpic from '../assets/cover/categoryCover/all.jpg';
+import coverAll from '../assets/cover/categoryCover/all.jpg';
+import coverWearables from '../assets/cover/categoryCover/wearables.jpg';
+import coverCollectibles from '../assets/cover/categoryCover/collectibles.jpg';
+import coverArtBooks from '../assets/cover/categoryCover/artBooks.jpg';
+import coverDigitalProducts from '../assets/cover/categoryCover/digitalProducts.jpg';
 
-export function mainContent(listofProducts, numPage, props) {
+export function mainContent(listofProducts, numPage, props, routeParameter) {
   if (!listofProducts) {
     return;
   }
+  const coverMap = {
+    wearables: coverWearables,
+    collectibles: coverCollectibles,
+    'art-books': coverArtBooks,
+    'digital-products': coverDigitalProducts,
+  };
+
   function renderProductCards(products, numPage) {
     function coverCardBox() {
       return (
         <div className="cardBox cover" key="cover">
           <div className="coverContainer">
-            <img src={coverpic} alt="coverpicforproducts"></img>
+            <img
+              src={coverMap[routeParameter] || coverAll}
+              alt="coverpicforproducts"
+            ></img>
           </div>
         </div>
       );
@@ -175,7 +189,7 @@ export default function Products(props) {
       {state.productList && state.category.lastPage ? (
         <>
           {/* {pageNavi(state.numPage, state.category.lastPage, handlePageChange)} */}
-          {mainContent(state.productList, state.numPage, props)}
+          {mainContent(state.productList, state.numPage, props, routeParameter)}
           {pageNavi(state.numPage, state.category.lastPage, handlePageChange)}
           <RecommendationSection />
         </>
