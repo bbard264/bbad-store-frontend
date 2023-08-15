@@ -250,9 +250,7 @@ class RESTapi {
     const apilink = '/api/review/removeReview';
     try {
       const response = await axios.delete(apilink, {
-        params: {
-          review_id: props.review_id,
-        },
+        params: props,
       });
       return response.data;
     } catch (error) {

@@ -19,7 +19,6 @@ function App() {
     query: '(min-width: 768px) and (max-width: 1279px)',
   });
   const isMobile = useMediaQuery({ query: '(max-width: 767px)' });
-
   const [role, setRole] = useState(Token.getRole()); // Initial state set to null
   const [shareState, setShareState] = useState(0);
   const [isDarkMode, setIsDarkMode] = useState(
@@ -46,12 +45,11 @@ function App() {
   useEffect(() => {
     if (role === 'guest') {
       setIsLoaded(true);
-      return;
     } else {
       async function handleAuthentication() {
         try {
           const authData = await RESTapi.fetchCheckAuthen();
-          setIsLoaded(true);
+
           if (authData && authData.isAuthen === false) {
             setShareState((prevState) => prevState + 1);
           }
@@ -61,10 +59,11 @@ function App() {
         }
       }
       handleAuthentication();
+      setIsLoaded(true);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [role]);
 
   if (!isLoaded) {
     return <></>;
@@ -91,21 +90,3 @@ function App() {
 }
 
 export default App;
-
-// {/* <Routes>
-// <Route path="/" element={<Home />} />
-// <Route path="/cart" element={<Cart />} />
-// <Route path="/order" element={<Order />} />
-// <Route
-//   path="/product-detail/:productId/:producturl"
-//   element={<ProductDetail />}
-// />
-// <Route
-//   path="/products/:routeParameter?/:routeParameter2?"
-//   element={<Products />}
-// />
-// <Route path="/user" element={<User />} />
-// <Route path="/login" element={<Login />} />
-// <Route path="/register" element={<Register />} />
-// <Route path="/*" element={<Page404 />} />
-// </Routes> */}

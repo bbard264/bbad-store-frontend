@@ -15,15 +15,17 @@
 
 .card .heartIcon {
   position: absolute;
-  top: 2em;
-  right: 2.5em;
+  bottom: 0.3em;
+  right: 4.5em;
   height: 1.5em;
   width: auto;
   z-index: 2;
-  filter: drop-shadow(1px 1px 3px rgba(255, 255, 255, 1))
-    var(--img-filter-invert);
+  filter: var(--img-filter-invert);
   transition: filter 0.2s ease, width 0.2s ease, height 0.2s ease,
     transform 0.2s ease;
+  border-radius: 50%;
+  padding: 0.25em;
+  overflow: unset;
 }
 
 .cardImg {
@@ -119,18 +121,4 @@
   transform: translate(7.5%, -7.5%);
   transition: filter 0.2s ease, width 0.2s ease, height 0.2s ease,
     transform 0.2s ease;
-}
-
-@media screen and (max-width: 1600px) {
-  .card .heartIcon {
-    top: 1.5em;
-    right: 1.5em;
-  }
-}
-
-@media screen and (max-width: 768px) {
-  .card .heartIcon {
-    top: 1.5em;
-    right: 1.5em;
-  }
 }

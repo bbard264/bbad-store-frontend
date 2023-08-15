@@ -108,20 +108,6 @@ export default function Card(props) {
 
   return (
     <div className="card">
-      <img
-        className="heartIcon"
-        src={
-          isFavoritePage ? xIcon : isFavorite ? heartFillIcon : heartEmptyIcon
-        }
-        alt={
-          isFavoritePage
-            ? 'xIcon'
-            : isFavorite
-            ? 'favoriteTure'
-            : 'favoriteFalse'
-        }
-        onClick={isLoading ? () => {} : onClickFavorite}
-      />
       <div
         className="cardImg"
         onClick={() =>
@@ -160,6 +146,20 @@ export default function Card(props) {
         >
           ฿ {props.product.product_price}
         </div>
+        <img
+          className="heartIcon"
+          src={
+            isFavoritePage ? xIcon : isFavorite ? heartFillIcon : heartEmptyIcon
+          }
+          alt={
+            isFavoritePage
+              ? 'xIcon'
+              : isFavorite
+              ? 'favoriteTure'
+              : 'favoriteFalse'
+          }
+          onClick={isLoading ? () => {} : onClickFavorite}
+        />
         <div className="addCartButton" onClick={onClickAddToCart}>
           <img src={addIcon} alt="addIcon" />
           <img src={cartIcon} alt="cartIcon" />

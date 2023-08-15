@@ -6,7 +6,6 @@
 .contentContainer {
   display: flex;
   justify-content: center;
-  width: 75vw;
   position: relative;
   justify-self: center;
 }

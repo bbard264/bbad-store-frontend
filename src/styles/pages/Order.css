@@ -355,10 +355,9 @@
 .orderDetailContainerMobile {
   display: flex;
   flex-direction: column;
-  padding: 1em;
+  padding: 1em 0;
   background-color: var(--darker-bg-color-lit);
   color: var(--font-color);
-  border-radius: 20px;
 }
 .namePhoneBox div {
   white-space: nowrap;

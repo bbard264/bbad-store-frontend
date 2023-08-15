@@ -178,7 +178,7 @@ class UserDataStorage {
     this.checkTokenAndRun(async () => {
       try {
         const response = await RESTapi.removeReview({
-          review_id: props.review.review_id,
+          review_id: props.review._id,
         });
         this.setUserReviews();
         return response;

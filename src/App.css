@@ -19,6 +19,8 @@
   --absolute-white: #ffffff;
   --absolute-black: #333333;
   --bg-color-op09: rgba(255, 255, 255, 0.9);
+  --bg-color-op09-invert: rgba(51, 51, 51, 0.9);
+  --bg-color-op05: rgba(255, 255, 255, 0.5);
 }
 
 .dark-theme {
@@ -41,5 +43,7 @@
   --color-green-hover: #079246;
   --absolute-white: #ffffff;
   --absolute-black: #333333;
-  --bg-color-op09: rgba(51, 51, 51, 0.98);
+  --bg-color-op09: rgba(51, 51, 51, 0.9);
+  --bg-color-op05: rgba(51, 51, 51, 0.5);
+  --bg-color-op09-invert: rgba(255, 255, 255, 0.9);
 }
