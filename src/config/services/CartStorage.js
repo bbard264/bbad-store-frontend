@@ -61,11 +61,24 @@ export default class CartStorage {
     const oldCartData = await JSON.parse(
       localStorage.getItem(this.storage_key)
     );
+    console.log(productData);
     let newCartData;
     if (!oldCartData || oldCartData === null || oldCartData === undefined) {
       newCartData = [productData];
     } else {
-      newCartData = [...oldCartData, productData];
+      if (productData.property.option.isSelect) {
+        const foundIndex = oldCartData.findIndex(
+          (item) => item.product_id === productData.product_id
+        );
+        if (foundIndex !== -1) {
+          oldCartData[foundIndex].property.quantity += 1;
+          newCartData = oldCartData;
+        } else {
+          newCartData = [...oldCartData, productData];
+        }
+      } else {
+        newCartData = [...oldCartData, productData];
+      }
     }
 
     try {
@@ -128,11 +141,23 @@ export default class CartStorage {
   }
 
   static getCountItemsInCart() {
-    const cartData = JSON.parse(localStorage.getItem(this.storage_key));
-    if (cartData) {
-      const itemsLength = cartData.length;
-      return itemsLength;
-    } else {
+    const cartDataJSON = localStorage.getItem(this.storage_key);
+
+    if (cartDataJSON === null) {
+      localStorage.removeItem(this.storage_key);
+      return 0;
+    }
+
+    try {
+      const cartData = JSON.parse(cartDataJSON);
+
+      if (Array.isArray(cartData)) {
+        return cartData.length;
+      } else {
+        return 0;
+      }
+    } catch (error) {
+      console.error('Error parsing cart data:', error);
       return 0;
     }
   }

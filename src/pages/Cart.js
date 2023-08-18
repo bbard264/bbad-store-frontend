@@ -758,7 +758,6 @@ function CartContent({
   onClickCopyThisProduct,
   media,
 }) {
-  console.log();
   return (
     <>
       {items.map((item, index) => (
@@ -766,12 +765,17 @@ function CartContent({
           className={`productLine${index % 2 === 1 ? ' odd' : ''}`}
           key={index}
         >
-          <div
-            className="copyThisProduct"
-            onClick={() => onClickCopyThisProduct(index)}
-          >
-            <div>+</div>
-          </div>
+          {item.property.option.isSelect &&
+          Object.keys(item.property.option.choice).length === 0 ? (
+            <></>
+          ) : (
+            <div
+              className="copyThisProduct"
+              onClick={() => onClickCopyThisProduct(index)}
+            >
+              <div>+</div>
+            </div>
+          )}
           <div className="productCol">
             <div
               className="productPhotoBox pointer"
