@@ -360,6 +360,15 @@ function UserProfile({ userData, media = 'desktop' }) {
       return;
     }
 
+    const updatedAddress = {
+      address1: userProInfo.userProfileInfo.address.address1.value,
+      address2: userProInfo.userProfileInfo.address.address2.value,
+      district: userProInfo.userProfileInfo.address.district.value,
+      province: userProInfo.userProfileInfo.address.province.value,
+      postcode: userProInfo.userProfileInfo.address.postcode.value,
+    };
+
+    // Construct newInfo object
     const newInfo = isInfoChanged
       ? {
           displayname: userProInfo.userProfileInfo.displayname.value,
@@ -367,16 +376,40 @@ function UserProfile({ userData, media = 'desktop' }) {
           phone: userProInfo.userProfileInfo.phone.value,
           gender: userProInfo.userProfileInfo.gender.value,
           birthdate: userProInfo.userProfileInfo.birthdate.value,
-          address: {
-            address1: userProInfo.userProfileInfo.address.address1.value,
-            address2: userProInfo.userProfileInfo.address.address2.value,
-            district: userProInfo.userProfileInfo.address.district.value,
-            province: userProInfo.userProfileInfo.address.province.value,
-            postcode: userProInfo.userProfileInfo.address.postcode.value,
-          },
+          address: updatedAddress,
         }
       : undefined;
 
+    // Validate address conditions
+    if (
+      (updatedAddress.address1 === userData.address.address1 &&
+        updatedAddress.address2 === userData.address.address2 &&
+        updatedAddress.district === userData.address.district &&
+        updatedAddress.province === userData.address.province &&
+        updatedAddress.postcode === userData.address.postcode) ||
+      (updatedAddress.address1 === '' &&
+        updatedAddress.address2 === '' &&
+        updatedAddress.district === '' &&
+        updatedAddress.province === '' &&
+        updatedAddress.postcode === '')
+    ) {
+      RESTapi.fetchUpdateUser({
+        userId: userData._id,
+        newImg: croppedImg,
+        newInfo: newInfo,
+      });
+      return;
+    } else if (
+      updatedAddress.address1 === '' ||
+      updatedAddress.address2 === '' ||
+      updatedAddress.district === '' ||
+      updatedAddress.province === '' ||
+      updatedAddress.postcode === ''
+    ) {
+      // Conditions are not met, display alert and return
+      window.alert('..Please fill all address form..');
+      return;
+    }
     RESTapi.fetchUpdateUser({
       userId: userData._id,
       newImg: croppedImg,
@@ -983,7 +1016,6 @@ function UserReviews({ media = 'desktop' }) {
     showReviewCard.name === 'showNoReview'
       ? userReviewsList.showNoReview
       : userReviewsList.showOnlyReview;
-
   return (
     <div className="userReviewBox">
       {media === 'mobile' ? (
@@ -1036,10 +1068,10 @@ function UserReviews({ media = 'desktop' }) {
           <></> //Loading
         ) : (
           <div className="listUserReviewBox">
-            {filteredItems.map((item) => (
+            {filteredItems.map((item, index) => (
               <ReviewCard
                 item={item}
-                key={item._id}
+                key={`${index}-${item.review._id || 'noReview'}`}
                 itemFocus={itemFocus}
                 setItemFocus={setItemFocus}
                 media={media}
