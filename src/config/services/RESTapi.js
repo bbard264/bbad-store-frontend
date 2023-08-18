@@ -64,6 +64,7 @@ class RESTapi {
 
         await axios.put(apilink, formData);
         UserDataStorage.setUserImage(newImg);
+        window.location.reload();
       } else if (newImg && newInfo) {
         // If both newImg and newInfo exist, send both image and other data
 
@@ -104,7 +105,7 @@ class RESTapi {
       }
       window.alert('Update your profile complete...');
     } catch (error) {
-      window.alert('Error updating data. Please, try again later...');
+      window.alert(`Error updating data: ${error.response.data.error}`);
       console.error('Error updating data:', error);
     }
   }
