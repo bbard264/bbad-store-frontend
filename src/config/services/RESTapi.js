@@ -92,16 +92,19 @@ class RESTapi {
         UserDataStorage.setUserImage(newImg);
         if (response.data.updateResult) {
           await RESTapi.fetchUserInfo();
+          window.location.reload();
         }
       } else if (!newImg && newInfo) {
         // If newImg is null, send only newInfo
         const response = await axios.put(apilink, newInfo);
         if (response.data.updateResult) {
           await RESTapi.fetchUserInfo();
+          window.location.reload();
         }
       }
-      window.location.reload();
+      window.alert('Update your profile complete...');
     } catch (error) {
+      window.alert('Error updating data. Please, try again later...');
       console.error('Error updating data:', error);
     }
   }
