@@ -10,7 +10,7 @@ import coverAll from '../assets/cover/categoryCover/all.jpg';
 import coverWearables from '../assets/cover/categoryCover/wearables.jpg';
 import coverCollectibles from '../assets/cover/categoryCover/collectibles.jpg';
 import coverArtBooks from '../assets/cover/categoryCover/artBooks.jpg';
-import coverDigitalProducts from '../assets/cover/categoryCover/digitalProducts.jpg';
+import coverDigitalProducts from '../assets/cover/categoryCover/DigitalProducts.jpg';
 
 export function mainContent(listofProducts, numPage, props, routeParameter) {
   if (!listofProducts) {
