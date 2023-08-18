@@ -89,6 +89,12 @@ function ReviewingBox({
         if (!window.confirm('COMMIT CHANGING??')) {
           return;
         }
+
+        if (finalBody.length > 500) {
+          setErrorM('Exceed 500 limit characters.');
+          return;
+        }
+
         const formData = {
           _id: item.review._id,
           rating: rating,
@@ -103,10 +109,15 @@ function ReviewingBox({
         if (!window.confirm('COMMIT REVIEW??')) {
           return;
         }
+
+        if (finalBody.length > 500) {
+          setErrorM('Exceed 500 limit character.');
+          return;
+        }
         const formData = {
           product_id: item.product_id,
           rating: rating,
-          body: e.target.elements.reviewTextArea.value,
+          body: finalBody,
         };
         const response = await UserDataStorage.createNewReview(formData);
         window.alert(`Create New Review is success? ` + response.isSuccess);
