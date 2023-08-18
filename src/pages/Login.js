@@ -147,6 +147,32 @@ export default function Login(porps) {
     });
   };
 
+  const onClikcloginDemo = async (user) => {
+    const email = `${user}@bbad.com`;
+    const password = '12341234';
+    const loginData = {
+      email: email,
+      password: password,
+    };
+
+    const responseLogin = await RESTapi.login(loginData);
+
+    if (responseLogin.token) {
+      window.alert(responseLogin.message);
+      Token.setToken(responseLogin.token);
+
+      try {
+        await RESTapi.fetchUserInfo();
+
+        navigate(previousRoute);
+        porps.setRole('user');
+      } catch (error) {
+        console.error('Error fetching user info:', error);
+      }
+      return;
+    }
+  };
+
   return (
     <div className="loginPage">
       <div className="loginContainer width60">
@@ -199,6 +225,18 @@ export default function Login(porps) {
           <div className="loginLink" onClick={() => navigate('/register')}>
             You haven't any account? Sign Up
           </div>
+        </div>
+      </div>
+      <div className="forDemoBox">
+        <div>
+          {`Demo version: block ability to [Create New User] and [Edit/Remove User
+          Infomations]`}
+        </div>
+        <div>Choose this provided user to Explore website</div>
+        <div>
+          <Button onClick={() => onClikcloginDemo('fizri')}>USER: Fizri</Button>
+          <Button onClick={() => onClikcloginDemo('burni')}>USER: Burni</Button>
+          <Button onClick={() => onClikcloginDemo('kuri')}>USER: Kuri</Button>
         </div>
       </div>
     </div>

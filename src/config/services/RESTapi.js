@@ -43,6 +43,7 @@ class RESTapi {
       const response = await axios.post(apilink, registerData);
       return response.data;
     } catch (error) {
+      window.alert(error.response.data.message);
       return error.response.data;
     }
   }
@@ -105,7 +106,7 @@ class RESTapi {
       }
       window.alert('Update your profile complete...');
     } catch (error) {
-      window.alert(`Error updating data: ${error.response.data.error}`);
+      window.alert(`Error updating data: ${error.response.data.message}`);
       console.error('Error updating data:', error);
     }
   }
