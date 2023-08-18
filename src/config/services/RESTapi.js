@@ -1,9 +1,11 @@
-import axios from 'axios';
+import axios from '../axios';
 import UserDataStorage from './UserDataStorage';
 import Token from './Token';
 import CartStorage from './CartStorage';
 
 class RESTapi {
+  static isDemo = false;
+
   static async fetchUserInfo() {
     const apilink = '/api/user/getUserById';
 
@@ -15,6 +17,103 @@ class RESTapi {
       await UserDataStorage.setUserReviews();
       await CartStorage.setCartStorage();
     } catch (error) {
+      console.error('Failed to fetch user information:', error);
+    }
+  }
+
+  static async login(loginData) {
+    const apilink = '/api/user/login';
+    try {
+      const response = await axios.post(apilink, loginData);
+      return response.data;
+    } catch (error) {
+      if (error.response.status === 500) {
+        return {
+          canLogin: false,
+          message: "Can't Login, Please try again later",
+        };
+      }
+      return error.response.data;
+    }
+  }
+
+  static async postRegisterUser(registerData) {
+    const apilink = '/api/user/register';
+    try {
+      const response = await axios.post(apilink, registerData);
+      return response.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  }
+
+  static async fetchUpdateUser(props) {
+    const { userId, newImg, newInfo } = props;
+    const apilink = '/api/user/updateUser';
+
+    try {
+      if (newImg && !newInfo) {
+        // If newImg exists but newInfo is null, send only the image data
+        const imageResponse = await axios.get(newImg, { responseType: 'blob' });
+        const imageBlob = imageResponse.data;
+
+        // Create a new FormData object and append the image blob as a file
+        const formData = new FormData();
+        formData.append('img', imageBlob, `${userId}-profile100x100.jpg`);
+        formData.append('photo', `${userId}-profile100x100.jpg`);
+
+        await axios.put(apilink, formData);
+        UserDataStorage.setUserImage(newImg);
+      } else if (newImg && newInfo) {
+        // If both newImg and newInfo exist, send both image and other data
+
+        // Fetch the image using Axios to get the image blob data
+        const imageResponse = await axios.get(newImg, { responseType: 'blob' });
+        const imageBlob = imageResponse.data;
+
+        // Create a new FormData object and append the image blob as a file
+        const formData = new FormData();
+        formData.append('img', imageBlob, `${userId}-profile100x100.jpg`); // Set the image name to the value of newInfo.photo
+
+        // Append other data from newInfo as fields
+        formData.append('photo', `${userId}-profile100x100.jpg`);
+        formData.append('displayname', newInfo.displayname);
+        formData.append('email', newInfo.email);
+        formData.append('phone', newInfo.phone);
+        formData.append('gender', newInfo.gender);
+        formData.append('birthdate', newInfo.birthdate);
+        formData.append('address[address1]', newInfo.address.address1);
+        formData.append('address[address2]', newInfo.address.address2);
+        formData.append('address[district]', newInfo.address.district);
+        formData.append('address[province]', newInfo.address.province);
+        formData.append('address[postcode]', newInfo.address.postcode);
+
+        const response = await axios.put(apilink, formData);
+        UserDataStorage.setUserImage(newImg);
+        if (response.data.updateResult) {
+          await RESTapi.fetchUserInfo();
+        }
+      } else if (!newImg && newInfo) {
+        // If newImg is null, send only newInfo
+        const response = await axios.put(apilink, newInfo);
+        if (response.data.updateResult) {
+          await RESTapi.fetchUserInfo();
+        }
+      }
+      window.location.reload();
+    } catch (error) {
+      console.error('Error updating data:', error);
+    }
+  }
+
+  static async fetchChangeUserPassword(props) {
+    const apilink = '/api/user/changePassword';
+    try {
+      const response = await axios.put(apilink, props);
+      return response.data;
+    } catch (error) {
+      window.alert(`Can't change password, Please try again later`);
+      window.location.reload();
       console.error('Failed to fetch user information:', error);
     }
   }
@@ -35,6 +134,30 @@ class RESTapi {
         console.error('Failed to check authen:', error);
         return { isAuthen: false, message: 'false to check Authen' };
       }
+    }
+  }
+
+  static async fetchProductList(category, page) {
+    const apilink = `/api/product/getProductsList/${
+      category ? category : 'all'
+    }${page ? '/' + page : ''}`;
+
+    try {
+      const resProductList = await axios.get(apilink);
+      return resProductList.data;
+    } catch (error) {
+      console.error('Failed to fetch products:', error);
+    }
+  }
+
+  static async fetchProduct(productId) {
+    const apilink = `/api/product/getProductById/${productId}`;
+    try {
+      const response = await axios.get(apilink);
+      const product = response.data;
+      return product;
+    } catch (error) {
+      throw error;
     }
   }
 

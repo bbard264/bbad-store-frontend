@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useReducer, useRef } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
-import axios from '../config/axios';
 import Token from '../config/services/Token';
 import '../styles/pages/ProductDetail.css';
 import { useMediaContext } from '../config/services/MediaContext';
@@ -1055,18 +1054,6 @@ function CommonSection({
 
 //#endregion CommonSection
 
-async function fetchProduct(productId) {
-  let requestAPI = `/api/product/getProductById/${productId}`;
-  console.log('requestAPI', requestAPI);
-  try {
-    const response = await axios.get(requestAPI);
-    const product = response.data;
-    return product;
-  } catch (error) {
-    throw error;
-  }
-}
-
 function calculateAverageRating(reviews) {
   if (!reviews || reviews.length === 0) {
     return 0; // Handle the case when there are no reviews to avoid division by zero.
@@ -1091,7 +1078,7 @@ export default function ProductDetail(props) {
         if (location.state) {
           setProduct(location.state.product);
         } else {
-          const fetchedProduct = await fetchProduct(productId.slice(3));
+          const fetchedProduct = await RESTapi.fetchProduct(productId.slice(3));
           setProduct(fetchedProduct);
         }
       } catch (error) {

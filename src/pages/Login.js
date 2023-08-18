@@ -1,6 +1,5 @@
 import React, { useReducer, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import '../styles/pages/Login.css';
 import Button from '../components/subcomponents/Button';
@@ -60,23 +59,6 @@ const reducer = (state, action) => {
   }
 };
 
-const login = async (loginData) => {
-  try {
-    const apilink = '/api/user/login';
-    const response = await axios.post(apilink, loginData);
-
-    return response.data;
-  } catch (error) {
-    if (error.response.status === 500) {
-      return {
-        canLogin: false,
-        message: "Can't Login, Please try again later",
-      };
-    }
-    return error.response.data;
-  }
-};
-
 export default function Login(porps) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -117,7 +99,7 @@ export default function Login(porps) {
       payload: { value: state.countLogin + 1 },
     });
 
-    const responseLogin = await login(loginData);
+    const responseLogin = await RESTapi.login(loginData);
 
     if (responseLogin.token) {
       window.alert(responseLogin.message);

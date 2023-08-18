@@ -53,13 +53,14 @@ function App() {
           if (authData && authData.isAuthen === false) {
             setShareState((prevState) => prevState + 1);
           }
+          setIsLoaded(true);
         } catch (error) {
           setRole('guest');
+          setIsLoaded(true);
           console.error('Error occurred while checking authentication:', error);
         }
       }
       handleAuthentication();
-      setIsLoaded(true);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

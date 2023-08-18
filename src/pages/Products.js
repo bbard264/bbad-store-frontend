@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from '../config/axios';
+import RESTapi from '../config/services/RESTapi';
 import '../styles/pages/Products.css';
 import CatgoryLastpage from '../config/services/CatagoryLastpage';
 import CategoryNavi from '../components/CategoryNavi';
@@ -109,19 +109,6 @@ function pageNavi(numPage, lastNumPage, handlePageChange) {
   );
 }
 
-const fetchProductList = async (category, page) => {
-  let apilink = `/api/product/getProductsList/${category ? category : 'all'}${
-    page ? '/' + page : ''
-  }`;
-
-  try {
-    const resProductList = await axios.get(apilink);
-    return resProductList.data;
-  } catch (error) {
-    console.error('Failed to fetch products:', error);
-  }
-};
-
 export default function Products(props) {
   const { routeParameter, routeParameter2 } = useParams();
   const [state, setState] = useState({
@@ -158,7 +145,8 @@ export default function Products(props) {
             props.category.category_id
           ].lastPage;
         }
-        props.productList = await fetchProductList(
+
+        props.productList = await RESTapi.fetchProductList(
           props.category.category_id,
           props.numPage
         );

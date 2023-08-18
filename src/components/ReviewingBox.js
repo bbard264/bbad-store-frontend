@@ -16,6 +16,7 @@ function ReviewingBox({
   const [rating, setRating] = useState(0);
   const [bodyText, setBodyText] = useState('');
   const [isEdit, setIsEdit] = useState(false);
+  const [errorM, setErrorM] = useState('');
   const textareaRef = useRef(null);
 
   useEffect(() => {
@@ -36,6 +37,28 @@ function ReviewingBox({
     }
   }, [item]);
 
+  useEffect(() => {
+    if (!item || Object.keys(item).length === 0) {
+      return;
+    } else {
+      const textarea = document.getElementById('reviewTextArea'); // Replace with the actual ID of your textarea element
+      textarea.addEventListener('focus', () => setErrorM(''));
+
+      return () => {
+        textarea.removeEventListener('focus', () => setErrorM(''));
+      };
+    }
+  }, []);
+
+  useEffect(() => {
+    if (errorM === '') {
+      return;
+    } else {
+      setErrorM('');
+    }
+    // eslint-disable-next-line
+  }, [textareaRef.current, rating]);
+
   if (!item || Object.keys(item).length === 0) {
     return (
       <div className="reviewingBox empty">... SELECT PRODUCT TO REVIEW ...</div>
@@ -44,16 +67,18 @@ function ReviewingBox({
 
   async function onSubmitReview(e) {
     e.preventDefault();
+    const finalBody = e.target.elements.reviewTextArea.value;
     if (rating === 0 || rating === null || rating === undefined) {
-      window.alert(`Can't leave blank star`);
+      setErrorM('Please give us rating score before commit review or edit');
+      return;
+    }
+    if (!(typeof finalBody === 'string' && finalBody.trim() !== '')) {
+      setErrorM('Please leave some text before commit review or edit');
       return;
     }
 
     if (isEdit) {
-      if (
-        item.review.rating === rating &&
-        item.review.body === e.target.elements.reviewTextArea.value
-      ) {
+      if (item.review.rating === rating && item.review.body === finalBody) {
         window.alert('Nothing change');
         return;
       }
@@ -67,7 +92,7 @@ function ReviewingBox({
         const formData = {
           _id: item.review._id,
           rating: rating,
-          body: e.target.elements.reviewTextArea.value,
+          body: finalBody,
         };
 
         const response = await UserDataStorage.modifyReview(formData);
@@ -163,7 +188,8 @@ function ReviewingBox({
           name="reviewTextArea"
           className="reviewTextArea"
           defaultValue={bodyText}
-          ref={textareaRef} // Assign the ref to the textarea element
+          ref={textareaRef}
+          id={'reviewTextArea'}
           placeholder="Enter your review here"
         />
       </form>
@@ -185,6 +211,7 @@ function ReviewingBox({
           SUBMIT
         </Button>
       </div>
+      <div className="errorMessage">{errorM}</div>
     </div>
   );
 }

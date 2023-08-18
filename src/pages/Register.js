@@ -1,5 +1,5 @@
 import React, { useReducer, useEffect } from 'react';
-import axios from '../config/axios';
+import RESTapi from '../config/services/RESTapi';
 import { useNavigate } from 'react-router-dom';
 import checkValue from '../config/services/CheckValueValidated';
 import '../styles/pages/Register.css';
@@ -113,17 +113,6 @@ function reducer(state, action) {
   }
 }
 
-const postRegisterUser = async (registerData) => {
-  console.log('sending registerData to backend');
-  try {
-    const apilink = '/api/user/register';
-    const response = await axios.post(apilink, registerData);
-    return response.data;
-  } catch (error) {
-    return error.response.data;
-  }
-};
-
 export default function Register() {
   const navigate = useNavigate();
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -147,7 +136,7 @@ export default function Register() {
       };
       const confirmed = window.confirm('Confirm your infomation?');
       if (confirmed) {
-        const response = await postRegisterUser(registData);
+        const response = await RESTapi.postRegisterUser(registData);
         if (response.registerSuccess) {
           window.alert(
             `Register Success!! Welcome ${state.registerInfo.displayname.value}`

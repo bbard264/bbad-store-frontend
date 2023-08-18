@@ -1,7 +1,6 @@
 import React, { useReducer, useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useMediaContext } from '../config/services/MediaContext';
-import axios from '../config/axios';
 import checkValue from '../config/services/CheckValueValidated';
 import Token from '../config/services/Token';
 import '../styles/pages/User.css';
@@ -234,65 +233,6 @@ function UserNaviMobile({ pageList }) {
   );
 }
 
-const fetchUpdateUser = async (props) => {
-  const { userId, newImg, newInfo } = props;
-  const apilink = '/api/user/updateUser';
-
-  try {
-    if (newImg && !newInfo) {
-      // If newImg exists but newInfo is null, send only the image data
-      const imageResponse = await axios.get(newImg, { responseType: 'blob' });
-      const imageBlob = imageResponse.data;
-
-      // Create a new FormData object and append the image blob as a file
-      const formData = new FormData();
-      formData.append('img', imageBlob, `${userId}-profile100x100.jpg`);
-      formData.append('photo', `${userId}-profile100x100.jpg`);
-
-      await axios.put(apilink, formData);
-      UserDataStorage.setUserImage(newImg);
-    } else if (newImg && newInfo) {
-      // If both newImg and newInfo exist, send both image and other data
-
-      // Fetch the image using Axios to get the image blob data
-      const imageResponse = await axios.get(newImg, { responseType: 'blob' });
-      const imageBlob = imageResponse.data;
-
-      // Create a new FormData object and append the image blob as a file
-      const formData = new FormData();
-      formData.append('img', imageBlob, `${userId}-profile100x100.jpg`); // Set the image name to the value of newInfo.photo
-
-      // Append other data from newInfo as fields
-      formData.append('photo', `${userId}-profile100x100.jpg`);
-      formData.append('displayname', newInfo.displayname);
-      formData.append('email', newInfo.email);
-      formData.append('phone', newInfo.phone);
-      formData.append('gender', newInfo.gender);
-      formData.append('birthdate', newInfo.birthdate);
-      formData.append('address[address1]', newInfo.address.address1);
-      formData.append('address[address2]', newInfo.address.address2);
-      formData.append('address[district]', newInfo.address.district);
-      formData.append('address[province]', newInfo.address.province);
-      formData.append('address[postcode]', newInfo.address.postcode);
-
-      const response = await axios.put(apilink, formData);
-      UserDataStorage.setUserImage(newImg);
-      if (response.data.updateResult) {
-        RESTapi.fetchUserInfo();
-      }
-    } else if (!newImg && newInfo) {
-      // If newImg is null, send only newInfo
-      const response = await axios.put(apilink, newInfo);
-      if (response.data.updateResult) {
-        RESTapi.fetchUserInfo();
-      }
-    }
-    window.location.reload();
-  } catch (error) {
-    console.error('Error updating data:', error);
-  }
-};
-
 function UserProfile({ userData, media = 'desktop' }) {
   const originUserProfileInfo = {
     userProfileInfo: {
@@ -437,7 +377,7 @@ function UserProfile({ userData, media = 'desktop' }) {
         }
       : undefined;
 
-    fetchUpdateUser({
+    RESTapi.fetchUpdateUser({
       userId: userData._id,
       newImg: croppedImg,
       newInfo: newInfo,
@@ -691,18 +631,6 @@ function UserProfile({ userData, media = 'desktop' }) {
   );
 }
 
-const fetchChangeUserPassword = async (props) => {
-  const apilink = '/api/user/changePassword';
-  try {
-    const response = await axios.put(apilink, props);
-    return response.data;
-  } catch (error) {
-    window.alert(`Can't change password, Please try again later`);
-    window.location.reload();
-    console.error('Failed to fetch user information:', error);
-  }
-};
-
 function UserAccount({ userData, media = 'desktop' }) {
   const originalUserAccountInfo = {
     userAccountInfo: {
@@ -770,7 +698,7 @@ function UserAccount({ userData, media = 'desktop' }) {
         oldPassword: userAccInfo.userAccountInfo.oldPassword.value,
         newPassword: userAccInfo.userAccountInfo.newPassword.value,
       };
-      const isChangePassword = await fetchChangeUserPassword(newInfo);
+      const isChangePassword = await RESTapi.fetchChangeUserPassword(newInfo);
       if (isChangePassword.changePassword) {
         window.alert(isChangePassword.message);
         window.location.reload();
@@ -934,34 +862,6 @@ function UserAccount({ userData, media = 'desktop' }) {
     </div>
   );
 }
-
-// function UserSettings({ userData }) {
-//   const [userSettingsInfo, dispatch] = useReducer(reducer, {
-//     userSettingsInfo: {
-//       language: {
-//         value: 'English',
-//         validator: {
-//           LanguageBasket: ['Thai', 'English'],
-//         },
-//         error: { status: false, message: '', isTouched: false },
-//       },
-//     },
-//   });
-
-//   return (
-//     <div className="userSettingsBox">
-//       <div className="changeLanguageLine">
-//         <div className="uHeadLine">Language</div>
-//         <select>
-//           <option value="">userData.language</option>
-//           <option value="English">English</option>
-//           <option value="ไทย">ไทย</option>
-//         </select>
-//         <button className="uButton">Submit</button>
-//       </div>
-//     </div>
-//   );
-// }
 
 function ReviewCard({
   item,
