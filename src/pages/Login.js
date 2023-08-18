@@ -65,6 +65,31 @@ export default function Login(porps) {
   const [previousRoute, setPreviousRoute] = useState('');
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  useEffect(() => {
+    const isFormFilled = state.email.isFill && state.password.isFill;
+    dispatch({
+      type: 'UPDATE_STATUS',
+      payload: { field: 'isAllFill', value: isFormFilled },
+    });
+  }, [state.email.isFill, state.password.isFill]);
+
+  useEffect(() => {
+    if (state.status.canLogin) {
+      dispatch({
+        type: 'UPDATE_COUNT_LOGIN',
+        payload: { value: 0 },
+      });
+      dispatch({
+        type: 'UPDATE_ERROR_MESSAGE',
+        payload: { value: '' },
+      });
+    }
+  }, [state.status.canLogin]);
+
+  useEffect(() => {
+    setPreviousRoute(location.state?.from || '/');
+  }, [location.state]);
+
   const handleValueChange = (e) => {
     const { name, value } = e.target;
     dispatch({ type: 'UPDATE_FIELD', payload: { field: name, value } });
@@ -122,30 +147,31 @@ export default function Login(porps) {
     });
   };
 
-  useEffect(() => {
-    const isFormFilled = state.email.isFill && state.password.isFill;
-    dispatch({
-      type: 'UPDATE_STATUS',
-      payload: { field: 'isAllFill', value: isFormFilled },
-    });
-  }, [state.email.isFill, state.password.isFill]);
+  const onClikcloginDemo = async (user) => {
+    const email = `${user}@bbad.com`;
+    const password = '12341234';
+    const loginData = {
+      email: email,
+      password: password,
+    };
 
-  useEffect(() => {
-    if (state.status.canLogin) {
-      dispatch({
-        type: 'UPDATE_COUNT_LOGIN',
-        payload: { value: 0 },
-      });
-      dispatch({
-        type: 'UPDATE_ERROR_MESSAGE',
-        payload: { value: '' },
-      });
+    const responseLogin = await RESTapi.login(loginData);
+
+    if (responseLogin.token) {
+      window.alert(responseLogin.message);
+      Token.setToken(responseLogin.token);
+
+      try {
+        await RESTapi.fetchUserInfo();
+
+        navigate(previousRoute);
+        porps.setRole('user');
+      } catch (error) {
+        console.error('Error fetching user info:', error);
+      }
+      return;
     }
-  }, [state.status.canLogin]);
-
-  useEffect(() => {
-    setPreviousRoute(location.state?.from || '/');
-  }, [location.state]);
+  };
 
   return (
     <div className="loginPage">
@@ -199,6 +225,18 @@ export default function Login(porps) {
           <div className="loginLink" onClick={() => navigate('/register')}>
             You haven't any account? Sign Up
           </div>
+        </div>
+      </div>
+      <div className="forDemoBox">
+        <div>
+          {`Demo version: block ability to [Create New User] and [Edit/Remove User
+          Infomations]`}
+        </div>
+        <div>Choose this provided user to Explore website</div>
+        <div>
+          <Button onClick={() => onClikcloginDemo('fizri')}>USER: Fizri</Button>
+          <Button onClick={() => onClikcloginDemo('burni')}>USER: Burni</Button>
+          <Button onClick={() => onClikcloginDemo('kuri')}>USER: Kuri</Button>
         </div>
       </div>
     </div>
