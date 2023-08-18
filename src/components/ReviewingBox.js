@@ -48,6 +48,7 @@ function ReviewingBox({
         textarea.removeEventListener('focus', () => setErrorM(''));
       };
     }
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
