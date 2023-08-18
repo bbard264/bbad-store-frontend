@@ -220,10 +220,8 @@
 
 .uPphotoBox {
   border-radius: 20px;
-  min-height: 6em;
-  min-width: 6em;
-  max-height: 6em;
-  max-width: 6em;
+  height: 6em;
+  width: 6em;
   overflow: hidden;
   margin-right: 1em;
   border: #999 1px solid;
@@ -365,9 +363,6 @@
   margin-left: 10px;
   font-size: 14px;
   color: #666;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  flex: 1;
 }
 
 .userReviewBox {

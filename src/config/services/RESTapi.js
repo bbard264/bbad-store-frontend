@@ -53,19 +53,29 @@ class RESTapi {
 
     try {
       if (newImg && !newInfo) {
+        // If newImg exists but newInfo is null, send only the image data
         const imageResponse = await axios.get(newImg, { responseType: 'blob' });
         const imageBlob = imageResponse.data;
+
+        // Create a new FormData object and append the image blob as a file
         const formData = new FormData();
         formData.append('img', imageBlob, `${userId}-profile100x100.jpg`);
         formData.append('photo', `${userId}-profile100x100.jpg`);
+
         await axios.put(apilink, formData);
         UserDataStorage.setUserImage(newImg);
-        window.location.reload();
       } else if (newImg && newInfo) {
+        // If both newImg and newInfo exist, send both image and other data
+
+        // Fetch the image using Axios to get the image blob data
         const imageResponse = await axios.get(newImg, { responseType: 'blob' });
         const imageBlob = imageResponse.data;
+
+        // Create a new FormData object and append the image blob as a file
         const formData = new FormData();
-        formData.append('img', imageBlob, `${userId}-profile100x100.jpg`);
+        formData.append('img', imageBlob, `${userId}-profile100x100.jpg`); // Set the image name to the value of newInfo.photo
+
+        // Append other data from newInfo as fields
         formData.append('photo', `${userId}-profile100x100.jpg`);
         formData.append('displayname', newInfo.displayname);
         formData.append('email', newInfo.email);
@@ -77,7 +87,7 @@ class RESTapi {
         formData.append('address[district]', newInfo.address.district);
         formData.append('address[province]', newInfo.address.province);
         formData.append('address[postcode]', newInfo.address.postcode);
-        console.log(formData);
+
         const response = await axios.put(apilink, formData);
         UserDataStorage.setUserImage(newImg);
         if (response.data.updateResult) {
@@ -85,6 +95,7 @@ class RESTapi {
           window.location.reload();
         }
       } else if (!newImg && newInfo) {
+        // If newImg is null, send only newInfo
         const response = await axios.put(apilink, newInfo);
         if (response.data.updateResult) {
           await RESTapi.fetchUserInfo();
@@ -93,7 +104,7 @@ class RESTapi {
       }
       window.alert('Update your profile complete...');
     } catch (error) {
-      window.alert(error.response.data.error);
+      window.alert('Error updating data. Please, try again later...');
       console.error('Error updating data:', error);
     }
   }
