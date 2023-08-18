@@ -284,8 +284,6 @@ function RenderModifyOption({
 function ReviewCheckOut({ cartState, onCalcelReviewCheckOut, media }) {
   const navigate = useNavigate();
   const userInfo = UserDataStorage.getUserData();
-  console.log(cartState.items[0].property.totalPrice);
-  console.log(cartState);
   function renderReviewProductList(items) {
     return items.map((item, index) => (
       <div className="reviewProductRow" key={index}>

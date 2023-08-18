@@ -903,7 +903,6 @@ function CommonSection({
     );
 
     async function onClickFavorite() {
-      console.log(product);
       if (isFavorite) {
         try {
           await UserDataStorage.removeFavorite(product);

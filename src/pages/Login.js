@@ -103,7 +103,6 @@ export default function Login(porps) {
     }
 
     if (state.countLogin > 5) {
-      console.log('Excess limit login');
       dispatch({
         type: 'UPDATE_STATUS',
         payload: { field: 'canLogin', value: false },

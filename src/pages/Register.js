@@ -126,7 +126,6 @@ export default function Register() {
     e.preventDefault();
 
     if (!state.isPassValidate) {
-      console.log('failed to validated by frontend');
       return;
     } else {
       let registData = {

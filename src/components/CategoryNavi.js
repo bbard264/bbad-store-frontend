@@ -23,7 +23,6 @@ function renderNavi(naviObj, currentCategory, navigate, currentPage) {
 const fetchCategoryList = async () => {
   try {
     const apilink = '/api/category/getCategoryList&Lastpage';
-    console.log('requestAPI', apilink);
     const response = await axios.get(apilink);
     CatgoryLastpage.setCatgoryLastpage(response.data);
   } catch (error) {

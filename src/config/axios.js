@@ -3,7 +3,7 @@ import Token from './services/Token';
 
 axios.interceptors.request.use(
   (config) => {
-    console.log('Request:', config.url, config.params ?? '');
+    // console.log('Request:', config.url, config.params ?? '');
     if (
       config.url.includes('/api/user/login') ||
       config.url.includes('/api/user/register')
@@ -25,7 +25,7 @@ axios.interceptors.request.use(
 
 axios.interceptors.response.use(
   (response) => {
-    console.log('Response:', response);
+    // console.log('Response:', response);
     return response;
   },
   (err) => {

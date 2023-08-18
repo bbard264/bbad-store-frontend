@@ -203,7 +203,6 @@ class RESTapi {
 
   static async removeFromCart(props) {
     const apilink = '/api/Order/removeFromCart';
-    console.log(props);
 
     try {
       await axios.delete(apilink, {

@@ -61,7 +61,6 @@ export default class CartStorage {
     const oldCartData = await JSON.parse(
       localStorage.getItem(this.storage_key)
     );
-    console.log(productData);
     let newCartData;
     if (!oldCartData || oldCartData === null || oldCartData === undefined) {
       newCartData = [productData];
