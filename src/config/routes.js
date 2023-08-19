@@ -83,7 +83,7 @@ const routesConfig = {
         components.user,
         components.favorite,
       ],
-      redirectRoute: '/user',
+      redirectRoute: '/',
     },
   },
 };
