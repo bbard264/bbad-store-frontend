@@ -17,6 +17,7 @@ export default function RecommendationSection() {
   const [showIndex, setShowIndex] = useState(0);
   const { isMobile } = useMediaContext();
   const { shareState, setShareState } = useContext(ShareStateContext);
+
   useEffect(() => {
     const fetchRecList = async () => {
       try {
@@ -29,6 +30,7 @@ export default function RecommendationSection() {
     };
     fetchRecList();
   }, []);
+
   useEffect(() => {
     if (isMobile) {
       return;
@@ -43,6 +45,7 @@ export default function RecommendationSection() {
       recBox.style.transform = `translateX(${-widthCardInt * showIndex}em)`;
     }
   }, [isMobile, showIndex]);
+
   const onClickCorner = (direction) => {
     if (direction === 'left' && showIndex >= 0) {
       setShowIndex((e) => (e = e - 1));
@@ -50,9 +53,10 @@ export default function RecommendationSection() {
       setShowIndex((e) => (e = e + 1));
     }
   };
+
   if (!isLoaded || !recList || recList.length === 0) {
     return <></>;
-  } else if (location.pathname === '/home') {
+  } else if (location.pathname === '/') {
     return (
       <div className="recHomeContainter">
         <div className="recHomeBox">
