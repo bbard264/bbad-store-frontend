@@ -64,6 +64,7 @@ export default function Login(porps) {
   const location = useLocation();
   const [previousRoute, setPreviousRoute] = useState('');
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const isFormFilled = state.email.isFill && state.password.isFill;
@@ -122,7 +123,7 @@ export default function Login(porps) {
       type: 'UPDATE_COUNT_LOGIN',
       payload: { value: state.countLogin + 1 },
     });
-
+    setIsLoading(true);
     const responseLogin = await RESTapi.login(loginData);
 
     if (responseLogin.token) {
@@ -134,9 +135,11 @@ export default function Login(porps) {
 
         navigate(previousRoute);
         porps.setRole('user');
+        setIsLoading(false);
       } catch (error) {
         console.error('Error fetching user info:', error);
       }
+      setIsLoading(false);
       return;
     }
 
@@ -153,7 +156,7 @@ export default function Login(porps) {
       email: email,
       password: password,
     };
-
+    setIsLoading(true);
     const responseLogin = await RESTapi.login(loginData);
 
     if (responseLogin.token) {
@@ -162,15 +165,20 @@ export default function Login(porps) {
 
       try {
         await RESTapi.fetchUserInfo();
-
         navigate(previousRoute);
         porps.setRole('user');
+        setIsLoading(false);
       } catch (error) {
         console.error('Error fetching user info:', error);
       }
+      setIsLoading(false);
       return;
     }
   };
+
+  if (isLoading) {
+    return <>loadding..</>;
+  }
 
   return (
     <div className="loginPage">

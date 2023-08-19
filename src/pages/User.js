@@ -657,7 +657,7 @@ function UserAccount({ userData, media = 'desktop' }) {
   };
   const [userAccInfo, dispatch] = useReducer(reducer, originalUserAccountInfo);
   const [showChangingPassword, setShowChangingPassword] = useState(false);
-
+  const navigate = useNavigate();
   const handleValueChange = async (e) => {
     const { name, value } = e.target;
     if (userAccInfo.errorMessage !== '') {
@@ -727,7 +727,7 @@ function UserAccount({ userData, media = 'desktop' }) {
     const confirmed = window.confirm('Are you sure to logout?');
     if (confirmed) {
       Token.removeToken();
-      window.location.reload();
+      navigate('/');
     }
   };
 

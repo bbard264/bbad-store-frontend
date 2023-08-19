@@ -11,7 +11,7 @@ import Favorite from '../pages/Favorite';
 
 const components = {
   home: {
-    url: '/home',
+    url: '/',
     component: Home,
   },
   products: {
@@ -69,7 +69,7 @@ const routesConfig = {
       components.user,
       components.favorite,
     ],
-    redirectRoute: '/404',
+    redirectRoute: '/',
   },
   role: {
     guest: {
