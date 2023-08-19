@@ -4,10 +4,10 @@ import Token from './Token';
 import CartStorage from './CartStorage';
 
 class RESTapi {
-  static isDemo = false;
+  static backendAPI = 'https://bbad-store-backend.onrender.com';
 
   static async fetchUserInfo() {
-    const apilink = '/api/user/getUserById';
+    const apilink = this.backendAPI + '/api/user/getUserById';
 
     try {
       const response = await axios.get(apilink);
@@ -22,7 +22,7 @@ class RESTapi {
   }
 
   static async login(loginData) {
-    const apilink = '/api/user/login';
+    const apilink = this.backendAPI + '/api/user/login';
     try {
       const response = await axios.post(apilink, loginData);
       return response.data;
@@ -38,7 +38,7 @@ class RESTapi {
   }
 
   static async postRegisterUser(registerData) {
-    const apilink = '/api/user/register';
+    const apilink = this.backendAPI + '/api/user/register';
     try {
       const response = await axios.post(apilink, registerData);
       return response.data;
@@ -50,7 +50,7 @@ class RESTapi {
 
   static async fetchUpdateUser(props) {
     const { userId, newImg, newInfo } = props;
-    const apilink = '/api/user/updateUser';
+    const apilink = this.backendAPI + '/api/user/updateUser';
 
     try {
       if (newImg && !newInfo) {
@@ -112,7 +112,7 @@ class RESTapi {
   }
 
   static async fetchChangeUserPassword(props) {
-    const apilink = '/api/user/changePassword';
+    const apilink = this.backendAPI + '/api/user/changePassword';
     try {
       const response = await axios.put(apilink, props);
       return response.data;
@@ -124,7 +124,7 @@ class RESTapi {
   }
 
   static async fetchCheckAuthen() {
-    const apilink = '/api/user/checkAuthentication';
+    const apilink = this.backendAPI + '/api/user/checkAuthentication';
     if (Token.getRole() === 'guest') {
       return;
     }
@@ -143,9 +143,11 @@ class RESTapi {
   }
 
   static async fetchProductList(category, page) {
-    const apilink = `/api/product/getProductsList/${
-      category ? category : 'all'
-    }${page ? '/' + page : ''}`;
+    const apilink =
+      this.backendAPI +
+      `/api/product/getProductsList/${category ? category : 'all'}${
+        page ? '/' + page : ''
+      }`;
 
     try {
       const resProductList = await axios.get(apilink);
@@ -156,7 +158,8 @@ class RESTapi {
   }
 
   static async fetchProduct(productId) {
-    const apilink = `/api/product/getProductById/${productId}`;
+    const apilink =
+      this.backendAPI + `/api/product/getProductById/${productId}`;
     try {
       const response = await axios.get(apilink);
       const product = response.data;
@@ -167,7 +170,7 @@ class RESTapi {
   }
 
   static async fetchCartData() {
-    const apilink = '/api/Order/getCart';
+    const apilink = this.backendAPI + '/api/Order/getCart';
 
     try {
       const response = await axios.get(apilink);
@@ -179,7 +182,7 @@ class RESTapi {
   }
 
   static async addToCart(props) {
-    const apilink = '/api/Order/addToCart';
+    const apilink = this.backendAPI + '/api/Order/addToCart';
     try {
       await axios.put(apilink, props);
       return {
@@ -202,7 +205,7 @@ class RESTapi {
   }
 
   static async removeFromCart(props) {
-    const apilink = '/api/Order/removeFromCart';
+    const apilink = this.backendAPI + '/api/Order/removeFromCart';
 
     try {
       await axios.delete(apilink, {
@@ -225,7 +228,7 @@ class RESTapi {
   }
 
   static async createOrder(props) {
-    const apilink = '/api/Order/createOrder'; // Assuming this is the correct API endpoint for creating orders
+    const apilink = this.backendAPI + '/api/Order/createOrder'; // Assuming this is the correct API endpoint for creating orders
     try {
       const response = await axios.post(apilink, props); // Use axios.post for POST requests
       return response.data;
@@ -245,7 +248,7 @@ class RESTapi {
   }
 
   static async getOrders() {
-    const apilink = '/api/Order/getOrders'; // Update the endpoint URL accordingly
+    const apilink = this.backendAPI + '/api/Order/getOrders'; // Update the endpoint URL accordingly
     try {
       const response = await axios.get(apilink); // Use axios.get for GET requests
       return response.data;
@@ -259,7 +262,7 @@ class RESTapi {
   }
 
   static async getOrderStatus() {
-    const apilink = '/api/Order/getOrderStatus'; // Update the endpoint URL accordingly
+    const apilink = this.backendAPI + '/api/Order/getOrderStatus'; // Update the endpoint URL accordingly
     try {
       const response = await axios.get(apilink); // Use axios.get for GET requests
       return response.data;
@@ -273,7 +276,7 @@ class RESTapi {
   }
 
   static async getFavorite() {
-    const apilink = '/api/User/getFavorite';
+    const apilink = this.backendAPI + '/api/User/getFavorite';
 
     try {
       const response = await axios.get(apilink);
@@ -288,7 +291,7 @@ class RESTapi {
   }
 
   static async addFavorite(props) {
-    const apilink = '/api/User/addFavorite';
+    const apilink = this.backendAPI + '/api/User/addFavorite';
     try {
       const response = await axios.put(apilink, props);
       return response.data;
@@ -308,7 +311,7 @@ class RESTapi {
   }
 
   static async removeFavorite(props) {
-    const apilink = '/api/User/removeFavorite';
+    const apilink = this.backendAPI + '/api/User/removeFavorite';
     try {
       const response = await axios.delete(apilink, {
         params: props,
@@ -324,7 +327,7 @@ class RESTapi {
   }
 
   static async createNewReview(props) {
-    const apilink = '/api/review/createNewReview';
+    const apilink = this.backendAPI + '/api/review/createNewReview';
 
     try {
       const response = await axios.post(apilink, props);
@@ -339,7 +342,7 @@ class RESTapi {
   }
 
   static async getReviewsByUser() {
-    const apilink = '/api/review/getReviewsByUser';
+    const apilink = this.backendAPI + '/api/review/getReviewsByUser';
 
     try {
       const response = await axios.get(apilink, { params: { from: 'user' } });
@@ -354,7 +357,7 @@ class RESTapi {
   }
 
   static async getReviewsByProduct(props) {
-    const apilink = '/api/review/getReviewsByProduct';
+    const apilink = this.backendAPI + '/api/review/getReviewsByProduct';
 
     try {
       const response = await axios.get(apilink, {
@@ -374,7 +377,7 @@ class RESTapi {
   }
 
   static async removeReview(props) {
-    const apilink = '/api/review/removeReview';
+    const apilink = this.backendAPI + '/api/review/removeReview';
     try {
       const response = await axios.delete(apilink, {
         params: props,
@@ -390,7 +393,7 @@ class RESTapi {
   }
 
   static async modifyReview(props) {
-    const apilink = '/api/review/modifyReview';
+    const apilink = this.backendAPI + '/api/review/modifyReview';
 
     try {
       const response = await axios.put(apilink, props);
@@ -405,7 +408,7 @@ class RESTapi {
   }
 
   static async getRecommendProduct() {
-    const apilink = '/api/product/getRecommendProduct';
+    const apilink = this.backendAPI + '/api/product/getRecommendProduct';
 
     try {
       const response = await axios.get(apilink);
