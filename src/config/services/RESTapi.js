@@ -13,7 +13,9 @@ class RESTapi {
     try {
       const response = await axios.get(apilink);
       await UserDataStorage.setUserData(response.data.userInfo);
-      await UserDataStorage.setUserImage(response.data.userInfo.photo);
+      await UserDataStorage.setUserImage(
+        this.backendAPI + response.data.userInfo.photo
+      );
       await UserDataStorage.setUserFavorite();
       await UserDataStorage.setUserReviews();
       await CartStorage.setCartStorage();

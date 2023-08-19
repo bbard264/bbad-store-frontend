@@ -52,7 +52,6 @@ class UserDataStorage {
       reader.readAsDataURL(blob);
     } catch (error) {
       console.error('Error fetching image:', error);
-      // Use the placeholder image as a fallback
       const tempResponse = await fetch(profileTemp);
       const tempBlob = await tempResponse.blob();
       const tempReader = new FileReader();
