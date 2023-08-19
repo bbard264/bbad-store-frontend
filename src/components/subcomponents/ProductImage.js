@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import product_temp_100100 from '../../assets/temp_img/product_temp_100100.jpg';
 import product_temp_400600 from '../../assets/temp_img/product_temp_400600.jpg';
 import product_temp_800600 from '../../assets/temp_img/product_temp_800600.jpg';
+import RESTapi from '../../config/services/RESTapi';
 
 function ProductImage({ src, alt, type }) {
   const [imageError, setImageError] = useState(false);
@@ -23,7 +24,11 @@ function ProductImage({ src, alt, type }) {
       {imageError ? (
         <img src={img} alt={alt} />
       ) : (
-        <img src={src} alt={alt} onError={handleImageError} />
+        <img
+          src={RESTapi.backendAPI + src}
+          alt={alt}
+          onError={handleImageError}
+        />
       )}
     </div>
   );

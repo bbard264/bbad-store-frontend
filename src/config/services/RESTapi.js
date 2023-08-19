@@ -4,7 +4,7 @@ import Token from './Token';
 import CartStorage from './CartStorage';
 
 class RESTapi {
-  static backendAPI = '';
+  static backendAPI = 'https://bbad-store-backend.onrender.com';
 
   static async fetchUserInfo() {
     const apilink = this.backendAPI + '/api/user/getUserById';
