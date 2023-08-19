@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import RESTapi from '../config/services/RESTapi';
 import '../styles/components/CategoryNavi.css';
 import CatgoryLastpage from '../config/services/CatagoryLastpage';
 
@@ -20,22 +20,11 @@ function renderNavi(naviObj, currentCategory, navigate, currentPage) {
   ));
 }
 
-const fetchCategoryList = async () => {
-  try {
-    const apilink = '/api/category/getCategoryList&Lastpage';
-    const response = await axios.get(apilink);
-    CatgoryLastpage.setCatgoryLastpage(response.data);
-  } catch (error) {
-    console.error('Failed to fetch products:', error);
-  }
-};
-
-if (!CatgoryLastpage.getCatgoryLastpage()) {
-  await fetchCategoryList();
-}
-
 export default function CategoryNavi({ currentCategory, currentPage }) {
   const navigate = useNavigate();
+  if (!CatgoryLastpage.getCatgoryLastpage()) {
+    RESTapi.fetchCategoryList();
+  }
   const categoryMap = CatgoryLastpage.getCatgoryLastpage();
 
   return (

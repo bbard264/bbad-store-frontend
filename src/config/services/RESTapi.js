@@ -2,6 +2,7 @@ import axios from '../axios';
 import UserDataStorage from './UserDataStorage';
 import Token from './Token';
 import CartStorage from './CartStorage';
+import CatgoryLastpage from './CatagoryLastpage';
 
 class RESTapi {
   static backendAPI = 'https://bbad-store-backend.onrender.com';
@@ -139,6 +140,17 @@ class RESTapi {
         console.error('Failed to check authen:', error);
         return { isAuthen: false, message: 'false to check Authen' };
       }
+    }
+  }
+
+  static async fetchCategoryList() {
+    try {
+      const apilink =
+        this.backendAPI + '/api/category/getCategoryList&Lastpage';
+      const response = await axios.get(apilink);
+      CatgoryLastpage.setCatgoryLastpage(response.data);
+    } catch (error) {
+      console.error('Failed to fetch products:', error);
     }
   }
 
