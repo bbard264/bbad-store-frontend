@@ -7,6 +7,7 @@ import heartEmptyIcon from '../assets/icon/heart.png';
 import heartFillIcon from '../assets/icon/heart2.png';
 import CartStorage from '../config/services/CartStorage';
 import ProductImage from './subcomponents/ProductImage';
+import Token from '../config/services/Token';
 
 import '../styles/components/Card.css';
 import UserDataStorage from '../config/services/UserDataStorage';
@@ -34,6 +35,12 @@ export default function Card(props) {
     );
   }
   async function onClickAddToCart() {
+    if (Token.getRole() === 'guest') {
+      if (window.confirm(`You haven't login, Want to login??`)) {
+        navigate('/login', { state: { from: location.pathname } });
+      }
+    }
+
     let option;
     let isOption = false;
 
@@ -63,16 +70,16 @@ export default function Card(props) {
       note: '',
     };
 
-    const response = await CartStorage.addToCart(newProductInCartToSave);
-    if (response.message === 'Unauthorized') {
-      if (window.confirm(`You haven't login, Want to login??`)) {
-        navigate('/login', { state: { from: location.pathname } });
-      }
-    }
+    await CartStorage.addToCart(newProductInCartToSave);
     props.setShareState(props.shareState + 1);
   }
 
   async function onClickFavorite() {
+    if (Token.getRole() === 'guest') {
+      if (window.confirm(`You haven't login, Want to login??`)) {
+        navigate('/login', { state: { from: location.pathname } });
+      }
+    }
     setIsLoading(true);
     if (isFavoritePage) {
       try {

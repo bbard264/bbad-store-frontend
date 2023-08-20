@@ -904,6 +904,15 @@ function CommonSection({
     );
 
     async function onClickFavorite() {
+      if (Token.getRole() === 'guest') {
+        if (window.confirm(`You haven't login yet, go to Login?`)) {
+          navigate('/login', { state: { from: location.pathname } });
+          return;
+        } else {
+          setErrorMessage('Please Login first');
+          return;
+        }
+      }
       if (isFavorite) {
         try {
           await UserDataStorage.removeFavorite(product);
