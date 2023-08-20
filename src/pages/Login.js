@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import '../styles/pages/Login.css';
 import Button from '../components/subcomponents/Button';
+import LoadingScene from '../components/LoadingScene';
 
 import Token from '../config/services/Token';
 import RESTapi from '../config/services/RESTapi';
@@ -177,7 +178,11 @@ export default function Login(porps) {
   };
 
   if (isLoading) {
-    return <>loadding..</>;
+    return (
+      <>
+        <LoadingScene />
+      </>
+    );
   }
 
   return (
