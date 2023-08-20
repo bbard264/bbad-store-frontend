@@ -25,6 +25,7 @@ function App() {
     localStorage.getItem('isDarkMode') === 'true'
   );
   const [firstTime, setFirstTime] = useState(true);
+  const [isLoaded, setIsLoaded] = useState(false);
   const location = useLocation();
   const toggleTheme = () => {
     setIsDarkMode((prevIsDarkMode) => {
@@ -57,6 +58,7 @@ function App() {
         console.error('Error occurred while checking authentication:', error);
       }
     }
+
     if (role === 'guest') {
       if (firstTime) {
         handleAuthentication();
