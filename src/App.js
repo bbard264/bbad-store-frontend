@@ -52,7 +52,7 @@ function App() {
     while (true) {
       console.log('check connect to backend.............');
       await new Promise((resolve) => setTimeout(resolve, 10000));
-      const response = await RESTapi.fetchCheckAuthen();
+      const response = await RESTapi.checkConnection();
       console.log(response);
       if (response === undefined || response === null) {
         continue;

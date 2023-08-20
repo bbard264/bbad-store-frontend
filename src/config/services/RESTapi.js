@@ -145,6 +145,21 @@ class RESTapi {
     }
   }
 
+  static async checkConnection() {
+    const apilink = this.backendAPI + '/api/user/checkAuthentication';
+    try {
+      const response = await axios.get(apilink);
+      return { isConnect: true };
+    } catch (error) {
+      if (error.response?.status === 401) {
+        return { isConnect: true };
+      } else {
+        console.error('Failed to check authen:', error);
+        return { isConnect: false };
+      }
+    }
+  }
+
   static async fetchCategoryList() {
     try {
       const apilink =
