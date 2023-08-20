@@ -1,6 +1,6 @@
 import './App.css';
 import React, { useState, useEffect, createContext } from 'react';
-import { BrowserRouter, useLocation } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import { useMediaQuery } from 'react-responsive';
 import CreateRoutes from './config/CreateRoutes';
 import Token from './config/services/Token';
@@ -26,7 +26,7 @@ function App() {
   );
   const [firstTime, setFirstTime] = useState(true);
   const [isLoaded, setIsLoaded] = useState(false);
-  const location = useLocation();
+
   const toggleTheme = () => {
     setIsDarkMode((prevIsDarkMode) => {
       localStorage.setItem('isDarkMode', !prevIsDarkMode);
