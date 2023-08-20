@@ -94,7 +94,7 @@ function App() {
   }
 
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/master--dynamic-stroopwafel-0913e8">
       <MediaContext.Provider value={{ isDesktop, isTablet, isMobile }}>
         <ThemeContext.Provider value={{ toggleTheme }}>
           <ShareStateContext.Provider value={{ shareState, setShareState }}>
