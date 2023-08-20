@@ -12,6 +12,7 @@ import ProductImage from '../components/subcomponents/ProductImage';
 import IconContainer from '../components/subcomponents/IconContainer';
 import checkOutIcon from '../assets/icon/check-it-out.png';
 import RecommendationSection from '../components/RecommendationSection';
+import LoadingScene from '../components/LoadingScene';
 
 function reducer(state, action) {
   switch (action.type) {
@@ -894,7 +895,9 @@ function CartSummaryBox({ cartState, onClickCheckOut, media }) {
   return (
     <div className="cartSumContainer">
       {Object.keys(cartState).length === 0 ? (
-        <></> //Loading
+        <>
+          <LoadingScene />
+        </>
       ) : (
         <div className="cartSumBox">
           <div className="cartSumLine">

@@ -41,9 +41,11 @@ function App() {
 
       if (authData && authData.isAuthen === false) {
         setRole('guest');
+        window.location.reload();
       }
     } catch (error) {
       setRole('guest');
+      window.location.reload();
       console.error('Error occurred while checking authentication:', error);
     }
   }

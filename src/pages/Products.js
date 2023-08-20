@@ -11,6 +11,7 @@ import coverWearables from '../assets/cover/categoryCover/wearables.jpg';
 import coverCollectibles from '../assets/cover/categoryCover/collectibles.jpg';
 import coverArtBooks from '../assets/cover/categoryCover/artBooks.jpg';
 import coverDigitalProducts from '../assets/cover/categoryCover/DigitalProducts.jpg';
+import LoadingScene from '../components/LoadingScene';
 
 export function mainContent(listofProducts, numPage, props, routeParameter) {
   if (!listofProducts) {
@@ -182,7 +183,9 @@ export default function Products(props) {
           <RecommendationSection />
         </>
       ) : (
-        <></> //Loading
+        <>
+          <LoadingScene />
+        </>
       )}
     </div>
   );

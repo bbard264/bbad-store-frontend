@@ -8,6 +8,7 @@ import Button from '../components/subcomponents/Button';
 import Backdrop from '../components/subcomponents/Backdrop';
 import ReviewingBox from '../components/ReviewingBox';
 import ProductImage from '../components/subcomponents/ProductImage';
+import LoadingScene from '../components/LoadingScene';
 
 import Cropping from '../components/Cropping';
 import UserDataStorage from '../config/services/UserDataStorage';
@@ -1033,7 +1034,9 @@ function UserReviews({ media = 'desktop' }) {
       </div>
       <div className="listUserReviewContainer">
         {isLoadReviewCard ? (
-          <></> //Loading
+          <>
+            <LoadingScene />
+          </>
         ) : (
           <div className="listUserReviewBox">
             {filteredItems.map((item) => (
@@ -1145,7 +1148,9 @@ export default function User() {
               </div>
             </>
           ) : (
-            <></> //Loading
+            <>
+              <LoadingScene />
+            </>
           )}
         </div>
       </div>

@@ -4,6 +4,7 @@ import Token from '../config/services/Token';
 import '../styles/pages/ProductDetail.css';
 import { useMediaContext } from '../config/services/MediaContext';
 import ProductImage from '../components/subcomponents/ProductImage';
+import LoadingScene from '../components/LoadingScene';
 
 import ArrowCorner from '../components/subcomponents/ArrowCorner';
 import StarRating from '../components/subcomponents/StarRating';
@@ -1132,7 +1133,9 @@ export default function ProductDetail(props) {
             <RecommendationSection />
           </>
         ) : (
-          <></> //Loading
+          <>
+            <LoadingScene />
+          </>
         )}
       </div>
     );
@@ -1164,7 +1167,9 @@ export default function ProductDetail(props) {
             </div>
           </>
         ) : (
-          <></> //Loading
+          <>
+            <LoadingScene />
+          </>
         )}
       </div>
     );
