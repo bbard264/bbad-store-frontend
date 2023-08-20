@@ -51,14 +51,12 @@ function App() {
   const checkConnection = async () => {
     while (true) {
       console.log('check connect to backend.............');
-      await new Promise((resolve) => setTimeout(resolve, 60000));
+      await new Promise((resolve) => setTimeout(resolve, 10000));
       const response = await RESTapi.fetchCheckAuthen();
-
+      console.log(response);
       if (response === undefined || response === null) {
-        console.log('check connect to backend: fail');
         continue;
       } else {
-        console.log('check connect to backend: complete');
         setFirstTime(false);
         break;
       }
