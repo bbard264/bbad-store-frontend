@@ -1,6 +1,6 @@
 import './App.css';
 import React, { useState, useEffect, createContext } from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, useLocation } from 'react-router-dom';
 import { useMediaQuery } from 'react-responsive';
 import CreateRoutes from './config/CreateRoutes';
 import Token from './config/services/Token';
@@ -24,8 +24,8 @@ function App() {
   const [isDarkMode, setIsDarkMode] = useState(
     localStorage.getItem('isDarkMode') === 'true'
   );
-  const [isLoaded, setIsLoaded] = useState(false);
-
+  const [firstTime, setFirstTime] = useState(true);
+  const location = useLocation();
   const toggleTheme = () => {
     setIsDarkMode((prevIsDarkMode) => {
       localStorage.setItem('isDarkMode', !prevIsDarkMode);
@@ -43,31 +43,33 @@ function App() {
   }, [isDarkMode]);
 
   useEffect(() => {
-    if (role === 'guest') {
-      setIsLoaded(true);
-    } else {
-      async function handleAuthentication() {
-        try {
-          const authData = await RESTapi.fetchCheckAuthen();
+    setIsLoaded(false);
+    async function handleAuthentication() {
+      try {
+        const authData = await RESTapi.fetchCheckAuthen();
 
-          if (authData && authData.isAuthen === false) {
-            setShareState((prevState) => prevState + 1);
-          }
-          setIsLoaded(true);
-        } catch (error) {
-          setRole('guest');
-          setIsLoaded(true);
-          console.error('Error occurred while checking authentication:', error);
+        if (authData && authData.isAuthen === false) {
+          setShareState((prevState) => prevState + 1);
         }
+      } catch (error) {
+        setRole('guest');
+
+        console.error('Error occurred while checking authentication:', error);
       }
+    }
+    if (role === 'guest') {
+      if (firstTime) {
+        handleAuthentication();
+        setFirstTime(false);
+      }
+    } else {
       handleAuthentication();
     }
-
+    setIsLoaded(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [role]);
-
   if (!isLoaded) {
-    return <></>;
+    return <>Loading</>;
   }
 
   return (
