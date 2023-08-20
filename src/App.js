@@ -65,6 +65,10 @@ function App() {
   };
 
   useEffect(() => {
+    checkConnection();
+  }, []);
+
+  useEffect(() => {
     const root = document.documentElement;
     if (isDarkMode) {
       root.classList.remove('dark-theme');
@@ -75,10 +79,6 @@ function App() {
 
   useEffect(() => {
     setIsLoaded(false);
-    if (firstTime) {
-      checkConnection();
-    }
-
     if (role === 'guest') {
     } else {
       handleAuthentication();
