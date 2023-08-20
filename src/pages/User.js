@@ -728,7 +728,7 @@ function UserAccount({ userData, media = 'desktop' }) {
     const confirmed = window.confirm('Are you sure to logout?');
     if (confirmed) {
       Token.removeToken();
-      navigate('/');
+      window.location.reload();
     }
   };
 
