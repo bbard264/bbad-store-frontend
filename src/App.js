@@ -83,12 +83,13 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [role]);
 
+  console.log(firstTime);
   if (firstTime || !isLoaded) {
     return <LoadingScene />;
   }
 
   return (
-    <BrowserRouter basename="/master--dynamic-stroopwafel-0913e8">
+    <BrowserRouter>
       <MediaContext.Provider value={{ isDesktop, isTablet, isMobile }}>
         <ThemeContext.Provider value={{ toggleTheme }}>
           <ShareStateContext.Provider value={{ shareState, setShareState }}>
