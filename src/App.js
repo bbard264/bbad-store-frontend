@@ -41,25 +41,19 @@ function App() {
 
       if (authData && authData.isAuthen === false) {
         setRole('guest');
-        window.location.reload();
       }
     } catch (error) {
       setRole('guest');
-      window.location.reload();
-      console.error('Error occurred while checking authentication:', error);
     }
   }
 
   const checkConnection = async () => {
     while (true) {
       const response = await RESTapi.checkConnection();
-      if (response === undefined || response === null) {
-        await new Promise((resolve) => setTimeout(resolve, 10000));
-        continue;
-      } else if (response.isConnect) {
+      if (response.isConnect === true) {
         setFirstTime(false);
         break;
-      } else {
+      } else if (response.isConnect === false) {
         await new Promise((resolve) => setTimeout(resolve, 10000));
         continue;
       }
