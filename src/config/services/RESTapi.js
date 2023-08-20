@@ -146,16 +146,12 @@ class RESTapi {
   }
 
   static async checkConnection() {
-    const apilink = this.backendAPI + '/api/user/checkAuthentication';
+    const apilink = this.backendAPI + '/api/checkConnection';
     try {
       await axios.get(apilink);
       return { isConnect: true };
     } catch (error) {
-      if (error.response?.status === 401) {
-        return { isConnect: true };
-      } else {
-        return { isConnect: false };
-      }
+      return { isConnect: false };
     }
   }
 
