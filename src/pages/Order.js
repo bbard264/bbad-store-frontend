@@ -10,6 +10,7 @@ import backTopIcon from '../assets/icon/up-arrow.png';
 import IconContainer from '../components/subcomponents/IconContainer';
 import listIcon from '../assets/icon/list.png';
 import LoadingScene from '../components/LoadingScene';
+import ProductImage from '../components/subcomponents/ProductImage';
 
 function OrderList({
   orderData,
@@ -100,7 +101,7 @@ function OrderDetail({
       <div className={`reviewProductRow ${media}`} key={index}>
         <div className="productCol">
           <div className="productPhotoBox inReview">
-            <img
+            <ProductImage
               src={item.property.thumb_photo}
               alt={item.property.product_name}
             />
