@@ -9,6 +9,7 @@ import Footer from './components/Footer';
 import MediaContext from './config/services/MediaContext';
 import ThemeContext from './config/services/ThemeContext';
 import RESTapi from './config/services/RESTapi';
+import LoadingScene from './components/LoadingScene';
 
 const ShareStateContext = createContext();
 export { ShareStateContext };
@@ -34,6 +35,36 @@ function App() {
     });
   };
 
+  async function handleAuthentication() {
+    try {
+      const authData = await RESTapi.fetchCheckAuthen();
+
+      if (authData && authData.isAuthen === false) {
+        setRole('guest');
+      }
+    } catch (error) {
+      setRole('guest');
+      console.error('Error occurred while checking authentication:', error);
+    }
+  }
+
+  const checkConnection = async () => {
+    while (true) {
+      console.log('check connect to backend.............');
+      await new Promise((resolve) => setTimeout(resolve, 60000));
+      const response = await RESTapi.fetchCheckAuthen();
+
+      if (response === undefined || response === null) {
+        console.log('check connect to backend: fail');
+        continue;
+      } else {
+        console.log('check connect to backend: complete');
+        setFirstTime(false);
+        break;
+      }
+    }
+  };
+
   useEffect(() => {
     const root = document.documentElement;
     if (isDarkMode) {
@@ -45,33 +76,20 @@ function App() {
 
   useEffect(() => {
     setIsLoaded(false);
-    async function handleAuthentication() {
-      try {
-        const authData = await RESTapi.fetchCheckAuthen();
-
-        if (authData && authData.isAuthen === false) {
-          setShareState((prevState) => prevState + 1);
-        }
-      } catch (error) {
-        setRole('guest');
-
-        console.error('Error occurred while checking authentication:', error);
-      }
+    if (firstTime) {
+      checkConnection();
     }
 
     if (role === 'guest') {
-      if (firstTime) {
-        handleAuthentication();
-        setFirstTime(false);
-      }
     } else {
       handleAuthentication();
     }
     setIsLoaded(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [role]);
-  if (!isLoaded) {
-    return <>Loading</>;
+
+  if (firstTime || !isLoaded) {
+    return <LoadingScene />;
   }
 
   return (
