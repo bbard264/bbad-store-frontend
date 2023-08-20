@@ -1,7 +1,7 @@
 import React from 'react';
 import '../styles/components/LoadingScene.css';
 
-export default function LoadingScene() {
+export default function LoadingScene({ firstTime = false }) {
   return (
     <div className="postionLoadingScene">
       <div className="loadingScene">
@@ -22,6 +22,11 @@ export default function LoadingScene() {
             <div className="circleLoading"></div>
           </div>
         </div>
+        {firstTime ? (
+          <div className="loadingText">Connecting to Server, take 1-3 mins</div>
+        ) : (
+          <></>
+        )}
       </div>
     </div>
   );

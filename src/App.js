@@ -54,7 +54,7 @@ function App() {
         setFirstTime(false);
         break;
       } else if (response.isConnect === false) {
-        await new Promise((resolve) => setTimeout(resolve, 10000));
+        await new Promise((resolve) => setTimeout(resolve, 30000));
         continue;
       }
     }
@@ -84,7 +84,7 @@ function App() {
   }, [role]);
 
   if (firstTime || !isLoaded) {
-    return <LoadingScene />;
+    return <LoadingScene firstTime={firstTime} />;
   }
 
   return (
