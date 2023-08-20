@@ -1,7 +1,7 @@
 import React from 'react';
 import '../styles/components/LoadingScene.css';
 
-export default function LoadingScene({ firstTime = false }) {
+export default function LoadingScene({ firstTime = false, login = false }) {
   return (
     <div className="postionLoadingScene">
       <div className="loadingScene">
@@ -24,6 +24,11 @@ export default function LoadingScene({ firstTime = false }) {
         </div>
         {firstTime ? (
           <div className="loadingText">Connecting to Server, take 1-3 mins</div>
+        ) : (
+          <></>
+        )}
+        {login ? (
+          <div className="loadingText">Login User Infomation!</div>
         ) : (
           <></>
         )}

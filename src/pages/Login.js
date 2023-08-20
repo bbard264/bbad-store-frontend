@@ -180,7 +180,7 @@ export default function Login(porps) {
   if (isLoading) {
     return (
       <>
-        <LoadingScene />
+        <LoadingScene login={true} />
       </>
     );
   }

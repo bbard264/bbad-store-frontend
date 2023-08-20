@@ -48,13 +48,19 @@ function App() {
   }
 
   const checkConnection = async () => {
+    let numoftry = 0;
     while (true) {
       const response = await RESTapi.checkConnection();
       if (response.isConnect === true) {
         setFirstTime(false);
         break;
       } else if (response.isConnect === false) {
+        if (numoftry >= 10) {
+          window.alert("Can't Connect to server, Please try again later");
+          break;
+        }
         await new Promise((resolve) => setTimeout(resolve, 30000));
+        numoftry += 1;
         continue;
       }
     }
