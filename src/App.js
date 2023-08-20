@@ -83,7 +83,6 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [role]);
 
-  console.log(firstTime);
   if (firstTime || !isLoaded) {
     return <LoadingScene />;
   }
