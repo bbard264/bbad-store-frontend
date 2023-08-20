@@ -10,6 +10,7 @@ function CreateRoutes(props) {
 
   return (
     <Routes>
+      <Route path="*" element={<Navigate to={'/'} />} />
       {publicRoutes.map((route) => (
         <Route
           path={route.url}
@@ -40,7 +41,6 @@ function CreateRoutes(props) {
           }
         />
       ))}
-      <Route path="*" element={<Navigate to={redirectRoute} />} />
     </Routes>
   );
 }
