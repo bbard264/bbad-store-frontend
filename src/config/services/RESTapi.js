@@ -154,7 +154,6 @@ class RESTapi {
       if (error.response?.status === 401) {
         return { isConnect: true };
       } else {
-        console.error('Failed to check authen:', error);
         return { isConnect: false };
       }
     }

@@ -53,12 +53,13 @@ function App() {
       console.log('check connect to backend.............');
       await new Promise((resolve) => setTimeout(resolve, 10000));
       const response = await RESTapi.checkConnection();
-      console.log(response);
       if (response === undefined || response === null) {
         continue;
-      } else {
+      } else if (response.isConnect) {
         setFirstTime(false);
         break;
+      } else {
+        continue;
       }
     }
   };
@@ -85,6 +86,7 @@ function App() {
     setIsLoaded(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [role]);
+  console.log(firstTime);
 
   if (firstTime || !isLoaded) {
     return <LoadingScene />;
