@@ -27,16 +27,14 @@ This project leverages the following technologies and frameworks:
 
 - Front End:
   - React.js for building the user interface.
-  - Redux for state management.
   - Axios for making API requests.
-  - Material-UI for UI components.
-
+  - 
 - Back End:
   - Node.js for server-side development.
   - Express.js for building RESTful APIs.
   - MongoDB Atlas for the database.
   - JWT (JSON Web Tokens) for user authentication.
-  - Stripe (or your preferred payment gateway) for payment processing.
+
 
 ## Deployment
 
