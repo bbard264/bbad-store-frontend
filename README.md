@@ -2,7 +2,8 @@
 
 Welcome to BBAD Shop, a single-vendor e-commerce platform built with React.js, Node.js, Express.js, and MongoDB Atlas.
 
-![BBAD Shop Logo](path/to/logo.png)
+![BBAD Shop Logo](https://github.com/ppoompich/bbad-store-frontend/raw/master/public/logo192.png)
+
 
 ## Introduction
 
