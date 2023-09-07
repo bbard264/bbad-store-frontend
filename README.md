@@ -1,6 +1,7 @@
 # BBAD Shop
 
-![BBAD Shop Logo](https://github.com/ppoompich/bbad-store-frontend/raw/master/public/logo192.png)
+<img src="https://github.com/ppoompich/bbad-store-frontend/raw/master/public/logo192.png" alt="BBAD Shop Logo" width="2em">
+
 
 Welcome to BBAD Shop, a single-vendor e-commerce platform built with React.js, Node.js, Express.js, and MongoDB Atlas.
 
@@ -56,6 +57,10 @@ This project leverages the following technologies and frameworks:
   - Express.js for building RESTful APIs.
   - MongoDB Atlas for the database.
   - JWT (JSON Web Tokens) for user authentication.
+
+## Backend Repository
+
+The backend code for this project can be found in the [BBAD Store Backend Repository](https://github.com/ppoompich/bbad-store-backend). It includes the server-side logic, API endpoints, and database configurations required to run the application.
 
 ## Deployment
 
