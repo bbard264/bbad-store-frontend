@@ -28,7 +28,7 @@ This project leverages the following technologies and frameworks:
 - Front End:
   - React.js for building the user interface.
   - Axios for making API requests.
-  - 
+
 - Back End:
   - Node.js for server-side development.
   - Express.js for building RESTful APIs.
